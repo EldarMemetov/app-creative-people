@@ -1,0 +1,107 @@
+.languageSwitcherContainer {
+  position: relative;
+  display: inline-block;
+  z-index: 11111;
+}
+
+.languageButton {
+  border: none;
+  background: transparent;
+  padding: 5px 10px;
+  cursor: pointer;
+  border-radius: 5px;
+  width: 100%;
+  font-weight: 500;
+  @include font(16, 21);
+  text-align: left;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: #fff;
+
+  @include media(tablet) {
+    padding: 15px 20px;
+  }
+}
+
+.languageButton:hover {
+  backdrop-filter: blur(200px);
+  background: linear-gradient(
+    180deg,
+    rgba(2, 7, 157, 0.04) 0%,
+    rgba(150, 36, 226, 0.04) 47.28%,
+    rgba(206, 99, 235, 0.04) 82.32%,
+    rgba(239, 196, 251, 0.04) 100%
+  );
+}
+
+.languageList {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  width: 100%;
+  z-index: 0;
+  margin: 0;
+  padding: 0;
+  border: none;
+  border-radius: 5px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    border-radius: inherit;
+    background: linear-gradient(
+      180deg,
+      rgba(2, 7, 157, 0.3) 0%,
+      rgba(150, 36, 226, 0.3) 47.28%,
+      rgba(206, 99, 235, 0.3) 82.32%,
+      rgba(239, 196, 251, 0.3) 100%
+    );
+    backdrop-filter: blur(200px);
+    -webkit-backdrop-filter: blur(200px);
+    z-index: -1;
+  }
+
+  li + li {
+    margin-top: 10px;
+  }
+}
+
+.languageOption {
+  position: relative;
+  background: transparent;
+  border: none;
+  padding: 10px 10px;
+  text-align: center;
+  width: 100%;
+  cursor: pointer;
+  border-radius: 5px;
+  transition: background-color 0.3s;
+  color: #fff;
+}
+
+.languageOption:hover {
+  background: linear-gradient(
+    180deg,
+    rgba(2, 7, 157, 0.3) 0%,
+    rgba(150, 36, 226, 0.3) 47.28%,
+    rgba(206, 99, 235, 0.3) 82.32%,
+    rgba(239, 196, 251, 0.3) 100%
+  );
+
+  backdrop-filter: blur(200px);
+  -webkit-backdrop-filter: blur(200px);
+
+  will-change: backdrop-filter;
+  transform: translateZ(0);
+}
+
+.languageOption:focus {
+  outline: none;
+}

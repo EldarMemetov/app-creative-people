@@ -1,0 +1,12 @@
+.container {
+  margin-top: -80px;
+  padding-top: 80px;
+  background:
+    linear-gradient(to bottom, rgba(0, 0, 0, 0.4) 0%, #000000 12%, #000 100%),
+    linear-gradient(
+      to right,
+      rgb(50 0 196 / 74%) 0%,
+      rgb(90 23 224 / 32%) 40%,
+      rgb(3 68 249 / 74%) 100%
+    );
+}

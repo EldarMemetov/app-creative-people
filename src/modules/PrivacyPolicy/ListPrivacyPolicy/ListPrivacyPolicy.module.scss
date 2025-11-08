@@ -1,0 +1,41 @@
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+}
+
+.title {
+  font-size: 20px;
+  font-weight: 600;
+  margin-bottom: 16px;
+
+  @include media(tablet) {
+    font-size: 22px;
+  }
+
+  @include media(desktop) {
+    font-size: 24px;
+  }
+}
+
+.description {
+  font-size: 16px;
+  line-height: 26px;
+  margin-bottom: 16px;
+
+  @include media(tablet) {
+    font-size: 17px;
+    line-height: 28px;
+  }
+
+  @include media(desktop) {
+    font-size: 18px;
+    line-height: 30px;
+  }
+}
+
+.empty {
+  font-size: 16px;
+  text-align: center;
+  padding: 40px 0;
+}

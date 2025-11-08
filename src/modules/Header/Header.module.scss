@@ -1,0 +1,75 @@
+.header {
+  background-color: #1e1e2f;
+  padding: 20px 20px;
+  backdrop-filter: blur(200px);
+  background: linear-gradient(
+    180deg,
+    rgba(2, 7, 157, 0.04) 0%,
+    rgba(150, 36, 226, 0.04) 47.28%,
+    rgba(206, 99, 235, 0.04) 82.32%,
+    rgba(239, 196, 251, 0.04) 100%
+  );
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  display: flex;
+  justify-content: space-between;
+
+  @include media(tablet) {
+    padding: 20px 104px;
+    align-items: center;
+  }
+
+  @include media(desktop) {
+    padding: 20px 108px;
+  }
+}
+.overlay {
+  position: fixed;
+  top: 80px;
+  left: 0;
+  width: 100vw;
+  height: calc(100vh - 80px);
+  backdrop-filter: blur(8px);
+  background: rgba(0, 0, 0, 0.56);
+  z-index: 400;
+  opacity: 1;
+  transition: opacity 0.5s ease;
+}
+
+.menuButton {
+  background: none;
+  border: none;
+  cursor: pointer;
+  @media (min-width: 1154px) {
+    display: none;
+  }
+}
+
+.containerButtonTrans {
+  display: flex;
+  gap: 20px;
+  align-items: center;
+}
+
+.iconOpen {
+  width: 23px;
+  height: 23px;
+  fill: #fff;
+}
+
+.buttonContact {
+  display: none;
+
+  @include media(desktop) {
+    display: block;
+  }
+}
+
+.mobileButton {
+  order: 1;
+}
+
+.languageSwitcher {
+  margin-left: auto;
+}

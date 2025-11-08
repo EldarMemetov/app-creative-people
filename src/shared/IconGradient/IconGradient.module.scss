@@ -1,0 +1,18 @@
+.icon {
+  display: inline-block;
+  width: 24px;
+  height: 24px;
+  transition: all 0.3s ease;
+  fill: currentColor;
+  stroke: none;
+}
+
+.filled {
+  fill: url(#star-gradient-filled);
+  stroke: none;
+}
+
+.outline {
+  fill: none;
+  stroke: url(#star-gradient-outline);
+}

@@ -1,0 +1,40 @@
+.logoContainer {
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+
+.logo {
+  object-fit: contain;
+  width: 40px;
+  height: 40px;
+
+  .footer & {
+    width: 50px;
+    height: 50px;
+
+    @include media(desktop) {
+      width: 60px;
+      height: 60px;
+    }
+  }
+}
+
+.logoText {
+  font-weight: 800;
+  @include font(24, 34);
+  text-transform: uppercase;
+  min-height: 34px;
+
+  .footer & {
+    @include font(36, 50);
+    min-height: 50px;
+    min-height: 56px;
+    @include media(desktop) {
+      @include font(40, 56);
+      min-height: 56px;
+    }
+  }
+}

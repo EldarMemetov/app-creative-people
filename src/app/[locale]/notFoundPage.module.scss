@@ -1,0 +1,26 @@
+.section {
+  padding-top: 100px;
+  padding-bottom: 100px;
+}
+.container {
+  text-align: center;
+  padding: 25px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+
+.title {
+  font-weight: 700;
+}
+
+.message {
+  font-weight: 700;
+}
+
+.link {
+  font-weight: 700;
+
+  text-decoration: underline;
+}

@@ -1,0 +1,43 @@
+.wrapper {
+  position: fixed;
+  top: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 99;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: linear-gradient(
+      to bottom,
+      rgb(0 0 0 / 36%) 0%,
+      rgb(0 0 0) 20%,
+      rgb(0 0 0) 100%
+    ),
+    linear-gradient(
+      to right,
+      #00008b 0%,
+      #00004d 30%,
+      #2c0bd4 50%,
+      #8a2be2 80%,
+      #8a2be2 100%
+    );
+}
+
+.loader {
+  width: 80px;
+  height: 80px;
+  border: 8px solid #ddd;
+  border-radius: 50%;
+  border-top: 8px solid #6a1b9a;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+
+  100% {
+    transform: rotate(360deg);
+  }
+}

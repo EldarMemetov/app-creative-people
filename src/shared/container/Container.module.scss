@@ -1,0 +1,20 @@
+@use '../styles/mixins' as *;
+
+.container {
+  padding: 0 12px;
+  margin: 0 auto;
+  @include media(mobile) {
+    width: $mobile;
+    padding: 0 16px;
+  }
+
+  @include media(tablet) {
+    width: $tablet;
+    padding: 0 20px;
+  }
+
+  @include media(desktop) {
+    width: $desktop;
+    padding: 0 80px;
+  }
+}

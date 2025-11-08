@@ -1,0 +1,38 @@
+@keyframes loadingAnimation {
+  0% {
+    width: 0;
+  }
+  50% {
+    width: 100%;
+  }
+  51% {
+    width: 100%;
+  }
+  55% {
+    width: 100%;
+  }
+  100% {
+    width: 0;
+  }
+}
+
+.loadingContainer {
+  width: 288px;
+  height: 6px;
+  border-radius: 4px;
+  overflow: hidden;
+  position: relative;
+  @include media(tablet) {
+    width: 660px;
+  }
+  @include media(desktop) {
+    width: 912px;
+  }
+}
+
+.loadingBar {
+  height: 100%;
+  border-radius: 4px;
+  background: linear-gradient(30deg, #02079d 0%, #9624e2 44.88%);
+  animation: loadingAnimation 4.5s infinite ease-in-out;
+}

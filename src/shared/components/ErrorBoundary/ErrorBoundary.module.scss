@@ -1,0 +1,24 @@
+.container {
+  text-align: center;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+
+.heading {
+  @include font(36, 36);
+  font-weight: 700;
+  color: black;
+}
+
+.message {
+  @include font(20, 30);
+  font-weight: 700;
+  color: violet;
+}
+
+.button {
+  margin-top: 10px;
+}

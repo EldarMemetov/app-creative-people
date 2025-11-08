@@ -1,0 +1,103 @@
+{
+  "policy": {
+    "title": "Datenschutz- und Verarbeitungspolitik für personenbezogene Daten der Nutzer der Qvrix-Website",
+    "intro": "Der Betreiber Qvrix legt besonderen Wert auf den Schutz Ihrer Privatsphäre. Wir bemühen uns, Transparenz und Sicherheit in Bezug auf alle Informationen zu gewährleisten, die Sie uns bei der Nutzung der Website https://qvrix.com (im Folgenden – „Website“) sowie ihrer Dienste, Programme und begleitenden Dienstleistungen bereitstellen. Diese Datenschutzrichtlinie regelt die Verarbeitung personenbezogener Daten, die von Eldar Memetov, einer in Deutschland registrierten selbständigen Person, die unter dem Handelsnamen Qvrix tätig ist (im Folgenden – „Betreiber“), durchgeführt wird. Durch die Nutzung der Dienste der Website erklärt der Nutzer sein uneingeschränktes Einverständnis mit den Bestimmungen dieser Richtlinie. Wenn Sie damit nicht einverstanden sind, bitten wir Sie, von der Nutzung der Website abzusehen.",
+    "sections": [
+      {
+        "title": "1. Allgemeine Bestimmungen",
+        "description": "Wir nutzen die Dienste von Cloudflare, um die Sicherheit und Leistung unserer Website zu gewährleisten. Cloudflare ist gemäß den Standards des EU-U.S. Data Privacy Framework und der UK-Erweiterung zum EU-U.S. DPF zertifiziert, was ihre Konformität mit den Anforderungen der DSGVO zur Verarbeitung personenbezogener Daten in Europa bestätigt.",
+        "subsections": [
+          {
+            "title": "1.1. Unter dem Begriff „personenbezogene Informationen des Nutzers“ versteht man in dieser Richtlinie",
+            "points": [
+              "Daten, die der Nutzer freiwillig über sich selbst bei der Ausfüllung von Formularen, Anträgen, dem Abonnieren von Updates oder der Nutzung von Diensten bereitstellt. Dazu können Name, E-Mail-Adresse, Telefonnummer usw. gehören. Pflichtfelder sind entsprechend gekennzeichnet.",
+              "1.1.2 Daten, die automatisch an die Website während ihrer Nutzung übermittelt werden: IP-Adresse, Cookies, Browsertyp, Sprache, technische Merkmale des Geräts, Zugriffszeit, URL-Anfragen usw.",
+              "1.1.3 Andere Informationen, deren Verarbeitung durch die Bedingungen der Nutzungsvereinbarung der Website vorgesehen ist.",
+              "1.1.4 Diese Richtlinie gilt ausschließlich für die Website. Der Betreiber ist nicht verantwortlich für Websites Dritter, zu denen der Nutzer über Links von der Website gelangen kann."
+            ]
+          }
+        ]
+      },
+      {
+        "title": "2. Zwecke der Verarbeitung personenbezogener Daten",
+        "points": [
+          "Bereitstellung der von Ihnen angeforderten Dienste und Beantwortung von Anfragen.",
+          "Personalisierung der Nutzererfahrung.",
+          "Verbesserung der Qualität der Dienste und Entwicklung neuer Produkte.",
+          "Information über unsere Produkte, Dienstleistungen, Aktionen, Veranstaltungen.",
+          "Wir verkaufen, tauschen oder übertragen Ihre personenbezogenen Daten nicht an Dritte ohne Ihre Zustimmung, außer in Fällen, die ausdrücklich durch geltendes Recht vorgesehen sind."
+        ]
+      },
+      {
+        "title": "3. Rechte und Pflichten des Betreibers",
+        "subsections": [
+          {
+            "title": "3.1. Der Betreiber hat das Recht",
+            "points": [
+              "Zuverlässige Informationen und/oder Dokumente zu erhalten, die personenbezogene Daten enthalten.",
+              "Im Falle des Widerrufs der Zustimmung des Nutzers – die Datenverarbeitung fortzusetzen, wenn dies gesetzlich erlaubt ist.",
+              "Selbstständig die Liste der Maßnahmen zu bestimmen, die erforderlich sind, um die Einhaltung der gesetzlichen Anforderungen in Bezug auf personenbezogene Daten sicherzustellen."
+            ]
+          },
+          {
+            "title": "3.2. Der Betreiber ist verpflichtet",
+            "points": [
+              "Dem Nutzer auf Anfrage Informationen über die Verarbeitung seiner personenbezogenen Daten bereitzustellen.",
+              "Die Verarbeitung personenbezogener Daten gemäß geltendem Recht durchzuführen.",
+              "Auf Anfragen und Anträge von Betroffenen personenbezogener Daten zu reagieren.",
+              "Den zuständigen Behörden innerhalb ihrer Befugnisse die erforderlichen Informationen bereitzustellen.",
+              "Öffentlichen Zugang zu dieser Datenschutzrichtlinie zu gewährleisten.",
+              "Technische, organisatorische und rechtliche Maßnahmen zum Schutz personenbezogener Daten vor unbefugtem Zugriff oder Verlust zu ergreifen."
+            ]
+          }
+        ]
+      },
+      {
+        "title": "4. Grundsätze der Verarbeitung personenbezogener Daten",
+        "points": [
+          "4.1 Die Verarbeitung personenbezogener Daten erfolgt ausschließlich auf rechtmäßigen Grundlagen.",
+          "4.2 Es werden nur solche personenbezogenen Daten verarbeitet, die den angegebenen Zwecken entsprechen.",
+          "4.3 Umfang und Art der verarbeiteten Daten entsprechen den festgelegten Zielen.",
+          "4.4 Es wird die Genauigkeit, Aktualität und Angemessenheit der personenbezogenen Daten zur Erreichung der Verarbeitungsziele sichergestellt.",
+          "4.5 Personenbezogene Daten werden nicht länger gespeichert, als es für die Erreichung der Verarbeitungsziele erforderlich ist.",
+          "4.6 Nach Erreichung der Verarbeitungsziele können personenbezogene Daten gelöscht oder anonymisiert werden."
+        ]
+      },
+      {
+        "title": "5. Verfahren zur Erhebung, Speicherung, Übermittlung und anderen Arten der Verarbeitung personenbezogener Daten",
+        "points": [
+          "5.1 Um ein hohes Maß an Sicherheit und Leistung zu gewährleisten, nutzen wir die Dienste von Cloudflare, die gemäß den Standards des EU-U.S. Data Privacy Framework und der UK-Erweiterung zum EU-U.S. DPF zertifiziert sind.",
+          "5.2 Der Betreiber ergreift alle möglichen Maßnahmen zum Schutz personenbezogener Daten vor unbefugtem Zugriff, Änderung, Offenlegung oder Zerstörung.",
+          "5.3 Personenbezogene Daten der Nutzer werden nicht ohne Ihre Zustimmung an Dritte weitergegeben, außer in Fällen, die gesetzlich vorgesehen sind oder zur Erfüllung vertraglicher Verpflichtungen.",
+          "5.4 Im Falle von Ungenauigkeiten in personenbezogenen Daten hat der Nutzer das Recht, diese zu aktualisieren, indem er eine entsprechende Anfrage an die E-Mail-Adresse: qvrix.studio@gmail.com mit dem Betreff „Aktualisierung personenbezogener Daten“ sendet.",
+          "5.5 Der Nutzer kann seine Zustimmung zur Verarbeitung personenbezogener Daten jederzeit widerrufen, indem er eine Anfrage an die E-Mail-Adresse: qvrix.studio@gmail.com sendet.",
+          "5.6 Die Verarbeitung personenbezogener Daten wird nach Erreichung der Ziele, Widerruf der Zustimmung oder im Falle der Feststellung einer unrechtmäßigen Verarbeitung eingestellt."
+        ]
+      },
+      {
+        "title": "6. Umgang mit erhaltenen personenbezogenen Daten",
+        "points": [
+          "Der Betreiber sammelt, erfasst, systematisiert, speichert, aktualisiert, verwendet, übermittelt, anonymisiert, sperrt, löscht und vernichtet personenbezogene Daten gemäß den gesetzlichen Bestimmungen.",
+          "6.1 Daten, die über das Kontaktformular gesammelt werden, werden ausschließlich zur Beantwortung der Anfrage des Nutzers verwendet und nicht an Dritte weitergegeben.",
+          "6.2 Nutzerbewertungen dürfen nur nach ausdrücklicher Zustimmung des Nutzers veröffentlicht werden, die beim Ausfüllen des entsprechenden Formulars eingeholt wird."
+        ]
+      },
+      {
+        "title": "7. Vertraulichkeit personenbezogener Daten",
+        "points": [
+          "7.1 Zum Schutz personenbezogener Daten der Nutzer werden moderne technische und organisatorische Mittel eingesetzt, insbesondere die Dienste von Cloudflare mit entsprechenden Zertifikaten.",
+          "7.2 Der Betreiber und Personen, die Zugang zu personenbezogenen Daten erhalten haben, sind verpflichtet, diese Daten ohne Zustimmung des Nutzers nicht offenzulegen oder zu verbreiten, außer in gesetzlich vorgesehenen Fällen.",
+          "7.3 Der Nutzer kann sich für Erläuterungen zur Verarbeitung seiner personenbezogenen Daten an die E-Mail-Adresse: qvrix.studio@gmail.com wenden."
+        ]
+      },
+      {
+        "title": "8. Verwendung von Cookies",
+        "points": [
+          "8.1 Die Website verwendet nur notwendige Cookies, die ihre Funktionalität, Sicherheit und Leistung gewährleisten.",
+          "8.2 Wir verwenden keine Cookies, um das Nutzerverhalten zu Werbe- oder Marketingzwecken zu verfolgen.",
+          "8.3 Nutzer können das Speichern von Cookies in ihrem Browser einschränken oder deaktivieren, jedoch kann dies die Funktionalität bestimmter Website-Funktionen beeinträchtigen."
+        ]
+      }
+    ]
+  }
+}
