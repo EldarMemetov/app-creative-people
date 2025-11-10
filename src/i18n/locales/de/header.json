@@ -1,9 +1,10 @@
 {
   "home": "Startseite",
-  "aboutUs": "Über uns",
-  "webDevelopment": "Webentwicklung",
-  "videography": "Video-Produktion",
-  "kontakt": "Kontaktieren",
+  "talents": "Talente",
+  "offers": "Angebote",
+  "auth": "Registrieren / Anmelden",
   "blog": "Blog",
-  "haveQuestions": "Noch Fragen?"
+  "faq": "FAQ",
+  "about": "Über uns",
+  "community": "Gemeinschaft"
 }

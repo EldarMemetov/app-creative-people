@@ -1,4 +1,3 @@
-import Footer from '@/modules/Footer/Footer';
 import PrivacyPolicy from '@/modules/PrivacyPolicy/PrivacyPolicy';
 export default async function PrivacyPolicyPage({ params: rawParams }) {
   const params = await rawParams;
@@ -10,7 +9,6 @@ export default async function PrivacyPolicyPage({ params: rawParams }) {
   return (
     <div>
       <PrivacyPolicy locale={locale} />
-      <Footer />
     </div>
   );
 }

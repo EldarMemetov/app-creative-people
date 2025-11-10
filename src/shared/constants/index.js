@@ -1,21 +1,23 @@
 export const ROUTES = {
-  ABOUT: 'about-us',
-  PORTFOLIO: 'portfolio',
   HOME: '/',
-  DEVELOPMENT: 'web-development',
-  VIDEOGRAPHY: 'videography',
+  ABOUT: 'about-us',
+  TALENTS: 'talents',
+  OFFERS: 'offers',
+  COMMUNITY: 'community',
+  BLOG: 'blog',
   POLICY: 'privacy-policy',
-  Blog: 'blog',
 };
+
 export const LINKDATA = {
-  ABOUT: 'about-us',
-  PORTFOLIO: 'portfolio',
   HOME: '/',
-  DEVELOPMENT: 'web-development',
-  VIDEOGRAPHY: 'videography',
+  ABOUT: 'about-us',
+  TALENTS: 'talents',
+  OFFERS: 'offers',
+  COMMUNITY: 'community',
+  BLOG: 'blog',
   POLICY: 'privacy-policy',
-  Blog: 'blog',
 };
+
 export const LANGUAGES = { UA: 'ua', EN: 'en', DE: 'de' };
 
 export const NAMESPACES = [

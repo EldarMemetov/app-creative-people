@@ -10,7 +10,9 @@ import SvgSpriteLoader from '@/shared/constants/SvgSpriteLoader/SvgSpriteLoader'
 import CookieNotice from '@/modules/CookieNotice/CookieNotice';
 import { Manrope, Inter } from 'next/font/google';
 import clsx from 'clsx';
-import { Suspense } from 'react';
+
+import Footer from '@/modules/Footer/Footer';
+
 const manrope = Manrope({
   subsets: ['latin', 'cyrillic'],
   weight: ['400', '500', '600', '700', '800'],
@@ -86,6 +88,7 @@ export default async function Layout({ children, params }) {
         className={clsx(manrope.variable, inter.variable)}
       >
         <SvgSpriteLoader />
+
         <TranslationsProvider
           namespaces={NAMESPACES}
           locale={locale}
@@ -95,6 +98,7 @@ export default async function Layout({ children, params }) {
             <Header />
 
             <main>{children}</main>
+            <Footer />
             <CookieNotice />
           </ErrorBoundaryWithTranslation>
         </TranslationsProvider>

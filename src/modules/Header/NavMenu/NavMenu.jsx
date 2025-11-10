@@ -10,6 +10,7 @@ import styles from './NavMenu.module.scss';
 import Icon from '@/shared/Icon/Icon';
 import ScrollButton from '@/shared/ScrollButton/ScrollButton';
 
+// хук для отслеживания ширины экрана
 function useIsMobile(breakpoint = 1154) {
   const [isMobile, setIsMobile] = useState(false);
 
@@ -28,12 +29,14 @@ function useIsMobile(breakpoint = 1154) {
   return isMobile;
 }
 
+// 🧭 обновлённые ссылки (соответствуют новым ключам переводов)
 const links = [
   { href: '', key: 'home' },
-  { href: '/about-us', key: 'aboutUs' },
-  { href: '/web-development', key: 'webDevelopment' },
-  { href: '/videography', key: 'videography' },
+  { href: '/about-us', key: 'about' },
+  { href: '/talents', key: 'talents' },
+  { href: '/offers', key: 'offers' },
   { href: '/blog', key: 'blog' },
+  { href: '/community', key: 'community' },
 ];
 
 export default function NavMenu({
@@ -61,13 +64,11 @@ export default function NavMenu({
 
   const isActive = (href) => {
     const localizedHref = `/${i18n.language}${href}`;
-
     if (href === '') {
       return (
         pathname === `/${i18n.language}` || pathname === `/${i18n.language}/`
       );
     }
-
     return (
       pathname === localizedHref || pathname.startsWith(`${localizedHref}/`)
     );
@@ -110,13 +111,13 @@ export default function NavMenu({
                 <Icon iconName="icon-close" className={styles.iconClose} />
               </button>
               <div className={styles.mobileContact}>
-                <h3 className={styles.titleMobile}>{t('haveQuestions')}</h3>
+                <h3 className={styles.titleMobile}>{t('faq')}</h3>
                 <ScrollButton
                   onClick={onCloseMenu}
                   targetId="feedback-form"
                   variant="variant4"
                 >
-                  {t('kontakt')}
+                  {t('auth')}
                 </ScrollButton>
               </div>
             </div>

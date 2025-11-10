@@ -1,9 +1,10 @@
 {
   "home": "Home",
-  "aboutUs": "About Us",
-  "webDevelopment": "Web Development",
-  "videography": "Video Production",
-  "kontakt": "Contact",
+  "talents": "Talents",
+  "offers": "Offers",
+  "auth": "Sign Up / Log In",
   "blog": "Blog",
-  "haveQuestions": "Still have questions?"
+  "faq": "FAQ",
+  "about": "About Us",
+  "community": "Community"
 }
