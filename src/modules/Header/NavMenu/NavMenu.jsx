@@ -6,11 +6,10 @@ import { usePathname } from 'next/navigation';
 import { useTranslation } from 'react-i18next';
 import clsx from 'clsx';
 import styles from './NavMenu.module.scss';
-
+import { useAuth } from '../../../services/store/useAuth';
 import Icon from '@/shared/Icon/Icon';
 import ScrollButton from '@/shared/ScrollButton/ScrollButton';
 
-// хук для отслеживания ширины экрана
 function useIsMobile(breakpoint = 1154) {
   const [isMobile, setIsMobile] = useState(false);
 
@@ -29,7 +28,6 @@ function useIsMobile(breakpoint = 1154) {
   return isMobile;
 }
 
-// 🧭 обновлённые ссылки (соответствуют новым ключам переводов)
 const links = [
   { href: '', key: 'home' },
   { href: '/about-us', key: 'about' },
@@ -51,7 +49,7 @@ export default function NavMenu({
   const pathname = usePathname();
   const [isClient, setIsClient] = useState(false);
   const isMobile = useIsMobile(1154);
-
+  const { user } = useAuth();
   useEffect(() => {
     setIsClient(true);
   }, []);
@@ -77,22 +75,27 @@ export default function NavMenu({
 
   const renderLinks = (styleVariant) => (
     <ul className={clsx(styles.navList, styles[styleVariant])}>
-      {links.map(({ href, key }) => (
-        <li
-          key={key}
-          className={clsx(styles.navItem, styles[styleVariant], {
-            [styles.active]: isActive(href),
-          })}
-        >
-          <Link
-            href={`/${i18n.language}${href}`}
-            className={clsx(styles.navLink, styles[styleVariant])}
-            onClick={onCloseMenu}
+      {links
+        .filter((link) => {
+          if (link.href === '/profile' && !user) return false;
+          return true;
+        })
+        .map(({ href, key }) => (
+          <li
+            key={key}
+            className={clsx(styles.navItem, styles[styleVariant], {
+              [styles.active]: isActive(href),
+            })}
           >
-            {t(key)}
-          </Link>
-        </li>
-      ))}
+            <Link
+              href={`/${i18n.language}${href}`}
+              className={clsx(styles.navLink, styles[styleVariant])}
+              onClick={onCloseMenu}
+            >
+              {t(key)}
+            </Link>
+          </li>
+        ))}
     </ul>
   );
 
