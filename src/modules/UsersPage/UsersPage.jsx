@@ -4,6 +4,9 @@ import { useEffect, useState } from 'react';
 import { getAllUsers } from '@/services/api/users/api';
 import { ImageWithFallback } from '@/shared/ImageWithFallback/ImageWithFallback';
 import Loader from '@/shared/Loader/Loader';
+import Link from 'next/link';
+import Container from '@/shared/container/Container';
+import s from './UsersPage.module.scss';
 
 export default function UsersPage() {
   const [users, setUsers] = useState([]);
@@ -39,106 +42,54 @@ export default function UsersPage() {
   }, []);
 
   if (loading) return <Loader />;
-  if (error) return <div>Помилка: {error}</div>;
-  if (users.length === 0) return <div>Немає зареєстрованих користувачів</div>;
+  if (error) return <div className={s.error}>Помилка: {error}</div>;
+  if (users.length === 0)
+    return <div className={s.noUsers}>Немає зареєстрованих користувачів</div>;
 
   return (
-    <div style={{ padding: '20px' }}>
-      <h1>Усі користувачі</h1>
+    <Container>
+      <section className={s.section}>
+        <h1 className={s.title}>Усі користувачі</h1>
 
-      {users.map((user) => (
-        <div
-          key={user._id}
-          style={{
-            marginBottom: '20px',
-            border: '1px solid #000',
-            padding: '10px',
-            borderRadius: '8px',
-            display: 'flex',
-            alignItems: 'flex-start',
-            gap: '15px',
-            flexWrap: 'wrap',
-          }}
-        >
-          <div style={{ flexShrink: 0 }}>
-            <ImageWithFallback
-              src={user.safePhoto}
-              alt={`${user.name} ${user.surname}`}
-              width={80}
-              height={80}
-            />
-          </div>
+        <div className={s.grid}>
+          {users.map((user) => (
+            <Link
+              key={user._id}
+              href={`/talents/${user._id}`}
+              className={s.link}
+            >
+              <div className={s.card}>
+                <div className={s.photoWrapper}>
+                  <ImageWithFallback
+                    src={user.safePhoto}
+                    alt={`${user.name} ${user.surname}`}
+                    width={500}
+                    height={700}
+                    className={s.photo}
+                  />
+                </div>
 
-          <div>
-            <p>
-              <strong>Ім’я:</strong> {user.name}
-            </p>
-            <p>
-              <strong>Прізвище:</strong> {user.surname}
-            </p>
-            <p>
-              <strong>Місто:</strong> {user.city}
-            </p>
-            <p>
-              <strong>Електронна пошта:</strong> {user.email}
-            </p>
-            <p>
-              <strong>Роль:</strong> {user.role}
-            </p>
-            <p>
-              <strong>Рівень доступу:</strong> {user.accessRole}
-            </p>
-            <p>
-              <strong>Рейтинг:</strong> {user.rating}
-            </p>
-            <p>
-              <strong>Досвід:</strong> {user.experience || 'не вказано'}
-            </p>
-            <p>
-              <strong>Напрямки:</strong>{' '}
-              {user.directions && user.directions.length > 0
-                ? user.directions.join(', ')
-                : 'не вказано'}
-            </p>
-            <p>
-              <strong>Онлайн статус:</strong>{' '}
-              {user.onlineStatus ? 'Онлайн' : 'Офлайн'}
-            </p>
-            <p>
-              <strong>Про себе:</strong> {user.aboutMe || 'не вказано'}
-            </p>
-            <p>
-              <strong>Заблокований:</strong> {user.isBlocked ? 'Так' : 'Ні'}
-            </p>
-            <p>
-              <strong>Потребує перевірки:</strong>{' '}
-              {user.needsReview ? 'Так' : 'Ні'}
-            </p>
+                <div className={s.infoBlur}>
+                  <p className={s.infoRow}>
+                    <span className={s.label}>Ім’я:</span>
+                    <span className={s.value}>{user.name}</span>
+                  </p>
 
-            {user.portfolio && user.portfolio.length > 0 && (
-              <div style={{ marginTop: '10px' }}>
-                <strong>Портфоліо:</strong>
-                <ul>
-                  {user.portfolio.map((item, index) => (
-                    <li key={index}>
-                      <p>Тип: {item.type === 'photo' ? 'Фото' : 'Відео'}</p>
-                      <p>Опис: {item.description || 'немає опису'}</p>
-                      <a
-                        href={item.url}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        style={{ color: '#0070f3' }}
-                      >
-                        Переглянути
-                      </a>
-                    </li>
-                  ))}
-                </ul>
+                  <p className={s.infoRow}>
+                    <span className={s.label}>Прізвище:</span>
+                    <span className={s.value}>{user.surname}</span>
+                  </p>
+
+                  <p className={s.infoRow}>
+                    <span className={s.label}>Місто:</span>
+                    <span className={s.value}>{user.city}</span>
+                  </p>
+                </div>
               </div>
-            )}
-          </div>
+            </Link>
+          ))}
         </div>
-      ))}
-    </div>
+      </section>
+    </Container>
   );
 }

@@ -1,21 +1,12 @@
-import axios from 'axios';
+import { api } from '../lib/api';
 import { handleError } from '@/utils/errorHandler';
-const api = axios.create({
-  baseURL: 'https://app-server-o38y.onrender.com',
-  withCredentials: true,
-  headers: {
-    'Content-Type': 'application/json',
-  },
-});
 
 // Получить всех пользователей
 
 export const getAllUsers = async () => {
   try {
-    const response = await axios.get(
-      'https://app-server-o38y.onrender.com/profile/all'
-    );
-    return response.data.data; // массив пользователей
+    const response = await api.get('/profile/all');
+    return response.data.data;
   } catch (error) {
     console.error(error);
     throw error;

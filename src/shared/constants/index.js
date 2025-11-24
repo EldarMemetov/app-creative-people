@@ -26,6 +26,8 @@ export const NAMESPACES = [
   'errorGlobal',
   'footer',
   'privacyPolicy',
+  'register',
+  'buttonLogout',
 ];
 
 export const FLIPPED_TIME_MS = 15000;

@@ -37,6 +37,7 @@ const links = [
   { href: '/offers', key: 'offers' },
   { href: '/blog', key: 'blog' },
   { href: '/community', key: 'community' },
+  { href: '/profile', key: 'profile' },
 ];
 
 export default function NavMenu({

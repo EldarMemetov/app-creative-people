@@ -1,0 +1,27 @@
+{
+  "register": "Registrieren",
+  "name": "Name",
+  "surname": "Nachname",
+  "country": "Land",
+  "city": "Stadt",
+  "email": "E-Mail",
+  "password": "Passwort",
+  "role": "Rolle",
+  "roles": {
+    "model": "Model",
+    "photographer": "Fotograf",
+    "videographer": "Videograf",
+    "designer": "Designer",
+    "producer": "Produzent",
+    "director": "Regisseur",
+    "editor": "Editor",
+    "retoucher": "Retuscheur",
+    "business": "Geschäft",
+    "host": "Moderator",
+    "dj": "DJ",
+    "fashionOwner": "Modebrand-Besitzer",
+    "stylist": "Stylist",
+    "lighting": "Lichttechniker",
+    "soundEngineer": "Tontechniker"
+  }
+}
