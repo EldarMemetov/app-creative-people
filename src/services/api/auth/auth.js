@@ -1,7 +1,6 @@
 import { api } from '../lib/api.js';
 import { handleError } from '@/utils/errorHandler';
 
-// ⭐ Регистрация
 export const registerUser = async (data) => {
   try {
     const res = await api.post('/auth/register', data);
