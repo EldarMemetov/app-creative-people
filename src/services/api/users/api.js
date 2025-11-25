@@ -5,7 +5,7 @@ import { handleError } from '@/utils/errorHandler';
 
 export const getAllUsers = async () => {
   try {
-    const response = await api.get('/profile/all');
+    const response = await api.get('/people/all');
     return response.data.data;
   } catch (error) {
     console.error(error);
@@ -16,14 +16,13 @@ export const getAllUsers = async () => {
 // Получить одного пользователя по id
 export const getUserById = async (id) => {
   try {
-    const { data } = await api.get(`/profile/${id}`);
+    const { data } = await api.get(`/people/${id}`);
     return data.data;
   } catch (error) {
     throw handleError(error);
   }
 };
 
-// Получить свой профиль
 export const getMyProfile = async () => {
   try {
     const { data } = await api.get('/profile');

@@ -3,10 +3,9 @@ import { useAuth } from '../../store/useAuth.js';
 
 export const api = axios.create({
   baseURL: process.env.NEXT_PUBLIC_API_URL,
-  withCredentials: true, // важно, чтобы шли cookie с refreshToken
+  withCredentials: true,
 });
 
-// добавляем accessToken к каждому запросу
 api.interceptors.request.use((config) => {
   const token = useAuth.getState().accessToken;
   if (token) {
