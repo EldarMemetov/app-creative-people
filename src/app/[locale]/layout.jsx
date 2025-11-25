@@ -7,7 +7,6 @@ import { NAMESPACES } from '@/shared/constants';
 import i18nConfig from '../../../i18nConfig';
 import { dir } from 'i18next';
 import SvgSpriteLoader from '@/shared/constants/SvgSpriteLoader/SvgSpriteLoader';
-import CookieNotice from '@/modules/CookieNotice/CookieNotice';
 import { Manrope, Inter } from 'next/font/google';
 import clsx from 'clsx';
 
@@ -28,19 +27,16 @@ const inter = Inter({
 });
 const metadataDict = {
   ua: {
-    title: 'QVRIX — Веб-розробка та Відео-продукція',
-    description:
-      'Команда Qvrix — ваш партнер у розвитку бізнесу. Ми створюємо сучасні сайти, унікальний дизайн і професійні відео - для розвитку вашого бізнесу.',
+    title: 'Тітле ',
+    description: 'Опис',
   },
   en: {
-    title: 'QVRIX — Web Development & Video Production',
-    description:
-      'Qvrix is your partner in business growth. We create modern websites, unique design, and professional videos to grow your business.',
+    title: 'Тітле',
+    description: 'Опис',
   },
   de: {
-    title: 'QVRIX — Webentwicklung & Videoproduktion',
-    description:
-      'Qvrix ist Ihr Partner für Unternehmenswachstum. Wir erstellen moderne Websites, einzigartiges Design und professionelle Videos.',
+    title: 'Тітле',
+    description: 'Опис',
   },
 };
 
@@ -99,7 +95,6 @@ export default async function Layout({ children, params }) {
 
             <main>{children}</main>
             <Footer />
-            <CookieNotice />
           </ErrorBoundaryWithTranslation>
         </TranslationsProvider>
       </body>
