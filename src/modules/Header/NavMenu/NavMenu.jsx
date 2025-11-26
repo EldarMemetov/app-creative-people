@@ -8,7 +8,7 @@ import clsx from 'clsx';
 import styles from './NavMenu.module.scss';
 import { useAuth } from '../../../services/store/useAuth';
 import Icon from '@/shared/Icon/Icon';
-import ScrollButton from '@/shared/ScrollButton/ScrollButton';
+import ButtonLoginRegister from '../ButtonLoginRegister/ButtonLoginRegister';
 
 function useIsMobile(breakpoint = 1154) {
   const [isMobile, setIsMobile] = useState(false);
@@ -43,6 +43,7 @@ export default function NavMenu({
   isMobileMenuOpen = false,
   onCloseMenu = () => {},
   onToggleMenu = () => {},
+  closeMenu,
 }) {
   const { t, i18n } = useTranslation('header');
   const [locale, setLocale] = useState(i18n.language);
@@ -116,7 +117,8 @@ export default function NavMenu({
               </button>
               <div className={styles.mobileContact}>
                 <h3 className={styles.titleMobile}>{t('faq')}</h3>
-                <ScrollButton onClick={onCloseMenu}>{t('auth')}</ScrollButton>
+
+                <ButtonLoginRegister onCloseMenu={closeMenu} />
               </div>
             </div>
           )}

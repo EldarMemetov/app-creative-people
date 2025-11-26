@@ -3,14 +3,7 @@ import { clsx } from 'clsx';
 import { LINKDATA } from '@/shared/constants';
 import s from './LinkButton.module.scss';
 
-const LinkButton = ({
-  path,
-  linkText,
-  children,
-  type,
-  className,
-  ...props
-}) => {
+const LinkButton = ({ path, linkText, children, type, className, onClick }) => {
   let linkStyle = '';
   let icon = null;
 
@@ -38,7 +31,7 @@ const LinkButton = ({
     <Link
       href={path}
       className={clsx(s.defaultLink, linkStyle, className)}
-      {...props}
+      onClick={onClick}
     >
       {icon && <span className={s.iconWrapper}>{icon}</span>}
       {children || linkText}

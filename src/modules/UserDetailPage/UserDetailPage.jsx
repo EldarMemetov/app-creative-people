@@ -6,9 +6,11 @@ import { getUserById } from '@/services/api/users/api';
 import Loader from '@/shared/Loader/Loader';
 import { ImageWithFallback } from '@/shared/ImageWithFallback/ImageWithFallback';
 import Container from '@/shared/container/Container';
+import { useTranslation } from 'react-i18next';
 
 export default function UserDetailPage() {
   const { id } = useParams();
+  const { t } = useTranslation(['register']);
 
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -44,39 +46,86 @@ export default function UserDetailPage() {
   return (
     <Container>
       <section>
-        <div style={{ padding: '20px' }}>
-          <h1>Профіль користувача</h1>
+        <h1>Профіль користувача</h1>
+        <div>
+          <div style={{ flexShrink: 0 }}>
+            <ImageWithFallback
+              src={getSafePhoto(user.photo)}
+              alt={`${user.name} ${user.surname}`}
+              width={80}
+              height={80}
+            />
+          </div>
 
-          <div style={{ display: 'flex', gap: '15px', flexWrap: 'wrap' }}>
-            <div style={{ flexShrink: 0 }}>
-              <ImageWithFallback
-                src={getSafePhoto(user.photo)}
-                alt={`${user.name} ${user.surname}`}
-                width={80}
-                height={80}
-              />
-            </div>
+          <div>
+            <p>
+              <strong>Ім’я:</strong> {user.name}
+            </p>
+            <p>
+              <strong>Прізвище:</strong> {user.surname}
+            </p>
+            <p>
+              <strong>Місто:</strong> {user.city}
+            </p>
+            <p>
+              <strong>Країна:</strong> {user.country}
+            </p>
+            <p>
+              <strong>Email:</strong> {user.email}
+            </p>
+            <p>
+              <strong>Роль:</strong> {t(`roles.${user.role}`)}
+            </p>
+            <p>
+              <strong>Рівень доступу:</strong> {user.accessRole}
+            </p>
+            <p>
+              <strong>Рейтинг:</strong> {user.rating}
+            </p>
+            <p>
+              <strong>Досвід:</strong> {user.experience || 'не вказано'}
+            </p>
+            <p>
+              <strong>Напрямки:</strong>{' '}
+              {user.directions?.length
+                ? user.directions.join(', ')
+                : 'не вказано'}
+            </p>
+            <p>
+              <strong>Онлайн статус:</strong>{' '}
+              {user.onlineStatus ? 'Онлайн' : 'Офлайн'}
+            </p>
+            <p>
+              <strong>Про себе:</strong> {user.aboutMe || 'не вказано'}
+            </p>
+            <p>
+              <strong>Заблокований:</strong> {user.isBlocked ? 'Так' : 'Ні'}
+            </p>
+            <p>
+              <strong>Потребує перевірки:</strong>{' '}
+              {user.needsReview ? 'Так' : 'Ні'}
+            </p>
 
-            <div>
-              <p>
-                <strong>Ім’я:</strong> {user.name}
-              </p>
-              <p>
-                <strong>Прізвище:</strong> {user.surname}
-              </p>
-              <p>
-                <strong>Місто:</strong> {user.city}
-              </p>
-              <p>
-                <strong>Країна:</strong> {user.country}
-              </p>
-              <p>
-                <strong>Email:</strong> {user.email}
-              </p>
-              <p>
-                <strong>Роль:</strong> {user.role}
-              </p>
-            </div>
+            {user.portfolio?.length > 0 && (
+              <div>
+                <strong>Портфоліо:</strong>
+                <ul>
+                  {user.portfolio.map((item, index) => (
+                    <li key={index}>
+                      <p>Тип: {item.type === 'photo' ? 'Фото' : 'Відео'}</p>
+                      <p>Опис: {item.description || 'немає опису'}</p>
+                      <a
+                        href={item.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        Переглянути
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
           </div>
         </div>
       </section>

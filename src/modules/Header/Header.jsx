@@ -7,7 +7,7 @@ import LanguageSwitcher from '@/shared/components/LanguageSwitcher/LanguageSwitc
 import Icon from '@/shared/Icon/Icon';
 import Logo from '@/shared/Logo/Logo';
 import NavMenu from './NavMenu/NavMenu';
-import ScrollButton from '@/shared/ScrollButton/ScrollButton';
+import ButtonLoginRegister from './ButtonLoginRegister/ButtonLoginRegister';
 
 function Header() {
   const { t, i18n } = useTranslation('header');
@@ -63,10 +63,8 @@ function Header() {
 
       <div className={styles.containerButtonTrans}>
         <LanguageSwitcher />
-        <div className={styles.buttonContact}>
-          <ScrollButton>{t('auth')}</ScrollButton>
-        </div>
 
+        <ButtonLoginRegister />
         <button
           type="button"
           onClick={toggleMenu}
