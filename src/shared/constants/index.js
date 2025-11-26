@@ -28,6 +28,7 @@ export const NAMESPACES = [
   'privacyPolicy',
   'register',
   'buttonLogout',
+  'login',
 ];
 
 export const FLIPPED_TIME_MS = 15000;

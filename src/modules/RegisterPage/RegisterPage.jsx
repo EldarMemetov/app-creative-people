@@ -5,34 +5,40 @@ import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 import { registerUser } from '../../services/api/auth/auth';
 import { useRouter } from 'next/navigation';
-import { useState } from 'react';
 import { useAuth } from '../../services/store/useAuth.js';
 import Container from '@/shared/container/Container';
 import { useTranslation } from 'react-i18next';
 import roles from '@/utils/roles.js';
-
-const RegisterSchema = Yup.object().shape({
-  name: Yup.string().min(2).max(50).required('Required'),
-  surname: Yup.string().min(2).max(50).required('Required'),
-  country: Yup.string().required('Required'),
-  city: Yup.string().required('Required'),
-  email: Yup.string().email('Invalid email').required('Required'),
-  password: Yup.string().min(6).max(128).required('Required'),
-  role: Yup.string().required('Select a role'),
-});
+import { toast } from 'react-hot-toast';
 
 export default function RegisterPage() {
   const router = useRouter();
   const auth = useAuth();
-  const [serverError, setServerError] = useState('');
   const { t } = useTranslation(['register']);
+
+  const RegisterSchema = Yup.object().shape({
+    name: Yup.string()
+      .min(2, t('name_min', { min: 2 }))
+      .max(50, t('name_max', { max: 50 }))
+      .required(t('required_field')),
+    surname: Yup.string()
+      .min(2, t('surname_min', { min: 2 }))
+      .max(50, t('surname_max', { max: 50 }))
+      .required(t('required_field')),
+    country: Yup.string().required(t('required_field')),
+    city: Yup.string().required(t('required_field')),
+    email: Yup.string().email(t('invalid_email')).required(t('required_field')),
+    password: Yup.string()
+      .min(6, t('password_min'))
+      .max(128, t('password_max'))
+      .required(t('required_field')),
+    role: Yup.string().required(t('required_field')),
+  });
 
   return (
     <Container>
       <div className={s.section}>
         <h1>{t('register')}</h1>
-
-        {serverError && <p style={{ color: 'red' }}>{serverError}</p>}
 
         <Formik
           initialValues={{
@@ -46,15 +52,21 @@ export default function RegisterPage() {
           }}
           validationSchema={RegisterSchema}
           onSubmit={async (values, actions) => {
-            setServerError('');
+            actions.setSubmitting(true);
             try {
               await registerUser(values);
               await auth.login(values.email, values.password);
+              toast.success(t('register_success'));
               router.push('/profile');
             } catch (err) {
-              setServerError(err.message || 'Registration failed');
+              if (err.status === 409) {
+                actions.setFieldError('email', t('email_already_exist'));
+              } else {
+                toast.error(err.message || t('register_failed'));
+              }
+            } finally {
+              actions.setSubmitting(false);
             }
-            actions.setSubmitting(false);
           }}
         >
           {({ isSubmitting, values, setFieldValue }) => (
@@ -76,7 +88,7 @@ export default function RegisterPage() {
               />
 
               <label>{t('country')}</label>
-              <Field name="country" placeholder="Enter your country" />
+              <Field name="country" placeholder={t('country_placeholder')} />
               <ErrorMessage
                 name="country"
                 component="p"
@@ -84,7 +96,7 @@ export default function RegisterPage() {
               />
 
               <label>{t('city')}</label>
-              <Field name="city" placeholder="Enter your city" />
+              <Field name="city" placeholder={t('city_placeholder')} />
               <ErrorMessage
                 name="city"
                 component="p"
@@ -112,7 +124,6 @@ export default function RegisterPage() {
               />
 
               <label>{t('role')}</label>
-
               <div className={s.roleGrid}>
                 {roles.map((role) => (
                   <div
@@ -126,7 +137,6 @@ export default function RegisterPage() {
                   </div>
                 ))}
               </div>
-
               <ErrorMessage
                 name="role"
                 component="p"
@@ -134,7 +144,7 @@ export default function RegisterPage() {
               />
 
               <button type="submit" disabled={isSubmitting}>
-                {isSubmitting ? 'Loading...' : 'Register'}
+                {isSubmitting ? t('loading') : t('submit')}
               </button>
             </Form>
           )}

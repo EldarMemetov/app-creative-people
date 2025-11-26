@@ -1,7 +1,7 @@
 {
   "register": "Register",
-  "name": "Name",
-  "surname": "Surname",
+  "name": "First Name",
+  "surname": "Last Name",
   "country": "Country",
   "city": "City",
   "email": "Email",
@@ -19,9 +19,22 @@
     "business": "Business",
     "host": "Host",
     "dj": "DJ",
-    "fashionOwner": "Fashion Brand Owner",
+    "fashionOwner": "Brand Owner",
     "stylist": "Stylist",
     "lighting": "Lighting Technician",
     "soundEngineer": "Sound Engineer"
-  }
+  },
+  "register_success": "Registration successful!",
+  "register_failed": "Registration failed",
+  "required_field": "Required field",
+  "invalid_email": "Invalid email",
+  "password_min": "Password must be at least 6 characters",
+  "password_max": "Password cannot exceed 128 characters",
+  "submit": "Register",
+  "loading": "Loading...",
+  "email_already_exist": "Email is already in use",
+  "name_min": "Name must be at least 2 characters",
+  "name_max": "Name cannot exceed 50 characters",
+  "surname_min": "Surname must be at least 2 characters",
+  "surname_max": "Surname cannot exceed 50 characters"
 }

@@ -64,9 +64,7 @@ function Header() {
       <div className={styles.containerButtonTrans}>
         <LanguageSwitcher />
         <div className={styles.buttonContact}>
-          <ScrollButton targetId="feedback-form" variant="variant1">
-            {t('auth')}
-          </ScrollButton>
+          <ScrollButton>{t('auth')}</ScrollButton>
         </div>
 
         <button

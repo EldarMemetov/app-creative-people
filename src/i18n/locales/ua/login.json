@@ -1,0 +1,12 @@
+{
+  "login": "Логін",
+  "email": "Електронна пошта",
+  "password": "Пароль",
+  "login_success": "Вхід успішний!",
+  "login_failed": "Невірний email або пароль",
+  "required_field": "Обов'язкове поле",
+  "invalid_email": "Невірний email",
+  "password_min": "Пароль має бути не менше 6 символів",
+  "submit": "Увійти",
+  "loading": "Завантаження..."
+}

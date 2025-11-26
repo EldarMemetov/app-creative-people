@@ -19,6 +19,11 @@ api.interceptors.response.use(
   async (error) => {
     const originalRequest = error.config;
 
+    const skipUrls = ['/auth/login', '/auth/register', '/auth/refresh'];
+    if (skipUrls.includes(originalRequest.url)) {
+      return Promise.reject(error);
+    }
+
     if (error.response?.status === 401 && !originalRequest._retry) {
       originalRequest._retry = true;
 
@@ -27,6 +32,11 @@ api.interceptors.response.use(
       if (newToken) {
         originalRequest.headers.Authorization = `Bearer ${newToken}`;
         return api(originalRequest);
+      } else {
+        useAuth.getState().stopRefresh();
+        useAuth
+          .getState()
+          .set({ accessToken: null, user: null, isAuthChecked: true });
       }
     }
 

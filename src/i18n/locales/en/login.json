@@ -1,0 +1,12 @@
+{
+  "login": "Login",
+  "email": "Email",
+  "password": "Password",
+  "login_success": "Login successful!",
+  "login_failed": "Invalid email or password",
+  "required_field": "Required field",
+  "invalid_email": "Invalid email",
+  "password_min": "Password must be at least 6 characters",
+  "submit": "Login",
+  "loading": "Loading..."
+}

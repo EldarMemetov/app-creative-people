@@ -24,7 +24,6 @@ export const refreshAccessToken = async () => {
     const res = await api.post('/auth/refresh', {}, { withCredentials: true });
     return res.data?.data?.accessToken || null;
   } catch (err) {
-    console.error('Refresh token failed:', err.response?.data || err.message);
     return null;
   }
 };

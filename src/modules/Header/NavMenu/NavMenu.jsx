@@ -116,13 +116,7 @@ export default function NavMenu({
               </button>
               <div className={styles.mobileContact}>
                 <h3 className={styles.titleMobile}>{t('faq')}</h3>
-                <ScrollButton
-                  onClick={onCloseMenu}
-                  targetId="feedback-form"
-                  variant="variant4"
-                >
-                  {t('auth')}
-                </ScrollButton>
+                <ScrollButton onClick={onCloseMenu}>{t('auth')}</ScrollButton>
               </div>
             </div>
           )}

@@ -9,7 +9,7 @@ import { dir } from 'i18next';
 import SvgSpriteLoader from '@/shared/constants/SvgSpriteLoader/SvgSpriteLoader';
 import { Manrope, Inter } from 'next/font/google';
 import clsx from 'clsx';
-
+import { Toaster } from 'react-hot-toast';
 import Footer from '@/modules/Footer/Footer';
 
 const manrope = Manrope({
@@ -97,6 +97,7 @@ export default async function Layout({ children, params }) {
             <Footer />
           </ErrorBoundaryWithTranslation>
         </TranslationsProvider>
+        <Toaster position="top-right" reverseOrder={false} />
       </body>
     </html>
   );

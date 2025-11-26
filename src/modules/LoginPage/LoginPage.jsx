@@ -4,45 +4,52 @@ import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 import { useAuth } from '../../services/store/useAuth.js';
 import { useRouter } from 'next/navigation';
-import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import toast from 'react-hot-toast';
 import Container from '@/shared/container/Container';
-
-const LoginSchema = Yup.object().shape({
-  email: Yup.string().email('Invalid email').required('Required'),
-  password: Yup.string().required('Required'),
-});
 
 export default function LoginPage() {
   const auth = useAuth();
   const router = useRouter();
-  const [serverError, setServerError] = useState('');
+  const { t } = useTranslation(['login']);
+
+  const LoginSchema = Yup.object().shape({
+    email: Yup.string().email(t('invalid_email')).required(t('required_field')),
+    password: Yup.string()
+      .min(6, t('password_min'))
+      .required(t('required_field')),
+  });
 
   return (
     <Container>
       <div className={s.section}>
-        <h1>Login</h1>
-
-        {serverError && <p style={{ color: 'red' }}>{serverError}</p>}
+        <h1>{t('login')}</h1>
 
         <Formik
           initialValues={{ email: '', password: '' }}
           validationSchema={LoginSchema}
           onSubmit={async (values, actions) => {
-            setServerError('');
+            actions.setSubmitting(true);
 
             try {
               await auth.login(values.email, values.password);
+              toast.success(t('login_success'));
               router.push('/profile');
             } catch (err) {
-              setServerError(err.message);
+              if (err.status === 401) {
+                actions.setFieldError('email', t('login_failed'));
+                actions.setFieldError('password', t('login_failed'));
+              } else {
+                toast.error(err.message || t('login_failed'));
+              }
+            } finally {
+              actions.setSubmitting(false);
             }
-
-            actions.setSubmitting(false);
           }}
         >
           {({ isSubmitting }) => (
             <Form>
-              <label>Email</label>
+              <label>{t('email')}</label>
               <Field name="email" type="email" autoComplete="email" />
               <ErrorMessage
                 name="email"
@@ -50,7 +57,7 @@ export default function LoginPage() {
                 style={{ color: 'red' }}
               />
 
-              <label>Password</label>
+              <label>{t('password')}</label>
               <Field
                 name="password"
                 type="password"
@@ -63,7 +70,7 @@ export default function LoginPage() {
               />
 
               <button type="submit" disabled={isSubmitting}>
-                {isSubmitting ? 'Loading...' : 'Login'}
+                {isSubmitting ? t('loading') : t('submit')}
               </button>
             </Form>
           )}

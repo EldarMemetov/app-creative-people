@@ -1,0 +1,12 @@
+{
+  "login": "Anmeldung",
+  "email": "E-Mail",
+  "password": "Passwort",
+  "login_success": "Anmeldung erfolgreich!",
+  "login_failed": "Ungültige E-Mail oder Passwort",
+  "required_field": "Pflichtfeld",
+  "invalid_email": "Ungültige E-Mail",
+  "password_min": "Passwort muss mindestens 6 Zeichen lang sein",
+  "submit": "Anmelden",
+  "loading": "Lädt..."
+}
