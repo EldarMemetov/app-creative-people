@@ -7,7 +7,6 @@ import { useRouter } from 'next/navigation';
 import { useAuth } from '../../services/store/useAuth.js';
 import Container from '@/shared/container/Container';
 import { useTranslation } from 'react-i18next';
-import roles from '@/utils/roles.js';
 import { toast } from 'react-hot-toast';
 import FormInput from '@/shared/FormInput/FormInput';
 import { RegisterSchema } from '@/shared/FormSchema/RegisterSchema/RegisterSchema';
