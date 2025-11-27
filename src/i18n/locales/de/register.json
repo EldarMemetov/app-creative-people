@@ -1,5 +1,5 @@
 {
-  "register": "Registrierung",
+  "register": "Registrieren",
   "name": "Vorname",
   "surname": "Nachname",
   "country": "Land",
@@ -8,7 +8,7 @@
   "password": "Passwort",
   "role": "Rolle",
   "roles": {
-    "model": "Model",
+    "model": "Modell",
     "photographer": "Fotograf",
     "videographer": "Videograf",
     "designer": "Designer",
@@ -16,7 +16,7 @@
     "director": "Regisseur",
     "editor": "Editor",
     "retoucher": "Retuscheur",
-    "business": "Business",
+    "business": "Unternehmen",
     "host": "Moderator",
     "dj": "DJ",
     "fashionOwner": "Markeninhaber",
@@ -28,13 +28,15 @@
   "register_failed": "Registrierung fehlgeschlagen",
   "required_field": "Pflichtfeld",
   "invalid_email": "Ungültige E-Mail",
-  "password_min": "Passwort muss mindestens 6 Zeichen lang sein",
+  "password_min": "Passwort muss mindestens 6 Zeichen haben",
   "password_max": "Passwort darf nicht länger als 128 Zeichen sein",
   "submit": "Registrieren",
-  "loading": "Lädt...",
-  "email_already_exist": "E-Mail wird bereits verwendet",
-  "name_min": "Der Name muss mindestens 2 Zeichen enthalten",
-  "name_max": "Der Name darf nicht länger als 50 Zeichen sein",
-  "surname_min": "Der Nachname muss mindestens 2 Zeichen enthalten",
-  "surname_max": "Der Nachname darf nicht länger als 50 Zeichen sein"
+  "loading": "Wird geladen...",
+  "email_already_exist": "E-Mail existiert bereits",
+  "name_min": "Vorname muss mindestens 2 Zeichen haben",
+  "name_max": "Vorname darf nicht länger als 50 Zeichen sein",
+  "surname_min": "Nachname muss mindestens 2 Zeichen haben",
+  "surname_max": "Nachname darf nicht länger als 50 Zeichen sein",
+  "country_placeholder": "Geben Sie Ihr Land ein",
+  "city_placeholder": "Geben Sie Ihre Stadt ein"
 }

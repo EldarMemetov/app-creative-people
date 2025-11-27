@@ -32,9 +32,11 @@
   "password_max": "Password cannot exceed 128 characters",
   "submit": "Register",
   "loading": "Loading...",
-  "email_already_exist": "Email is already in use",
-  "name_min": "Name must be at least 2 characters",
-  "name_max": "Name cannot exceed 50 characters",
-  "surname_min": "Surname must be at least 2 characters",
-  "surname_max": "Surname cannot exceed 50 characters"
+  "email_already_exist": "Email already exists",
+  "name_min": "First name must be at least 2 characters",
+  "name_max": "First name cannot exceed 50 characters",
+  "surname_min": "Last name must be at least 2 characters",
+  "surname_max": "Last name cannot exceed 50 characters",
+  "country_placeholder": "Enter your country",
+  "city_placeholder": "Enter your city"
 }

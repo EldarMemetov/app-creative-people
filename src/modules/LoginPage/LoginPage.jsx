@@ -1,25 +1,18 @@
 'use client';
 import s from './LoginPage.module.scss';
-import { Formik, Form, Field, ErrorMessage } from 'formik';
-import * as Yup from 'yup';
+import { Formik, Form } from 'formik';
+import { LoginSchema } from '@/shared/FormSchema/LoginSchema/LoginSchema';
 import { useAuth } from '../../services/store/useAuth.js';
 import { useRouter } from 'next/navigation';
 import { useTranslation } from 'react-i18next';
 import toast from 'react-hot-toast';
 import Container from '@/shared/container/Container';
-
+import FormInput from '@/shared/FormInput/FormInput';
 export default function LoginPage() {
   const auth = useAuth();
   const router = useRouter();
   const { t } = useTranslation(['login']);
-
-  const LoginSchema = Yup.object().shape({
-    email: Yup.string().email(t('invalid_email')).required(t('required_field')),
-    password: Yup.string()
-      .min(6, t('password_min'))
-      .required(t('required_field')),
-  });
-
+  const GetLoginSchema = LoginSchema(t);
   return (
     <Container>
       <div className={s.section}>
@@ -27,7 +20,7 @@ export default function LoginPage() {
 
         <Formik
           initialValues={{ email: '', password: '' }}
-          validationSchema={LoginSchema}
+          validationSchema={GetLoginSchema}
           onSubmit={async (values, actions) => {
             actions.setSubmitting(true);
 
@@ -49,24 +42,12 @@ export default function LoginPage() {
         >
           {({ isSubmitting }) => (
             <Form>
-              <label>{t('email')}</label>
-              <Field name="email" type="email" autoComplete="email" />
-              <ErrorMessage
-                name="email"
-                component="p"
-                style={{ color: 'red' }}
-              />
+              <FormInput label={t('email')} name="email" type="email" />
 
-              <label>{t('password')}</label>
-              <Field
+              <FormInput
+                label={t('password')}
                 name="password"
                 type="password"
-                autoComplete="current-password"
-              />
-              <ErrorMessage
-                name="password"
-                component="p"
-                style={{ color: 'red' }}
               />
 
               <button type="submit" disabled={isSubmitting}>
