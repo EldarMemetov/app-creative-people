@@ -39,11 +39,10 @@ const links = [
 ];
 
 export default function NavMenu({
-  variant = 'header',
-  isMobileMenuOpen = false,
+  variant,
+  isMobileMenuOpen,
   onCloseMenu = () => {},
-  onToggleMenu = () => {},
-  closeMenu,
+  onToggleMenu,
 }) {
   const { t, i18n } = useTranslation('header');
   const [locale, setLocale] = useState(i18n.language);
@@ -118,7 +117,7 @@ export default function NavMenu({
               <div className={styles.mobileContact}>
                 <h3 className={styles.titleMobile}>{t('faq')}</h3>
 
-                <ButtonLoginRegister onCloseMenu={closeMenu} />
+                <ButtonLoginRegister onCloseMenu={onCloseMenu} />
               </div>
             </div>
           )}

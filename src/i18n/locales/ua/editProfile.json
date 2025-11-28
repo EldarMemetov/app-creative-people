@@ -1,0 +1,40 @@
+{
+  "edit_profile": "Редагувати профіль",
+  "required": "Обов'язкове поле",
+
+  "name": "Ім'я",
+  "name_placeholder": "Введіть ім'я",
+
+  "surname": "Прізвище",
+  "surname_placeholder": "Введіть прізвище",
+
+  "country": "Країна",
+  "country_placeholder": "Введіть країну",
+
+  "city": "Місто",
+  "city_placeholder": "Введіть місто",
+
+  "about": "Про мене",
+  "about_placeholder": "Розкажіть про себе",
+
+  "experience": "Досвід",
+  "experience_placeholder": "Опишіть ваш досвід",
+
+  "save": "Зберегти",
+  "saving": "Збереження...",
+  "saved": "Збережено",
+
+  "load_error": "Не вдалося завантажити дані",
+  "not_found": "Користувача не знайдено",
+
+  "photo_updated": "Фото оновлено",
+  "upload_error": "Помилка завантаження фото",
+  "photo_deleted": "Фото видалено",
+  "delete_error": "Помилка видалення фото",
+  "remove_photo": "Видалити фото",
+
+  "invalid_file": "Неприпустимий формат файлу",
+  "deleting": "Видалення...",
+  "no_changes": "Немає змін для збереження",
+  "back_to_profile": "Назад до профілю"
+}

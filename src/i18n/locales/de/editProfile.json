@@ -1,0 +1,40 @@
+{
+  "edit_profile": "Profil bearbeiten",
+  "required": "Dieses Feld ist erforderlich",
+
+  "name": "Name",
+  "name_placeholder": "Geben Sie Ihren Namen ein",
+
+  "surname": "Nachname",
+  "surname_placeholder": "Geben Sie Ihren Nachnamen ein",
+
+  "country": "Land",
+  "country_placeholder": "Geben Sie Ihr Land ein",
+
+  "city": "Stadt",
+  "city_placeholder": "Geben Sie Ihre Stadt ein",
+
+  "about": "Über mich",
+  "about_placeholder": "Erzählen Sie etwas über sich",
+
+  "experience": "Erfahrung",
+  "experience_placeholder": "Beschreiben Sie Ihre Erfahrung",
+
+  "save": "Speichern",
+  "saving": "Speichern...",
+  "saved": "Gespeichert",
+
+  "load_error": "Daten konnten nicht geladen werden",
+  "not_found": "Benutzer nicht gefunden",
+
+  "photo_updated": "Foto aktualisiert",
+  "upload_error": "Fehler beim Hochladen des Fotos",
+  "photo_deleted": "Foto gelöscht",
+  "delete_error": "Fehler beim Löschen",
+  "remove_photo": "Foto entfernen",
+
+  "invalid_file": "Ungültiges Dateiformat",
+  "deleting": "Löschen...",
+  "no_changes": "Keine Änderungen zum Speichern",
+  "back_to_profile": "Zurück zum Profil"
+}

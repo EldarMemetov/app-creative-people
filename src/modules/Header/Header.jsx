@@ -63,8 +63,10 @@ function Header() {
 
       <div className={styles.containerButtonTrans}>
         <LanguageSwitcher />
+        <div className={styles.desktopOnly}>
+          <ButtonLoginRegister />
+        </div>
 
-        <ButtonLoginRegister />
         <button
           type="button"
           onClick={toggleMenu}

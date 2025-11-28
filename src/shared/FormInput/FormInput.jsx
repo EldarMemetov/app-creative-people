@@ -3,7 +3,13 @@
 import { Field, ErrorMessage } from 'formik';
 import styles from './FormInput.module.scss';
 
-export default function FormInput({ label, name, type = 'text', placeholder }) {
+export default function FormInput({
+  label,
+  name,
+  type = 'text',
+  placeholder,
+  as,
+}) {
   return (
     <div className={styles.inputWrap}>
       {label && (
@@ -15,9 +21,9 @@ export default function FormInput({ label, name, type = 'text', placeholder }) {
       <Field
         id={name}
         name={name}
-        type={type}
         placeholder={placeholder}
-        className={styles.input}
+        as={as}
+        className={as === 'textarea' ? styles.textarea : styles.input}
       />
 
       <ErrorMessage name={name} component="p" className={styles.error} />

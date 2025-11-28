@@ -24,6 +24,16 @@
     padding: 20px 108px;
   }
 }
+
+.desktopOnly {
+  display: block;
+}
+
+@media (max-width: 1152px) {
+  .desktopOnly {
+    display: none;
+  }
+}
 .overlay {
   position: fixed;
   top: 80px;

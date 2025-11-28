@@ -17,6 +17,8 @@ export const useAuth = create(
       isAuthChecked: false,
       refreshTimeout: null,
 
+      setUser: (user) => set({ user }),
+
       login: async (email, password) => {
         set({ loading: true });
         try {

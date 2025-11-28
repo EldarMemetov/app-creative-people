@@ -5,6 +5,8 @@ import { useTranslation } from 'react-i18next';
 import { useAuthGuard } from '@/hooks/useAuthGuard';
 
 import Loader from '@/shared/Loader/Loader';
+import LinkButton from '@/shared/components/LinkButton/LinkButton';
+import { LINKDATA } from '@/shared/constants';
 
 export default function InfoDetails() {
   const { user, loading } = useAuthGuard();
@@ -98,6 +100,11 @@ export default function InfoDetails() {
           )}
         </div>
       </div>
+      <LinkButton
+        path="profile/edit"
+        type={LINKDATA.TYPE_LIGHT_BORDER}
+        linkText="Редегувати свій профіль"
+      />
     </div>
   );
 }

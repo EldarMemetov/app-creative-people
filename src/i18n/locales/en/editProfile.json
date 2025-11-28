@@ -1,0 +1,40 @@
+{
+  "edit_profile": "Edit Profile",
+  "required": "This field is required",
+
+  "name": "Name",
+  "name_placeholder": "Enter your name",
+
+  "surname": "Surname",
+  "surname_placeholder": "Enter your surname",
+
+  "country": "Country",
+  "country_placeholder": "Enter your country",
+
+  "city": "City",
+  "city_placeholder": "Enter your city",
+
+  "about": "About me",
+  "about_placeholder": "Tell us about yourself",
+
+  "experience": "Experience",
+  "experience_placeholder": "Describe your experience",
+
+  "save": "Save",
+  "saving": "Saving...",
+  "saved": "Saved",
+
+  "load_error": "Failed to load data",
+  "not_found": "User not found",
+
+  "photo_updated": "Photo updated",
+  "upload_error": "Photo upload failed",
+  "photo_deleted": "Photo deleted",
+  "delete_error": "Delete error",
+  "remove_photo": "Remove photo",
+
+  "invalid_file": "Invalid file format",
+  "deleting": "Deleting...",
+  "no_changes": "No changes to save",
+  "back_to_profile": "Back to Profile"
+}
