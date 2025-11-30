@@ -16,6 +16,7 @@ export const useAuth = create(
       loading: false,
       isAuthChecked: false,
       refreshTimeout: null,
+      refreshingPromise: null,
 
       setUser: (user) => set({ user }),
 
@@ -50,17 +51,24 @@ export const useAuth = create(
 
       refresh: async () => {
         try {
-          const token = await refreshAccessToken();
+          let token = await refreshAccessToken();
+
+          if (!token) {
+            console.warn('Refresh failed, retrying in 3s...');
+            await new Promise((res) => setTimeout(res, 3000));
+            token = await refreshAccessToken();
+          }
+
           if (token) {
             set({ accessToken: token });
             api.defaults.headers.Authorization = `Bearer ${token}`;
             await get().fetchUser();
             get().scheduleRefresh();
             return token;
-          } else {
-            set({ accessToken: null, user: null, isAuthChecked: true });
-            return null;
           }
+
+          set({ accessToken: null, user: null, isAuthChecked: true });
+          return null;
         } catch (err) {
           set({ accessToken: null, user: null, isAuthChecked: true });
           return null;
@@ -75,6 +83,7 @@ export const useAuth = create(
           acc[k] = decodeURIComponent(v);
           return acc;
         }, {});
+
         const refreshTokenExpiry = cookies.refreshTokenValidUntil
           ? new Date(cookies.refreshTokenValidUntil).getTime()
           : Date.now() + 15 * 60 * 1000;
@@ -82,9 +91,28 @@ export const useAuth = create(
         const delay = Math.max(refreshTokenExpiry - Date.now() - 60_000, 0);
 
         const timeout = setTimeout(async () => {
-          await get().refresh();
+          const token = await get().refresh();
+          if (!token) {
+            console.warn(
+              'Automatic refresh failed, user stays logged in until next request'
+            );
+            get().scheduleRefreshRetry();
+          }
         }, delay);
 
+        set({ refreshTimeout: timeout });
+      },
+
+      scheduleRefreshRetry: () => {
+        const timeout = setTimeout(async () => {
+          const token = await get().refresh();
+          if (!token) {
+            console.warn(
+              'Retry refresh failed, user still logged in temporarily'
+            );
+            get().scheduleRefreshRetry();
+          }
+        }, 30_000);
         set({ refreshTimeout: timeout });
       },
 

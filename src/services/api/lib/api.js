@@ -6,11 +6,23 @@ export const api = axios.create({
   withCredentials: true,
 });
 
-api.interceptors.request.use((config) => {
-  const token = useAuth.getState().accessToken;
-  if (token) {
-    config.headers.Authorization = `Bearer ${token}`;
+api.interceptors.request.use(async (config) => {
+  const authStore = useAuth.getState();
+
+  if (authStore.accessToken) {
+    if (authStore.refreshingPromise) {
+      await authStore.refreshingPromise;
+    }
+
+    if (authStore.shouldRefresh && authStore.shouldRefresh()) {
+      authStore.refreshingPromise = authStore.refresh();
+      await authStore.refreshingPromise;
+      authStore.refreshingPromise = null;
+    }
+
+    config.headers.Authorization = `Bearer ${authStore.accessToken}`;
   }
+
   return config;
 });
 
@@ -26,17 +38,24 @@ api.interceptors.response.use(
 
     if (error.response?.status === 401 && !originalRequest._retry) {
       originalRequest._retry = true;
+      const authStore = useAuth.getState();
 
-      const newToken = await useAuth.getState().refresh();
+      try {
+        const newToken = await authStore.refresh();
 
-      if (newToken) {
-        originalRequest.headers.Authorization = `Bearer ${newToken}`;
-        return api(originalRequest);
-      } else {
-        useAuth.getState().stopRefresh();
-        useAuth
-          .getState()
-          .set({ accessToken: null, user: null, isAuthChecked: true });
+        if (newToken) {
+          originalRequest.headers.Authorization = `Bearer ${newToken}`;
+          return api(originalRequest);
+        } else {
+          console.warn('Refresh failed, keeping user logged in temporarily');
+          return Promise.reject(error);
+        }
+      } catch (refreshError) {
+        console.warn(
+          'Refresh threw an error, keeping user logged in temporarily',
+          refreshError
+        );
+        return Promise.reject(error);
       }
     }
 
