@@ -29,6 +29,7 @@ export function useAuthGuard() {
     return () => {
       isMounted = false;
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return { user: auth.user, loading };
