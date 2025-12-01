@@ -36,3 +36,21 @@
   padding: 10px;
   resize: vertical;
 }
+.inputInner {
+  position: relative;
+}
+
+.eyeButton {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+}
+.icon {
+  stroke: #000;
+  width: 16px;
+}

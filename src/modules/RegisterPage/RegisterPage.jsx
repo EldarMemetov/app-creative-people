@@ -70,11 +70,10 @@ export default function RegisterPage() {
                 label={t('password')}
                 name="password"
                 type="password"
+                autoComplete="current-password"
               />
 
               <RoleSelector
-                label={t('role')}
-                t={t}
                 value={values.role}
                 onChange={(role) => setFieldValue('role', role)}
               />

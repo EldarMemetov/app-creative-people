@@ -4,6 +4,7 @@ import { Formik, Form } from 'formik';
 import { toast } from 'react-hot-toast';
 import FormInput from '@/shared/FormInput/FormInput';
 import { updateProfile } from '@/services/api/profileEdit/media';
+import RoleSelector from '@/modules/RegisterPage/RoleSelector/RoleSelector';
 
 export default function EditProfileForm({
   user,
@@ -19,6 +20,7 @@ export default function EditProfileForm({
     city: user.city || '',
     aboutMe: user.aboutMe || '',
     experience: user.experience || '',
+    role: user.role || 'model',
   };
 
   return (
@@ -28,9 +30,11 @@ export default function EditProfileForm({
       validationSchema={ProfileSchema}
       onSubmit={async (values, actions) => {
         actions.setSubmitting(true);
-        try {
-          await updateProfile(values);
 
+        try {
+          const { role, ...cleanValues } = values;
+
+          await updateProfile(cleanValues);
           await refreshUser();
 
           toast.success(t('saved'));
@@ -42,7 +46,7 @@ export default function EditProfileForm({
         }
       }}
     >
-      {({ isSubmitting }) => (
+      {({ isSubmitting, values, setFieldValue }) => (
         <Form className="profile-form">
           <FormInput
             label={t('name')}
@@ -64,6 +68,7 @@ export default function EditProfileForm({
             name="city"
             placeholder={t('city_placeholder')}
           />
+
           <FormInput
             label={t('about')}
             name="aboutMe"
@@ -75,6 +80,11 @@ export default function EditProfileForm({
             name="experience"
             placeholder={t('experience_placeholder')}
             as="textarea"
+          />
+
+          <RoleSelector
+            value={values.role}
+            onChange={(role) => setFieldValue('role', role)}
           />
 
           <button type="submit" disabled={isSubmitting || uploadingPhoto}>

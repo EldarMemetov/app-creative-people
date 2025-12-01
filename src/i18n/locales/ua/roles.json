@@ -1,0 +1,18 @@
+{
+  "role": "Роль",
+  "model": "Модель",
+  "photographer": "Фотограф",
+  "videographer": "Відеограф",
+  "designer": "Дизайнер",
+  "producer": "Продюсер",
+  "director": "Режисер",
+  "editor": "Редактор",
+  "retoucher": "Ретушер",
+  "business": "Бізнес",
+  "host": "Ведучий",
+  "dj": "Ді-джей",
+  "fashionOwner": "Власник бренду",
+  "stylist": "Стиліст",
+  "lighting": "Світлотехнік",
+  "soundEngineer": "Звукорежисер"
+}

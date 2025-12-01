@@ -38,6 +38,7 @@ export const NAMESPACES = [
   'login',
   'textButton',
   'editProfile',
+  'roles',
 ];
 
 export const FLIPPED_TIME_MS = 15000;

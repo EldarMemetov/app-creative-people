@@ -1,0 +1,18 @@
+{
+  "role": "Rolle",
+  "model": "Model",
+  "photographer": "Fotograf",
+  "videographer": "Videograf",
+  "designer": "Designer",
+  "producer": "Produzent",
+  "director": "Regisseur",
+  "editor": "Editor",
+  "retoucher": "Retuscheur",
+  "business": "Business",
+  "host": "Moderator",
+  "dj": "DJ",
+  "fashionOwner": "Modebrand-Inhaber",
+  "stylist": "Stylist",
+  "lighting": "Lichttechniker",
+  "soundEngineer": "Tontechniker"
+}
