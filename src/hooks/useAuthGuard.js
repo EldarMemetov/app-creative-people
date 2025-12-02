@@ -4,7 +4,7 @@ import { useRouter } from 'next/navigation';
 import { useAuth } from '@/services/store/useAuth';
 
 export function useAuthGuard() {
-  const auth = useAuth();
+  const { user, accessToken, refresh } = useAuth();
   const router = useRouter();
   const [loading, setLoading] = useState(true);
 
@@ -12,12 +12,15 @@ export function useAuthGuard() {
     let isMounted = true;
 
     async function verify() {
-      if (!auth.user) {
-        const token = await auth.refresh();
+      if (!user && accessToken) {
+        const token = await refresh();
         if (!token && isMounted) {
-          router.push('/');
+          router.replace('/');
           return;
         }
+      } else if (!user && !accessToken) {
+        router.replace('/');
+        return;
       }
 
       if (isMounted) setLoading(false);
@@ -28,7 +31,7 @@ export function useAuthGuard() {
     return () => {
       isMounted = false;
     };
-  }, [auth, router]);
+  }, [user, accessToken, refresh, router]);
 
-  return { user: auth.user, loading };
+  return { user, loading };
 }

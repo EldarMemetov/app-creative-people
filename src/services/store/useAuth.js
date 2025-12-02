@@ -151,8 +151,6 @@ import {
 } from '../api/auth/auth.js';
 import { api } from '../api/lib/api.js';
 
-const ACCESS_TOKEN_LIFETIME_MS = 15 * 60 * 1000;
-
 export const useAuth = create(
   persist(
     (set, get) => ({
@@ -160,7 +158,6 @@ export const useAuth = create(
       user: null,
       loading: false,
       isAuthChecked: false,
-      refreshTimeout: null,
       refreshingPromise: null,
 
       setUser: (user) => set({ user }),
@@ -171,7 +168,6 @@ export const useAuth = create(
           const token = await loginUser({ email, password });
           set({ accessToken: token, loading: false });
           await get().fetchUser();
-          get().scheduleRefresh();
           return token;
         } catch (err) {
           set({ loading: false });
@@ -195,27 +191,21 @@ export const useAuth = create(
       },
 
       refresh: async () => {
+        // если уже есть выполняющийся refresh, возвращаем его
         if (get().refreshingPromise) return get().refreshingPromise;
 
         const promise = (async () => {
           try {
-            let token = await refreshAccessToken();
-
-            if (!token) {
-              await new Promise((res) => setTimeout(res, 3000));
-              token = await refreshAccessToken();
-            }
-
+            const token = await refreshAccessToken();
             if (token) {
               set({ accessToken: token });
               api.defaults.headers.Authorization = `Bearer ${token}`;
               await get().fetchUser();
-              get().scheduleRefresh();
               return token;
+            } else {
+              set({ accessToken: null, user: null, isAuthChecked: true });
+              return null;
             }
-
-            set({ accessToken: null, user: null, isAuthChecked: true });
-            return null;
           } catch (err) {
             set({ accessToken: null, user: null, isAuthChecked: true });
             return null;
@@ -228,69 +218,12 @@ export const useAuth = create(
         return promise;
       },
 
-      shouldRefresh: () => {
-        const cookies = document.cookie.split('; ').reduce((acc, curr) => {
-          const [k, v] = curr.split('=');
-          acc[k] = decodeURIComponent(v);
-          return acc;
-        }, {});
-
-        const refreshTokenExpiry = cookies.refreshTokenValidUntil
-          ? new Date(cookies.refreshTokenValidUntil).getTime()
-          : Date.now() + ACCESS_TOKEN_LIFETIME_MS;
-
-        return refreshTokenExpiry - Date.now() < 60_000;
-      },
-
-      scheduleRefresh: () => {
-        if (get().refreshTimeout) clearTimeout(get().refreshTimeout);
-
-        const cookies = document.cookie.split('; ').reduce((acc, curr) => {
-          const [k, v] = curr.split('=');
-          acc[k] = decodeURIComponent(v);
-          return acc;
-        }, {});
-
-        const refreshTokenExpiry = cookies.refreshTokenValidUntil
-          ? new Date(cookies.refreshTokenValidUntil).getTime()
-          : Date.now() + ACCESS_TOKEN_LIFETIME_MS;
-
-        const delay = Math.max(refreshTokenExpiry - Date.now() - 60_000, 0);
-
-        const timeout = setTimeout(async () => {
-          const token = await get().refresh();
-          if (!token) {
-            console.warn(
-              'Automatic refresh failed, user stays logged in temporarily'
-            );
-            get().scheduleRefreshRetry();
-          }
-        }, delay);
-
-        set({ refreshTimeout: timeout });
-      },
-
-      scheduleRefreshRetry: () => {
-        const timeout = setTimeout(async () => {
-          const token = await get().refresh();
-          if (!token) get().scheduleRefreshRetry();
-        }, 30_000);
-
-        set({ refreshTimeout: timeout });
-      },
-
-      stopRefresh: () => {
-        if (get().refreshTimeout) clearTimeout(get().refreshTimeout);
-        set({ refreshTimeout: null });
-      },
-
       logout: async () => {
         try {
           await logoutUser();
         } catch (err) {
           console.warn('Logout failed', err);
         } finally {
-          get().stopRefresh();
           set({ accessToken: null, user: null, isAuthChecked: true });
         }
       },

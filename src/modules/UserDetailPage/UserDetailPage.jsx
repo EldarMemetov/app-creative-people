@@ -10,7 +10,7 @@ import { useTranslation } from 'react-i18next';
 
 export default function UserDetailPage() {
   const { id } = useParams();
-  const { t } = useTranslation(['register']);
+  const { t } = useTranslation(['roles']);
 
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -74,7 +74,7 @@ export default function UserDetailPage() {
               <strong>Email:</strong> {user.email}
             </p>
             <p>
-              <strong>Роль:</strong> {t(`roles.${user.role}`)}
+              <strong>Роль:</strong> {t(user.role)}
             </p>
             <p>
               <strong>Рівень доступу:</strong> {user.accessRole}

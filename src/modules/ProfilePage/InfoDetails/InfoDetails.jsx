@@ -11,7 +11,7 @@ import { LINKDATA } from '@/shared/constants';
 export default function InfoDetails() {
   const { user, loading } = useAuthGuard();
 
-  const { t } = useTranslation(['register']);
+  const { t } = useTranslation(['roles']);
   if (loading) return <Loader />;
   if (!user) return null;
 
@@ -46,7 +46,7 @@ export default function InfoDetails() {
             <strong>Електронна пошта:</strong> {user.email}
           </p>
           <p>
-            <strong>Роль:</strong> {t(`roles.${user.role}`)}
+            <strong>Роль:</strong> {t(user.role)}
           </p>
           <p>
             <strong>Рівень доступу:</strong> {user.accessRole}

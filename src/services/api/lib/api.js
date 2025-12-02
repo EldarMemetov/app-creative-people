@@ -77,13 +77,6 @@ api.interceptors.request.use(async (config) => {
     if (authStore.refreshingPromise) {
       await authStore.refreshingPromise;
     }
-
-    if (authStore.shouldRefresh && authStore.shouldRefresh()) {
-      authStore.refreshingPromise = authStore.refresh();
-      await authStore.refreshingPromise;
-      authStore.refreshingPromise = null;
-    }
-
     config.headers.Authorization = `Bearer ${authStore.accessToken}`;
   }
 
@@ -94,7 +87,6 @@ api.interceptors.response.use(
   (response) => response,
   async (error) => {
     const originalRequest = error.config;
-
     if (!originalRequest) return Promise.reject(error);
 
     const skipUrls = ['/auth/login', '/auth/register', '/auth/refresh'];
@@ -108,16 +100,15 @@ api.interceptors.response.use(
 
       try {
         const newToken = await authStore.refresh();
-
         if (newToken) {
           originalRequest.headers.Authorization = `Bearer ${newToken}`;
           return api(originalRequest);
         } else {
-          console.warn('Refresh failed, user will be logged out');
+          console.warn('Refresh failed: user will be logged out');
           return Promise.reject(error);
         }
-      } catch (refreshError) {
-        console.warn('Refresh threw an error', refreshError);
+      } catch (err) {
+        console.warn('Refresh threw an error', err);
         return Promise.reject(error);
       }
     }

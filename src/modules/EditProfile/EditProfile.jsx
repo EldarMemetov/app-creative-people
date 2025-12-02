@@ -16,8 +16,7 @@ import { getProfile } from '@/services/api/auth/auth';
 export default function EditProfile() {
   const { user: authUser, loading: guardLoading } = useAuthGuard();
   const { t } = useTranslation(['editProfile']);
-  const [user, setUser] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const [user, setUser] = useState(authUser);
   const [uploadingPhoto, setUploadingPhoto] = useState(false);
   const { setUser: setUserStore } = useAuth();
   const ProfileSchema = EditProfileSchema(t);
@@ -33,18 +32,10 @@ export default function EditProfile() {
   };
 
   useEffect(() => {
-    if (guardLoading) return;
-
-    if (!authUser) {
-      setLoading(false);
-      return;
-    }
-
     setUser(authUser);
-    setLoading(false);
-  }, [guardLoading, authUser]);
+  }, [authUser]);
 
-  if (loading) return <Loader />;
+  if (guardLoading) return <Loader />;
   if (!user) return <div>{t('not_found')}</div>;
 
   return (
