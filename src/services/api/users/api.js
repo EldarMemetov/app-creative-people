@@ -22,12 +22,3 @@ export const getUserById = async (id) => {
     throw handleError(error);
   }
 };
-
-export const getMyProfile = async () => {
-  try {
-    const { data } = await api.get('/profile');
-    return data.data;
-  } catch (error) {
-    throw handleError(error);
-  }
-};

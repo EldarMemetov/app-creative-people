@@ -1,5 +1,4 @@
 'use client';
-
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/services/store/useAuth';
@@ -29,8 +28,7 @@ export function useAuthGuard() {
     return () => {
       isMounted = false;
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [auth, router]);
 
   return { user: auth.user, loading };
 }
