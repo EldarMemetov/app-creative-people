@@ -78,6 +78,12 @@ api.interceptors.request.use(async (config) => {
       await authStore.refreshingPromise;
     }
 
+    if (authStore.shouldRefresh && authStore.shouldRefresh()) {
+      authStore.refreshingPromise = authStore.refresh();
+      await authStore.refreshingPromise;
+      authStore.refreshingPromise = null;
+    }
+
     config.headers.Authorization = `Bearer ${authStore.accessToken}`;
   }
 

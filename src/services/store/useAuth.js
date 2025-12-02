@@ -231,20 +231,18 @@ export const useAuth = create(
         return promise;
       },
 
-      scheduleRefresh: () => {
-        if (get().refreshTimeout) clearTimeout(get().refreshTimeout);
+      shouldRefresh: () => {
+        const cookies = document.cookie.split('; ').reduce((acc, curr) => {
+          const [k, v] = curr.split('=');
+          acc[k] = decodeURIComponent(v);
+          return acc;
+        }, {});
 
-        const timeout = setTimeout(async () => {
-          const token = await get().refresh();
-          if (!token) {
-            console.warn(
-              'Automatic refresh failed, user stays logged in until next request'
-            );
-            get().scheduleRetry();
-          }
-        }, ACCESS_TOKEN_LIFETIME_MS - 60_000);
+        const refreshTokenExpiry = cookies.refreshTokenValidUntil
+          ? new Date(cookies.refreshTokenValidUntil).getTime()
+          : Date.now() + ACCESS_TOKEN_LIFETIME_MS;
 
-        set({ refreshTimeout: timeout });
+        return refreshTokenExpiry - Date.now() < 60_000;
       },
 
       scheduleRetry: () => {
