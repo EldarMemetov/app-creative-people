@@ -151,23 +151,53 @@ import {
 } from '../api/auth/auth.js';
 import { api } from '../api/lib/api.js';
 
+const ACCESS_TOKEN_LIFETIME_MS = 1000 * 60 * 15;
+
 export const useAuth = create(
   persist(
     (set, get) => ({
       accessToken: null,
+      accessTokenExpiresAt: null,
       user: null,
       loading: false,
       isAuthChecked: false,
+      refreshTimeout: null,
       refreshingPromise: null,
 
       setUser: (user) => set({ user }),
+
+      init: async () => {
+        const { accessToken } = get();
+        if (accessToken) {
+          const user = await get().fetchUser();
+          if (user) {
+            get().scheduleRefresh();
+            return;
+          }
+
+          await get().refresh();
+        } else {
+          set({ isAuthChecked: true });
+        }
+      },
 
       login: async (email, password) => {
         set({ loading: true });
         try {
           const token = await loginUser({ email, password });
-          set({ accessToken: token, loading: false });
+          const expiresAt = Date.now() + ACCESS_TOKEN_LIFETIME_MS;
+
+          set({
+            accessToken: token,
+            accessTokenExpiresAt: expiresAt,
+            loading: false,
+          });
+
+          api.defaults.headers.Authorization = `Bearer ${token}`;
+
           await get().fetchUser();
+          get().scheduleRefresh();
+
           return token;
         } catch (err) {
           set({ loading: false });
@@ -185,29 +215,45 @@ export const useAuth = create(
           set({ user, isAuthChecked: true });
           return user;
         } catch (err) {
-          set({ accessToken: null, user: null, isAuthChecked: true });
+          set({
+            accessToken: null,
+            user: null,
+            isAuthChecked: true,
+            accessTokenExpiresAt: null,
+          });
           return null;
         }
       },
 
       refresh: async () => {
-        // если уже есть выполняющийся refresh, возвращаем его
         if (get().refreshingPromise) return get().refreshingPromise;
 
         const promise = (async () => {
           try {
             const token = await refreshAccessToken();
             if (token) {
-              set({ accessToken: token });
+              const expiresAt = Date.now() + ACCESS_TOKEN_LIFETIME_MS;
+              set({ accessToken: token, accessTokenExpiresAt: expiresAt });
               api.defaults.headers.Authorization = `Bearer ${token}`;
               await get().fetchUser();
+              get().scheduleRefresh();
               return token;
-            } else {
-              set({ accessToken: null, user: null, isAuthChecked: true });
-              return null;
             }
+
+            set({
+              accessToken: null,
+              user: null,
+              isAuthChecked: true,
+              accessTokenExpiresAt: null,
+            });
+            return null;
           } catch (err) {
-            set({ accessToken: null, user: null, isAuthChecked: true });
+            set({
+              accessToken: null,
+              user: null,
+              isAuthChecked: true,
+              accessTokenExpiresAt: null,
+            });
             return null;
           } finally {
             set({ refreshingPromise: null });
@@ -218,13 +264,62 @@ export const useAuth = create(
         return promise;
       },
 
+      scheduleRefresh: () => {
+        if (get().refreshTimeout) clearTimeout(get().refreshTimeout);
+
+        const expiresAt = get().accessTokenExpiresAt;
+        const now = Date.now();
+
+        const defaultDelay = Math.max(ACCESS_TOKEN_LIFETIME_MS - 60_000, 0);
+        let delay = defaultDelay;
+
+        if (expiresAt && expiresAt > now) {
+          delay = Math.max(expiresAt - now - 60_000, 0);
+        }
+
+        const timeout = setTimeout(async () => {
+          const token = await get().refresh();
+          if (!token) {
+            console.warn('Automatic refresh failed');
+
+            get().scheduleRefreshRetry();
+          }
+        }, delay);
+
+        set({ refreshTimeout: timeout });
+      },
+
+      scheduleRefreshRetry: () => {
+        if (get().refreshTimeout) clearTimeout(get().refreshTimeout);
+        const timeout = setTimeout(async () => {
+          const token = await get().refresh();
+          if (!token) {
+            console.warn('Retry refresh failed');
+
+            get().scheduleRefreshRetry();
+          }
+        }, 30_000);
+        set({ refreshTimeout: timeout });
+      },
+
+      stopRefresh: () => {
+        if (get().refreshTimeout) clearTimeout(get().refreshTimeout);
+        set({ refreshTimeout: null });
+      },
+
       logout: async () => {
         try {
           await logoutUser();
         } catch (err) {
           console.warn('Logout failed', err);
         } finally {
-          set({ accessToken: null, user: null, isAuthChecked: true });
+          get().stopRefresh();
+          set({
+            accessToken: null,
+            accessTokenExpiresAt: null,
+            user: null,
+            isAuthChecked: true,
+          });
         }
       },
     }),
@@ -232,8 +327,18 @@ export const useAuth = create(
       name: 'auth-storage',
       partialize: (state) => ({
         accessToken: state.accessToken,
+        accessTokenExpiresAt: state.accessTokenExpiresAt,
         user: state.user,
       }),
+
+      onRehydrateStorage: () => (state) => {
+        if (state) {
+          setTimeout(() => {
+            const { init } = useAuth.getState();
+            if (init) init();
+          }, 0);
+        }
+      },
     }
   )
 );

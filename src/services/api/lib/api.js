@@ -73,46 +73,16 @@ export const api = axios.create({
 api.interceptors.request.use(async (config) => {
   const authStore = useAuth.getState();
 
-  if (authStore.accessToken) {
-    if (authStore.refreshingPromise) {
+  if (authStore.refreshingPromise) {
+    try {
       await authStore.refreshingPromise;
-    }
+    } catch (e) {}
+  }
+
+  if (authStore.accessToken) {
+    config.headers = config.headers || {};
     config.headers.Authorization = `Bearer ${authStore.accessToken}`;
   }
 
   return config;
 });
-
-api.interceptors.response.use(
-  (response) => response,
-  async (error) => {
-    const originalRequest = error.config;
-    if (!originalRequest) return Promise.reject(error);
-
-    const skipUrls = ['/auth/login', '/auth/register', '/auth/refresh'];
-    if (skipUrls.some((url) => originalRequest.url.endsWith(url))) {
-      return Promise.reject(error);
-    }
-
-    if (error.response?.status === 401 && !originalRequest._retry) {
-      originalRequest._retry = true;
-      const authStore = useAuth.getState();
-
-      try {
-        const newToken = await authStore.refresh();
-        if (newToken) {
-          originalRequest.headers.Authorization = `Bearer ${newToken}`;
-          return api(originalRequest);
-        } else {
-          console.warn('Refresh failed: user will be logged out');
-          return Promise.reject(error);
-        }
-      } catch (err) {
-        console.warn('Refresh threw an error', err);
-        return Promise.reject(error);
-      }
-    }
-
-    return Promise.reject(error);
-  }
-);

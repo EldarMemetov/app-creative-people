@@ -13,6 +13,7 @@ export const registerUser = async (data) => {
 export const loginUser = async (data) => {
   try {
     const res = await api.post('/auth/login', data);
+
     return res.data.data.accessToken;
   } catch (err) {
     throw handleError(err);
