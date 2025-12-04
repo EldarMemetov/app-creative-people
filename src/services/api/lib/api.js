@@ -73,8 +73,25 @@ export const api = axios.create({
 let isRefreshing = false;
 let refreshQueue = [];
 
-const flushQueue = (error, token = null) => {
-  refreshQueue.forEach((cb) => cb(error, token));
+const QUEUE_WAIT_TIMEOUT = 10_000;
+
+const pushToQueue = () =>
+  new Promise((resolve, reject) => {
+    const item = { resolve, reject };
+
+    item.timer = setTimeout(() => {
+      refreshQueue = refreshQueue.filter((it) => it !== item);
+      reject(new Error('refresh queue timeout'));
+    }, QUEUE_WAIT_TIMEOUT);
+    refreshQueue.push(item);
+  });
+
+const flushQueue = (err, token = null) => {
+  refreshQueue.forEach((it) => {
+    clearTimeout(it.timer);
+    if (err) it.reject(err);
+    else it.resolve(token);
+  });
   refreshQueue = [];
 };
 
@@ -88,53 +105,76 @@ const getPathname = (url) => {
   }
 };
 
-api.interceptors.request.use(async (config) => {
-  const authStore = useAuth.getState();
+api.interceptors.request.use(
+  async (config) => {
+    const authStore = useAuth.getState();
 
-  if (authStore.refreshingPromise) {
-    try {
-      await authStore.refreshingPromise;
-    } catch (e) {}
-  }
-
-  if (authStore.accessToken) {
-    if (authStore.shouldRefresh && authStore.shouldRefresh()) {
-      if (!isRefreshing) {
-        isRefreshing = true;
-
-        authStore.refreshingPromise = authStore.refresh();
-        try {
-          const newToken = await authStore.refreshingPromise;
-          authStore.refreshingPromise = null;
-          isRefreshing = false;
-          flushQueue(null, newToken);
-        } catch (err) {
-          authStore.refreshingPromise = null;
-          isRefreshing = false;
-          flushQueue(err, null);
-        }
-      } else {
-        await new Promise((resolve, reject) => {
-          refreshQueue.push((err) => {
-            if (err) return reject(err);
-            resolve();
-          });
-        });
+    if (authStore.refreshingPromise) {
+      try {
+        await Promise.race([
+          authStore.refreshingPromise,
+          new Promise((_, rej) =>
+            setTimeout(
+              () => rej(new Error('store refresh timeout')),
+              QUEUE_WAIT_TIMEOUT
+            )
+          ),
+        ]);
+      } catch (e) {
+        console.debug(
+          '[api] store.refreshingPromise wait failed:',
+          e?.message || e
+        );
       }
     }
 
-    config.headers = config.headers || {};
-    config.headers.Authorization = `Bearer ${authStore.accessToken}`;
-  }
+    if (authStore.accessToken) {
+      if (authStore.shouldRefresh && authStore.shouldRefresh()) {
+        if (!isRefreshing) {
+          isRefreshing = true;
+          authStore.refreshingPromise = authStore.refresh();
+          try {
+            const newToken = await Promise.race([
+              authStore.refreshingPromise,
+              new Promise((_, rej) =>
+                setTimeout(
+                  () => rej(new Error('refresh timeout')),
+                  QUEUE_WAIT_TIMEOUT
+                )
+              ),
+            ]);
 
-  return config;
-});
+            authStore.refreshingPromise = null;
+            isRefreshing = false;
+            flushQueue(null, newToken);
+          } catch (err) {
+            authStore.refreshingPromise = null;
+            isRefreshing = false;
+            flushQueue(err, null);
+            console.warn('[api] refresh failed in request interceptor:', err);
+          }
+        } else {
+          try {
+            await pushToQueue();
+          } catch (e) {
+            console.debug('[api] waiting in queue failed:', e?.message || e);
+          }
+        }
+      }
+
+      config.headers = config.headers || {};
+      config.headers.Authorization = `Bearer ${authStore.accessToken}`;
+    }
+
+    return config;
+  },
+  (err) => Promise.reject(err)
+);
 
 api.interceptors.response.use(
-  (response) => response,
+  (resp) => resp,
   async (error) => {
     const originalRequest = error.config;
-
     if (!originalRequest) return Promise.reject(error);
 
     const skipPaths = ['/auth/login', '/auth/register', '/auth/refresh'];
@@ -148,14 +188,17 @@ api.interceptors.response.use(
       originalRequest._retry = true;
       const authStore = useAuth.getState();
 
-      if (isRefreshing) {
+      if (isRefreshing || authStore.refreshingPromise) {
         try {
-          await new Promise((resolve, reject) => {
-            refreshQueue.push((err, token) => {
-              if (err) return reject(err);
-              resolve(token);
-            });
-          });
+          const token = await Promise.race([
+            pushToQueue(),
+            new Promise((_, rej) =>
+              setTimeout(
+                () => rej(new Error('queue wait timeout')),
+                QUEUE_WAIT_TIMEOUT
+              )
+            ),
+          ]);
 
           const latestToken = useAuth.getState().accessToken;
           originalRequest.headers = originalRequest.headers || {};
@@ -163,6 +206,10 @@ api.interceptors.response.use(
             originalRequest.headers.Authorization = `Bearer ${latestToken}`;
           return api(originalRequest);
         } catch (e) {
+          console.debug(
+            '[api] waiting for concurrent refresh failed:',
+            e?.message || e
+          );
           return Promise.reject(error);
         }
       }
@@ -171,7 +218,15 @@ api.interceptors.response.use(
       authStore.refreshingPromise = authStore.refresh();
 
       try {
-        const newToken = await authStore.refreshingPromise;
+        const newToken = await Promise.race([
+          authStore.refreshingPromise,
+          new Promise((_, rej) =>
+            setTimeout(
+              () => rej(new Error('refresh timeout')),
+              QUEUE_WAIT_TIMEOUT
+            )
+          ),
+        ]);
         authStore.refreshingPromise = null;
         isRefreshing = false;
         flushQueue(null, newToken);
@@ -181,13 +236,17 @@ api.interceptors.response.use(
           originalRequest.headers = originalRequest.headers || {};
           originalRequest.headers.Authorization = `Bearer ${newToken}`;
           return api(originalRequest);
+        } else {
+          return Promise.reject(error);
         }
-
-        return Promise.reject(error);
-      } catch (refreshError) {
+      } catch (refreshErr) {
         authStore.refreshingPromise = null;
         isRefreshing = false;
-        flushQueue(refreshError, null);
+        flushQueue(refreshErr, null);
+        console.warn(
+          '[api] refresh failed in response interceptor:',
+          refreshErr
+        );
         return Promise.reject(error);
       }
     }
