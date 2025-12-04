@@ -1,146 +1,3 @@
-// import { create } from 'zustand';
-// import { persist } from 'zustand/middleware';
-// import {
-//   loginUser,
-//   refreshAccessToken,
-//   logoutUser,
-//   getProfile,
-// } from '../api/auth/auth.js';
-// import { api } from '../api/lib/api.js';
-
-// export const useAuth = create(
-//   persist(
-//     (set, get) => ({
-//       accessToken: null,
-//       user: null,
-//       loading: false,
-//       isAuthChecked: false,
-//       refreshTimeout: null,
-//       refreshingPromise: null,
-
-//       setUser: (user) => set({ user }),
-
-//       login: async (email, password) => {
-//         set({ loading: true });
-//         try {
-//           const token = await loginUser({ email, password });
-//           set({ accessToken: token, loading: false });
-//           await get().fetchUser();
-//           get().scheduleRefresh();
-//           return token;
-//         } catch (err) {
-//           set({ loading: false });
-//           throw err;
-//         }
-//       },
-
-//       fetchUser: async () => {
-//         if (!get().accessToken) {
-//           set({ user: null, isAuthChecked: true });
-//           return null;
-//         }
-//         try {
-//           const user = await getProfile();
-//           set({ user, isAuthChecked: true });
-//           return user;
-//         } catch (err) {
-//           set({ accessToken: null, user: null, isAuthChecked: true });
-//           return null;
-//         }
-//       },
-
-//       refresh: async () => {
-//         try {
-//           let token = await refreshAccessToken();
-
-//           if (!token) {
-//             console.warn('Refresh failed, retrying in 3s...');
-//             await new Promise((res) => setTimeout(res, 3000));
-//             token = await refreshAccessToken();
-//           }
-
-//           if (token) {
-//             set({ accessToken: token });
-//             api.defaults.headers.Authorization = `Bearer ${token}`;
-//             await get().fetchUser();
-//             get().scheduleRefresh();
-//             return token;
-//           }
-
-//           set({ accessToken: null, user: null, isAuthChecked: true });
-//           return null;
-//         } catch (err) {
-//           set({ accessToken: null, user: null, isAuthChecked: true });
-//           return null;
-//         }
-//       },
-
-//       scheduleRefresh: () => {
-//         if (get().refreshTimeout) clearTimeout(get().refreshTimeout);
-
-//         const cookies = document.cookie.split('; ').reduce((acc, curr) => {
-//           const [k, v] = curr.split('=');
-//           acc[k] = decodeURIComponent(v);
-//           return acc;
-//         }, {});
-
-//         const refreshTokenExpiry = cookies.refreshTokenValidUntil
-//           ? new Date(cookies.refreshTokenValidUntil).getTime()
-//           : Date.now() + 15 * 60 * 1000;
-
-//         const delay = Math.max(refreshTokenExpiry - Date.now() - 60_000, 0);
-
-//         const timeout = setTimeout(async () => {
-//           const token = await get().refresh();
-//           if (!token) {
-//             console.warn(
-//               'Automatic refresh failed, user stays logged in until next request'
-//             );
-//             get().scheduleRefreshRetry();
-//           }
-//         }, delay);
-
-//         set({ refreshTimeout: timeout });
-//       },
-
-//       scheduleRefreshRetry: () => {
-//         const timeout = setTimeout(async () => {
-//           const token = await get().refresh();
-//           if (!token) {
-//             console.warn(
-//               'Retry refresh failed, user still logged in temporarily'
-//             );
-//             get().scheduleRefreshRetry();
-//           }
-//         }, 30_000);
-//         set({ refreshTimeout: timeout });
-//       },
-
-//       stopRefresh: () => {
-//         if (get().refreshTimeout) clearTimeout(get().refreshTimeout);
-//         set({ refreshTimeout: null });
-//       },
-
-//       logout: async () => {
-//         try {
-//           await logoutUser();
-//         } catch (err) {
-//           console.warn('Logout failed', err);
-//         } finally {
-//           get().stopRefresh();
-//           set({ accessToken: null, user: null, isAuthChecked: true });
-//         }
-//       },
-//     }),
-//     {
-//       name: 'auth-storage',
-//       partialize: (state) => ({
-//         accessToken: state.accessToken,
-//         user: state.user,
-//       }),
-//     }
-//   )
-// );
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import {
@@ -150,17 +7,6 @@ import {
   getProfile,
 } from '../api/auth/auth.js';
 import { api } from '../api/lib/api.js';
-
-// helper для декодирования JWT
-const parseJwt = (token) => {
-  try {
-    const base64 = token.split('.')[1];
-    const json = atob(base64.replace(/-/g, '+').replace(/_/g, '/'));
-    return JSON.parse(decodeURIComponent(escape(json)));
-  } catch (e) {
-    return null;
-  }
-};
 
 export const useAuth = create(
   persist(
@@ -173,15 +19,6 @@ export const useAuth = create(
       refreshingPromise: null,
 
       setUser: (user) => set({ user }),
-
-      shouldRefresh: () => {
-        const token = get().accessToken;
-        if (!token) return false;
-        const payload = parseJwt(token);
-        if (!payload?.exp) return false;
-        const msLeft = payload.exp * 1000 - Date.now();
-        return msLeft < 2 * 60 * 1000; // меньше 2 минут до конца жизни токена
-      },
 
       login: async (email, password) => {
         set({ loading: true });
@@ -247,20 +84,11 @@ export const useAuth = create(
           return acc;
         }, {});
 
-        let refreshTokenExpiry = null;
+        const refreshTokenExpiry = cookies.refreshTokenValidUntil
+          ? new Date(cookies.refreshTokenValidUntil).getTime()
+          : Date.now() + 15 * 60 * 1000;
 
-        if (cookies.refreshTokenValidUntil) {
-          refreshTokenExpiry = new Date(
-            cookies.refreshTokenValidUntil
-          ).getTime();
-        } else if (get().accessToken) {
-          const payload = parseJwt(get().accessToken);
-          if (payload?.exp) refreshTokenExpiry = payload.exp * 1000;
-        }
-
-        const defaultExpiry = Date.now() + 15 * 60 * 1000;
-        const expiry = refreshTokenExpiry || defaultExpiry;
-        const delay = Math.max(expiry - Date.now() - 60_000, 0);
+        const delay = Math.max(refreshTokenExpiry - Date.now() - 60_000, 0);
 
         const timeout = setTimeout(async () => {
           const token = await get().refresh();
