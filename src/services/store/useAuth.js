@@ -20,7 +20,6 @@ export const useAuth = create(
       loading: false,
       isAuthChecked: false,
       refreshTimeout: null,
-
       refreshingPromise: null,
 
       setUser: (user) => set({ user }),
@@ -55,6 +54,39 @@ export const useAuth = create(
           set({ loading: false });
           throw err;
         }
+      },
+
+      initAuth: async () => {
+        const state = get();
+        const token = state.accessToken;
+        const obtainedAt = state.accessTokenObtainedAt;
+
+        if (!token || !obtainedAt) {
+          set({ isAuthChecked: true });
+          return;
+        }
+
+        api.defaults.headers.Authorization = `Bearer ${token}`;
+
+        if (get().shouldRefresh && get().shouldRefresh()) {
+          const newToken = await get().refresh();
+          if (!newToken) {
+            set({
+              accessToken: null,
+              accessTokenObtainedAt: null,
+              user: null,
+              isAuthChecked: true,
+            });
+            return;
+          }
+          api.defaults.headers.Authorization = `Bearer ${newToken}`;
+        }
+
+        try {
+          await get().fetchUser();
+        } catch (e) {}
+
+        get().scheduleRefresh();
       },
 
       fetchUser: async () => {

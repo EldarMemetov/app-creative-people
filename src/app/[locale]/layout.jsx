@@ -11,7 +11,7 @@ import { Manrope, Inter } from 'next/font/google';
 import clsx from 'clsx';
 import { Toaster } from 'react-hot-toast';
 import Footer from '@/modules/Footer/Footer';
-
+import AuthProvider from '../AuthProvider';
 const manrope = Manrope({
   subsets: ['latin', 'cyrillic'],
   weight: ['400', '500', '600', '700', '800'],
@@ -90,12 +90,13 @@ export default async function Layout({ children, params }) {
           locale={locale}
           resources={resources}
         >
-          <ErrorBoundaryWithTranslation>
-            <Header />
-
-            <main>{children}</main>
-            <Footer />
-          </ErrorBoundaryWithTranslation>
+          <AuthProvider>
+            <ErrorBoundaryWithTranslation>
+              <Header />
+              <main>{children}</main>
+              <Footer />
+            </ErrorBoundaryWithTranslation>
+          </AuthProvider>
         </TranslationsProvider>
         <Toaster position="top-right" reverseOrder={false} />
       </body>
