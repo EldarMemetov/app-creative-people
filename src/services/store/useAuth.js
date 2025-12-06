@@ -230,6 +230,7 @@
 //     }
 //   )
 // );
+// src/services/store/useAuth.js
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import {
@@ -260,7 +261,8 @@ export const useAuth = create(
         const { accessToken, accessTokenObtainedAt } = get();
         if (!accessToken || !accessTokenObtainedAt) return false;
         const expiry = accessTokenObtainedAt + ACCESS_TOKEN_LIFETIME_MS;
-        return expiry - Date.now() < REFRESH_BUFFER_MS;
+        const remaining = expiry - Date.now();
+        return remaining < REFRESH_BUFFER_MS;
       },
 
       login: async (email, password) => {
@@ -268,13 +270,16 @@ export const useAuth = create(
         try {
           const token = await loginUser({ email, password });
           const now = Date.now();
+
           set({
             accessToken: token,
             accessTokenObtainedAt: now,
             loading: false,
           });
 
+          api.defaults.headers = api.defaults.headers || {};
           api.defaults.headers.Authorization = `Bearer ${token}`;
+
           await get().fetchUser();
           get().scheduleRefresh();
 
@@ -287,16 +292,18 @@ export const useAuth = create(
 
       initAuth: async () => {
         const { accessToken, accessTokenObtainedAt } = get();
+
         if (!accessToken || !accessTokenObtainedAt) {
           set({ isAuthChecked: true });
           return;
         }
 
+        api.defaults.headers = api.defaults.headers || {};
         api.defaults.headers.Authorization = `Bearer ${accessToken}`;
 
         if (get().shouldRefresh()) {
-          const newData = await get().refresh();
-          if (!newData?.token) {
+          const token = await get().refresh();
+          if (!token) {
             set({
               accessToken: null,
               accessTokenObtainedAt: null,
@@ -309,7 +316,8 @@ export const useAuth = create(
 
         try {
           await get().fetchUser();
-        } catch {}
+        } catch (e) {}
+
         get().scheduleRefresh();
       },
 
@@ -336,17 +344,20 @@ export const useAuth = create(
       },
 
       refresh: async () => {
-        if (get().refreshingPromise) return get().refreshingPromise;
+        if (get().refreshingPromise) {
+          return get().refreshingPromise;
+        }
 
         const promise = (async () => {
           try {
-            let tokenData = await refreshAccessToken();
-            if (!tokenData) {
+            let token = await refreshAccessToken();
+
+            if (!token) {
               await new Promise((res) => setTimeout(res, 2000));
-              tokenData = await refreshAccessToken();
+              token = await refreshAccessToken();
             }
 
-            if (!tokenData) {
+            if (!token) {
               get().stopRefresh();
               set({
                 accessToken: null,
@@ -354,28 +365,37 @@ export const useAuth = create(
                 user: null,
                 isAuthChecked: true,
               });
-              return { token: null, user: null };
+              return null;
             }
 
             const now = Date.now();
-            set({ accessToken: tokenData, accessTokenObtainedAt: now });
-            api.defaults.headers.Authorization = `Bearer ${tokenData}`;
+            set({ accessToken: token, accessTokenObtainedAt: now });
 
-            const user = await get().fetchUser();
-            console.debug('[useAuth.refresh] got token:', tokenData);
+            api.defaults.headers = api.defaults.headers || {};
+            api.defaults.headers.Authorization = `Bearer ${token}`;
+
+            await get().fetchUser();
 
             get().scheduleRefresh();
-            return { token: tokenData, user };
+
+            return token;
           } catch (error) {
-            set({ accessToken: null, accessTokenObtainedAt: null, user: null });
-            return { token: null, user: null };
+            set({
+              accessToken: null,
+              accessTokenObtainedAt: null,
+              user: null,
+              isAuthChecked: true,
+            });
+            return null;
           }
         })();
 
         set({ refreshingPromise: promise });
+
         promise.finally(() => {
-          if (get().refreshingPromise === promise)
+          if (get().refreshingPromise === promise) {
             set({ refreshingPromise: null });
+          }
         });
 
         return promise;
@@ -383,28 +403,40 @@ export const useAuth = create(
 
       scheduleRefresh: () => {
         const { accessTokenObtainedAt } = get();
-        if (get().refreshTimeout) clearTimeout(get().refreshTimeout);
+
+        if (get().refreshTimeout) {
+          clearTimeout(get().refreshTimeout);
+        }
+
         if (!accessTokenObtainedAt) return;
 
         const expiry = accessTokenObtainedAt + ACCESS_TOKEN_LIFETIME_MS;
         const delay = Math.max(expiry - Date.now() - REFRESH_BUFFER_MS, 0);
 
-        const timeout = setTimeout(() => get().refresh(), delay);
+        const timeout = setTimeout(() => {
+          get().refresh();
+        }, delay);
+
         set({ refreshTimeout: timeout });
       },
 
       logout: async () => {
         try {
           await logoutUser();
-        } catch {}
+        } catch (e) {}
+
         get().stopRefresh();
+
         set({
           accessToken: null,
           accessTokenObtainedAt: null,
           user: null,
           isAuthChecked: true,
         });
-        delete api.defaults.headers.Authorization;
+
+        if (api.defaults && api.defaults.headers) {
+          delete api.defaults.headers.Authorization;
+        }
       },
 
       stopRefresh: () => {
