@@ -98,6 +98,13 @@ export const refreshAccessToken = async () => {
       return null;
     }
 
+    const contentType = res.headers.get('content-type') || '';
+    if (!contentType.includes('application/json')) {
+      const text = await res.text();
+      console.warn('[refresh] proxy returned non-json:', text.slice(0, 500));
+      return null;
+    }
+
     const data = await res.json();
     console.debug('[refresh] proxy response body', data);
     return data?.data?.accessToken || null;
