@@ -1,3 +1,235 @@
+// import { create } from 'zustand';
+// import { persist } from 'zustand/middleware';
+// import {
+//   loginUser,
+//   refreshAccessToken,
+//   logoutUser,
+//   getProfile,
+// } from '../api/auth/auth.js';
+// import { api } from '../api/lib/api.js';
+
+// const ACCESS_TOKEN_LIFETIME_MS = 15 * 60 * 1000;
+// const REFRESH_BUFFER_MS = 60 * 1000;
+
+// export const useAuth = create(
+//   persist(
+//     (set, get) => ({
+//       accessToken: null,
+//       accessTokenObtainedAt: null,
+//       user: null,
+//       loading: false,
+//       isAuthChecked: false,
+//       refreshTimeout: null,
+//       refreshingPromise: null,
+
+//       setUser: (user) => set({ user }),
+
+//       shouldRefresh: () => {
+//         const token = get().accessToken;
+//         const obtainedAt = get().accessTokenObtainedAt;
+//         if (!token || !obtainedAt) return false;
+//         const expiry = obtainedAt + ACCESS_TOKEN_LIFETIME_MS;
+//         const msLeft = expiry - Date.now();
+
+//         return msLeft < 2 * 60 * 1000;
+//       },
+
+//       login: async (email, password) => {
+//         set({ loading: true });
+//         try {
+//           const token = await loginUser({ email, password });
+//           const now = Date.now();
+//           set({
+//             accessToken: token,
+//             accessTokenObtainedAt: now,
+//             loading: false,
+//           });
+
+//           api.defaults.headers.Authorization = `Bearer ${token}`;
+
+//           await get().fetchUser();
+//           get().scheduleRefresh();
+//           return token;
+//         } catch (err) {
+//           set({ loading: false });
+//           throw err;
+//         }
+//       },
+
+//       initAuth: async () => {
+//         const state = get();
+//         const token = state.accessToken;
+//         const obtainedAt = state.accessTokenObtainedAt;
+
+//         if (!token || !obtainedAt) {
+//           set({ isAuthChecked: true });
+//           return;
+//         }
+
+//         api.defaults.headers.Authorization = `Bearer ${token}`;
+
+//         if (get().shouldRefresh && get().shouldRefresh()) {
+//           const newToken = await get().refresh();
+//           if (!newToken) {
+//             set({
+//               accessToken: null,
+//               accessTokenObtainedAt: null,
+//               user: null,
+//               isAuthChecked: true,
+//             });
+//             return;
+//           }
+//           api.defaults.headers.Authorization = `Bearer ${newToken}`;
+//         }
+
+//         try {
+//           await get().fetchUser();
+//         } catch (e) {}
+
+//         get().scheduleRefresh();
+//       },
+
+//       fetchUser: async () => {
+//         if (!get().accessToken) {
+//           set({ user: null, isAuthChecked: true });
+//           return null;
+//         }
+//         try {
+//           const user = await getProfile();
+//           set({ user, isAuthChecked: true });
+//           return user;
+//         } catch (err) {
+//           set({
+//             accessToken: null,
+//             accessTokenObtainedAt: null,
+//             user: null,
+//             isAuthChecked: true,
+//           });
+//           return null;
+//         }
+//       },
+
+//       refresh: async () => {
+//         if (get().refreshingPromise) {
+//           return get().refreshingPromise;
+//         }
+
+//         const promise = (async () => {
+//           try {
+//             let token = await refreshAccessToken();
+
+//             if (!token) {
+//               console.warn('Refresh returned null, retrying in 3s...');
+//               await new Promise((res) => setTimeout(res, 3000));
+//               token = await refreshAccessToken();
+//             }
+
+//             if (token) {
+//               const now = Date.now();
+//               set({
+//                 accessToken: token,
+//                 accessTokenObtainedAt: now,
+//               });
+//               api.defaults.headers.Authorization = `Bearer ${token}`;
+
+//               await get().fetchUser();
+//               get().scheduleRefresh();
+
+//               return token;
+//             }
+
+//             set({
+//               accessToken: null,
+//               accessTokenObtainedAt: null,
+//               user: null,
+//               isAuthChecked: true,
+//             });
+//             return null;
+//           } catch (err) {
+//             set({
+//               accessToken: null,
+//               accessTokenObtainedAt: null,
+//               user: null,
+//               isAuthChecked: true,
+//             });
+//             return null;
+//           }
+//         })();
+
+//         set({ refreshingPromise: promise });
+//         promise.finally(() => {
+//           const cur = get().refreshingPromise;
+//           if (cur === promise) {
+//             set({ refreshingPromise: null });
+//           }
+//         });
+
+//         return promise;
+//       },
+
+//       scheduleRefresh: () => {
+//         if (get().refreshTimeout) clearTimeout(get().refreshTimeout);
+
+//         const obtainedAt = get().accessTokenObtainedAt;
+//         if (!obtainedAt) return;
+
+//         const expiry = obtainedAt + ACCESS_TOKEN_LIFETIME_MS;
+//         const delay = Math.max(expiry - Date.now() - REFRESH_BUFFER_MS, 0);
+
+//         const timeout = setTimeout(async () => {
+//           const token = await get().refresh();
+//           if (!token) {
+//             console.warn('Automatic refresh failed, scheduling retry');
+//             get().scheduleRefreshRetry();
+//           }
+//         }, delay);
+
+//         set({ refreshTimeout: timeout });
+//       },
+
+//       scheduleRefreshRetry: () => {
+//         const timeout = setTimeout(async () => {
+//           const token = await get().refresh();
+//           if (!token) {
+//             console.warn('Retry refresh failed, scheduling another retry');
+//             get().scheduleRefreshRetry();
+//           }
+//         }, 30_000);
+//         set({ refreshTimeout: timeout });
+//       },
+
+//       stopRefresh: () => {
+//         if (get().refreshTimeout) clearTimeout(get().refreshTimeout);
+//         set({ refreshTimeout: null });
+//       },
+
+//       logout: async () => {
+//         try {
+//           await logoutUser();
+//         } catch (err) {
+//           console.warn('Logout failed', err);
+//         } finally {
+//           get().stopRefresh();
+//           set({
+//             accessToken: null,
+//             accessTokenObtainedAt: null,
+//             user: null,
+//             isAuthChecked: true,
+//           });
+//           delete api.defaults.headers.Authorization;
+//         }
+//       },
+//     }),
+//     {
+//       name: 'auth-storage',
+//       partialize: (state) => ({
+//         accessToken: state.accessToken,
+//         accessTokenObtainedAt: state.accessTokenObtainedAt,
+//         user: state.user,
+//       }),
+//     }
+//   )
+// );
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import {
@@ -9,6 +241,7 @@ import {
 import { api } from '../api/lib/api.js';
 
 const ACCESS_TOKEN_LIFETIME_MS = 15 * 60 * 1000;
+
 const REFRESH_BUFFER_MS = 60 * 1000;
 
 export const useAuth = create(
@@ -17,21 +250,19 @@ export const useAuth = create(
       accessToken: null,
       accessTokenObtainedAt: null,
       user: null,
-      loading: false,
       isAuthChecked: false,
       refreshTimeout: null,
       refreshingPromise: null,
+      loading: false,
 
       setUser: (user) => set({ user }),
 
       shouldRefresh: () => {
-        const token = get().accessToken;
-        const obtainedAt = get().accessTokenObtainedAt;
-        if (!token || !obtainedAt) return false;
-        const expiry = obtainedAt + ACCESS_TOKEN_LIFETIME_MS;
-        const msLeft = expiry - Date.now();
-
-        return msLeft < 2 * 60 * 1000;
+        const { accessToken, accessTokenObtainedAt } = get();
+        if (!accessToken || !accessTokenObtainedAt) return false;
+        const expiry = accessTokenObtainedAt + ACCESS_TOKEN_LIFETIME_MS;
+        const remaining = expiry - Date.now();
+        return remaining < REFRESH_BUFFER_MS;
       },
 
       login: async (email, password) => {
@@ -39,6 +270,7 @@ export const useAuth = create(
         try {
           const token = await loginUser({ email, password });
           const now = Date.now();
+
           set({
             accessToken: token,
             accessTokenObtainedAt: now,
@@ -49,28 +281,27 @@ export const useAuth = create(
 
           await get().fetchUser();
           get().scheduleRefresh();
+
           return token;
-        } catch (err) {
+        } catch (error) {
           set({ loading: false });
-          throw err;
+          throw error;
         }
       },
 
       initAuth: async () => {
-        const state = get();
-        const token = state.accessToken;
-        const obtainedAt = state.accessTokenObtainedAt;
+        const { accessToken, accessTokenObtainedAt } = get();
 
-        if (!token || !obtainedAt) {
+        if (!accessToken || !accessTokenObtainedAt) {
           set({ isAuthChecked: true });
           return;
         }
 
-        api.defaults.headers.Authorization = `Bearer ${token}`;
+        api.defaults.headers.Authorization = `Bearer ${accessToken}`;
 
-        if (get().shouldRefresh && get().shouldRefresh()) {
-          const newToken = await get().refresh();
-          if (!newToken) {
+        if (get().shouldRefresh()) {
+          const newData = await get().refresh();
+          if (!newData?.token) {
             set({
               accessToken: null,
               accessTokenObtainedAt: null,
@@ -79,26 +310,27 @@ export const useAuth = create(
             });
             return;
           }
-          api.defaults.headers.Authorization = `Bearer ${newToken}`;
         }
 
         try {
           await get().fetchUser();
-        } catch (e) {}
+        } catch {}
 
         get().scheduleRefresh();
       },
 
       fetchUser: async () => {
-        if (!get().accessToken) {
+        const token = get().accessToken;
+        if (!token) {
           set({ user: null, isAuthChecked: true });
           return null;
         }
+
         try {
           const user = await getProfile();
           set({ user, isAuthChecked: true });
           return user;
-        } catch (err) {
+        } catch (error) {
           set({
             accessToken: null,
             accessTokenObtainedAt: null,
@@ -119,47 +351,41 @@ export const useAuth = create(
             let token = await refreshAccessToken();
 
             if (!token) {
-              console.warn('Refresh returned null, retrying in 3s...');
-              await new Promise((res) => setTimeout(res, 3000));
+              await new Promise((res) => setTimeout(res, 2000));
               token = await refreshAccessToken();
             }
-
-            if (token) {
-              const now = Date.now();
+            if (!token) {
+              get().stopRefresh();
               set({
-                accessToken: token,
-                accessTokenObtainedAt: now,
+                accessToken: null,
+                accessTokenObtainedAt: null,
+                user: null,
+                isAuthChecked: true,
               });
-              api.defaults.headers.Authorization = `Bearer ${token}`;
-
-              await get().fetchUser();
-              get().scheduleRefresh();
-
-              return token;
+              return { token: null, user: null };
             }
 
-            set({
-              accessToken: null,
-              accessTokenObtainedAt: null,
-              user: null,
-              isAuthChecked: true,
-            });
-            return null;
-          } catch (err) {
-            set({
-              accessToken: null,
-              accessTokenObtainedAt: null,
-              user: null,
-              isAuthChecked: true,
-            });
-            return null;
+            const now = Date.now();
+            set({ accessToken: token, accessTokenObtainedAt: now });
+
+            api.defaults.headers.Authorization = `Bearer ${token}`;
+
+            const user = await get().fetchUser();
+            console.debug('[useAuth.refresh] got token:', token);
+
+            get().scheduleRefresh();
+
+            return { token, user };
+          } catch (error) {
+            set({ accessToken: null, accessTokenObtainedAt: null, user: null });
+            return { token: null, user: null };
           }
         })();
 
         set({ refreshingPromise: promise });
+
         promise.finally(() => {
-          const cur = get().refreshingPromise;
-          if (cur === promise) {
+          if (get().refreshingPromise === promise) {
             set({ refreshingPromise: null });
           }
         });
@@ -168,58 +394,48 @@ export const useAuth = create(
       },
 
       scheduleRefresh: () => {
-        if (get().refreshTimeout) clearTimeout(get().refreshTimeout);
+        const { accessTokenObtainedAt } = get();
 
-        const obtainedAt = get().accessTokenObtainedAt;
-        if (!obtainedAt) return;
+        if (get().refreshTimeout) {
+          clearTimeout(get().refreshTimeout);
+        }
 
-        const expiry = obtainedAt + ACCESS_TOKEN_LIFETIME_MS;
+        if (!accessTokenObtainedAt) return;
+
+        const expiry = accessTokenObtainedAt + ACCESS_TOKEN_LIFETIME_MS;
+
         const delay = Math.max(expiry - Date.now() - REFRESH_BUFFER_MS, 0);
 
-        const timeout = setTimeout(async () => {
-          const token = await get().refresh();
-          if (!token) {
-            console.warn('Automatic refresh failed, scheduling retry');
-            get().scheduleRefreshRetry();
-          }
+        const timeout = setTimeout(() => {
+          get().refresh();
         }, delay);
 
         set({ refreshTimeout: timeout });
       },
 
-      scheduleRefreshRetry: () => {
-        const timeout = setTimeout(async () => {
-          const token = await get().refresh();
-          if (!token) {
-            console.warn('Retry refresh failed, scheduling another retry');
-            get().scheduleRefreshRetry();
-          }
-        }, 30_000);
-        set({ refreshTimeout: timeout });
+      logout: async () => {
+        try {
+          await logoutUser();
+        } catch {}
+
+        get().stopRefresh();
+
+        set({
+          accessToken: null,
+          accessTokenObtainedAt: null,
+          user: null,
+          isAuthChecked: true,
+        });
+
+        delete api.defaults.headers.Authorization;
       },
 
       stopRefresh: () => {
         if (get().refreshTimeout) clearTimeout(get().refreshTimeout);
         set({ refreshTimeout: null });
       },
-
-      logout: async () => {
-        try {
-          await logoutUser();
-        } catch (err) {
-          console.warn('Logout failed', err);
-        } finally {
-          get().stopRefresh();
-          set({
-            accessToken: null,
-            accessTokenObtainedAt: null,
-            user: null,
-            isAuthChecked: true,
-          });
-          delete api.defaults.headers.Authorization;
-        }
-      },
     }),
+
     {
       name: 'auth-storage',
       partialize: (state) => ({
