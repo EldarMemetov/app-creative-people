@@ -241,7 +241,6 @@ import {
 import { api } from '../api/lib/api.js';
 
 const ACCESS_TOKEN_LIFETIME_MS = 15 * 60 * 1000;
-
 const REFRESH_BUFFER_MS = 60 * 1000;
 
 export const useAuth = create(
@@ -261,8 +260,7 @@ export const useAuth = create(
         const { accessToken, accessTokenObtainedAt } = get();
         if (!accessToken || !accessTokenObtainedAt) return false;
         const expiry = accessTokenObtainedAt + ACCESS_TOKEN_LIFETIME_MS;
-        const remaining = expiry - Date.now();
-        return remaining < REFRESH_BUFFER_MS;
+        return expiry - Date.now() < REFRESH_BUFFER_MS;
       },
 
       login: async (email, password) => {
@@ -270,7 +268,6 @@ export const useAuth = create(
         try {
           const token = await loginUser({ email, password });
           const now = Date.now();
-
           set({
             accessToken: token,
             accessTokenObtainedAt: now,
@@ -278,7 +275,6 @@ export const useAuth = create(
           });
 
           api.defaults.headers.Authorization = `Bearer ${token}`;
-
           await get().fetchUser();
           get().scheduleRefresh();
 
@@ -291,7 +287,6 @@ export const useAuth = create(
 
       initAuth: async () => {
         const { accessToken, accessTokenObtainedAt } = get();
-
         if (!accessToken || !accessTokenObtainedAt) {
           set({ isAuthChecked: true });
           return;
@@ -315,7 +310,6 @@ export const useAuth = create(
         try {
           await get().fetchUser();
         } catch {}
-
         get().scheduleRefresh();
       },
 
@@ -342,19 +336,17 @@ export const useAuth = create(
       },
 
       refresh: async () => {
-        if (get().refreshingPromise) {
-          return get().refreshingPromise;
-        }
+        if (get().refreshingPromise) return get().refreshingPromise;
 
         const promise = (async () => {
           try {
-            let token = await refreshAccessToken();
-
-            if (!token) {
+            let tokenData = await refreshAccessToken();
+            if (!tokenData) {
               await new Promise((res) => setTimeout(res, 2000));
-              token = await refreshAccessToken();
+              tokenData = await refreshAccessToken();
             }
-            if (!token) {
+
+            if (!tokenData) {
               get().stopRefresh();
               set({
                 accessToken: null,
@@ -366,16 +358,14 @@ export const useAuth = create(
             }
 
             const now = Date.now();
-            set({ accessToken: token, accessTokenObtainedAt: now });
-
-            api.defaults.headers.Authorization = `Bearer ${token}`;
+            set({ accessToken: tokenData, accessTokenObtainedAt: now });
+            api.defaults.headers.Authorization = `Bearer ${tokenData}`;
 
             const user = await get().fetchUser();
-            console.debug('[useAuth.refresh] got token:', token);
+            console.debug('[useAuth.refresh] got token:', tokenData);
 
             get().scheduleRefresh();
-
-            return { token, user };
+            return { token: tokenData, user };
           } catch (error) {
             set({ accessToken: null, accessTokenObtainedAt: null, user: null });
             return { token: null, user: null };
@@ -383,11 +373,9 @@ export const useAuth = create(
         })();
 
         set({ refreshingPromise: promise });
-
         promise.finally(() => {
-          if (get().refreshingPromise === promise) {
+          if (get().refreshingPromise === promise)
             set({ refreshingPromise: null });
-          }
         });
 
         return promise;
@@ -395,21 +383,13 @@ export const useAuth = create(
 
       scheduleRefresh: () => {
         const { accessTokenObtainedAt } = get();
-
-        if (get().refreshTimeout) {
-          clearTimeout(get().refreshTimeout);
-        }
-
+        if (get().refreshTimeout) clearTimeout(get().refreshTimeout);
         if (!accessTokenObtainedAt) return;
 
         const expiry = accessTokenObtainedAt + ACCESS_TOKEN_LIFETIME_MS;
-
         const delay = Math.max(expiry - Date.now() - REFRESH_BUFFER_MS, 0);
 
-        const timeout = setTimeout(() => {
-          get().refresh();
-        }, delay);
-
+        const timeout = setTimeout(() => get().refresh(), delay);
         set({ refreshTimeout: timeout });
       },
 
@@ -417,16 +397,13 @@ export const useAuth = create(
         try {
           await logoutUser();
         } catch {}
-
         get().stopRefresh();
-
         set({
           accessToken: null,
           accessTokenObtainedAt: null,
           user: null,
           isAuthChecked: true,
         });
-
         delete api.defaults.headers.Authorization;
       },
 
@@ -435,7 +412,6 @@ export const useAuth = create(
         set({ refreshTimeout: null });
       },
     }),
-
     {
       name: 'auth-storage',
       partialize: (state) => ({

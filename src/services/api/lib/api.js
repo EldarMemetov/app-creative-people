@@ -274,16 +274,14 @@ import axios from 'axios';
 import { useAuth } from '@/services/store/useAuth';
 
 export const api = axios.create({
-  baseURL: '/api', // <- proxy via Vercel / next dev
+  baseURL: '/api',
   withCredentials: true,
 });
 
 let isRefreshing = false;
 let refreshQueue = [];
 
-const pushToQueue = (cb) => {
-  refreshQueue.push(cb);
-};
+const pushToQueue = (cb) => refreshQueue.push(cb);
 
 const processQueue = (err, token = null) => {
   refreshQueue.forEach((cb) => cb(err, token));
@@ -293,23 +291,19 @@ const processQueue = (err, token = null) => {
 api.interceptors.request.use(
   async (config) => {
     try {
-      console.debug(
-        '[api.request] using token:',
-        useAuth.getState().accessToken
-      );
       const auth = useAuth.getState();
 
       if (auth.refreshingPromise) {
         try {
           await auth.refreshingPromise;
-        } catch (e) {}
+        } catch {}
       }
 
       if (typeof auth.shouldRefresh === 'function' && auth.shouldRefresh()) {
         if (!isRefreshing) {
           isRefreshing = true;
           try {
-            const newData = await auth.refresh(); // { token, user } or { token: null }
+            const newData = await auth.refresh();
             if (newData?.token) {
               api.defaults.headers = api.defaults.headers || {};
               api.defaults.headers.Authorization = `Bearer ${newData.token}`;
@@ -350,26 +344,15 @@ api.interceptors.response.use(
     const originalRequest = error.config;
     if (!originalRequest) return Promise.reject(error);
 
-    console.debug(
-      '[api.response] 401 for',
-      originalRequest.url,
-      'starting refresh'
-    );
-
     try {
-      // build pathname safely (if url is relative)
       const base =
         typeof window !== 'undefined'
           ? window.location.origin
           : 'http://localhost';
       const urlPath = new URL(originalRequest.url, base).pathname;
       const skip = ['/auth/login', '/auth/register', '/auth/refresh'];
-      if (skip.includes(urlPath)) {
-        return Promise.reject(error);
-      }
-    } catch (e) {
-      // ignore
-    }
+      if (skip.includes(urlPath)) return Promise.reject(error);
+    } catch {}
 
     if (error.response?.status === 401 && !originalRequest._retry) {
       originalRequest._retry = true;
@@ -400,7 +383,7 @@ api.interceptors.response.use(
 
       isRefreshing = true;
       try {
-        const newData = await auth.refresh(); // we expect { token, user } or { token: null }
+        const newData = await auth.refresh();
         isRefreshing = false;
 
         if (!newData?.token) {
@@ -413,7 +396,6 @@ api.interceptors.response.use(
 
         api.defaults.headers = api.defaults.headers || {};
         api.defaults.headers.Authorization = `Bearer ${newData.token}`;
-
         processQueue(null, newData.token);
 
         originalRequest.headers = originalRequest.headers || {};

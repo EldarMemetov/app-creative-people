@@ -1,37 +1,19 @@
 'use client';
-
 import { ImageWithFallback } from '@/shared/ImageWithFallback/ImageWithFallback';
 import { useTranslation } from 'react-i18next';
+
 import { useAuthGuard } from '@/hooks/useAuthGuard';
+
 import Loader from '@/shared/Loader/Loader';
 import LinkButton from '@/shared/components/LinkButton/LinkButton';
 import { LINKDATA } from '@/shared/constants';
 
 export default function InfoDetails() {
   const { user, loading } = useAuthGuard();
+
   const { t } = useTranslation(['roles']);
-
   if (loading) return <Loader />;
-  if (!user) return <Loader />;
-
-  const {
-    name,
-    surname,
-    photo,
-    city,
-    country,
-    email,
-    role,
-    accessRole,
-    rating,
-    experience,
-    directions,
-    onlineStatus,
-    aboutMe,
-    isBlocked,
-    needsReview,
-    portfolio,
-  } = user;
+  if (!user) return null;
 
   return (
     <div>
@@ -40,8 +22,8 @@ export default function InfoDetails() {
       <div>
         <div>
           <ImageWithFallback
-            src={photo || '/image/logo.png'}
-            alt={`${name} ${surname}`}
+            src={user.photo || '/image/logo.png'}
+            alt={`${user.name} ${user.surname}`}
             width={80}
             height={80}
           />
@@ -49,57 +31,59 @@ export default function InfoDetails() {
 
         <div>
           <p>
-            <strong>Ім’я:</strong> {name}
+            <strong>Ім’я:</strong> {user.name}
           </p>
           <p>
-            <strong>Прізвище:</strong> {surname}
+            <strong>Прізвище:</strong> {user.surname}
           </p>
           <p>
-            <strong>Місто:</strong> {city}
+            <strong>Місто:</strong> {user.city}
           </p>
           <p>
-            <strong>Країна:</strong> {country}
+            <strong>Країна:</strong> {user.country}
           </p>
           <p>
-            <strong>Електронна пошта:</strong> {email}
+            <strong>Електронна пошта:</strong> {user.email}
           </p>
           <p>
-            <strong>Роль:</strong> {t(role)}
+            <strong>Роль:</strong> {t(user.role)}
           </p>
           <p>
-            <strong>Рівень доступу:</strong> {accessRole}
+            <strong>Рівень доступу:</strong> {user.accessRole}
           </p>
           <p>
-            <strong>Рейтинг:</strong> {rating}
+            <strong>Рейтинг:</strong> {user.rating}
           </p>
           <p>
-            <strong>Досвід:</strong> {experience || 'не вказано'}
+            <strong>Досвід:</strong> {user.experience || 'не вказано'}
           </p>
           <p>
             <strong>Напрямки:</strong>{' '}
-            {directions && directions.length > 0
-              ? directions.join(', ')
+            {user.directions && user.directions.length > 0
+              ? user.directions.join(', ')
               : 'не вказано'}
           </p>
           <p>
-            <strong>Онлайн статус:</strong> {onlineStatus ? 'Онлайн' : 'Офлайн'}
+            <strong>Онлайн статус:</strong>{' '}
+            {user.onlineStatus ? 'Онлайн' : 'Офлайн'}
           </p>
           <p>
-            <strong>Про себе:</strong> {aboutMe || 'не вказано'}
+            <strong>Про себе:</strong> {user.aboutMe || 'не вказано'}
           </p>
           <p>
-            <strong>Заблокований:</strong> {isBlocked ? 'Так' : 'Ні'}
+            <strong>Заблокований:</strong> {user.isBlocked ? 'Так' : 'Ні'}
           </p>
           <p>
-            <strong>Потребує перевірки:</strong> {needsReview ? 'Так' : 'Ні'}
+            <strong>Потребує перевірки:</strong>{' '}
+            {user.needsReview ? 'Так' : 'Ні'}
           </p>
 
-          {portfolio && portfolio.length > 0 && (
+          {user.portfolio && user.portfolio.length > 0 && (
             <div style={{ marginTop: '10px' }}>
               <strong>Портфоліо:</strong>
               <ul>
-                {portfolio.map((item) => (
-                  <li key={item.url}>
+                {user.portfolio.map((item, index) => (
+                  <li key={index}>
                     <p>Тип: {item.type === 'photo' ? 'Фото' : 'Відео'}</p>
                     <p>Опис: {item.description || 'немає опису'}</p>
                     <a
@@ -116,7 +100,6 @@ export default function InfoDetails() {
           )}
         </div>
       </div>
-
       <LinkButton
         path="profile/edit"
         type={LINKDATA.TYPE_LIGHT_BORDER}
