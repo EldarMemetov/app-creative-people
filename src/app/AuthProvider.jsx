@@ -22,8 +22,13 @@ export default function AuthProvider({ children }) {
 
   useEffect(() => {
     (async () => {
-      await useAuth.getState().initAuth();
-      setInitialized(true);
+      try {
+        await useAuth.getState().initAuth();
+      } catch (e) {
+        console.error('initAuth failed', e);
+      } finally {
+        setInitialized(true);
+      }
     })();
   }, []);
 
