@@ -456,7 +456,7 @@
 //     }
 //   )
 // );
-// src/services/store/useAuth.js
+
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import {
@@ -481,19 +481,15 @@ export const useAuth = create(
       refreshingPromise: null,
       loading: false,
 
-      setUser: (user) => set((state) => ({ ...state, user })),
+      setUser: (user) => set((s) => ({ ...s, user })),
 
       setAccessToken: (token) =>
-        set((state) => {
+        set((s) => {
           if (!token) {
-            return {
-              ...state,
-              accessToken: null,
-              accessTokenObtainedAt: null,
-            };
+            return { ...s, accessToken: null, accessTokenObtainedAt: null };
           }
           return {
-            ...state,
+            ...s,
             accessToken: token,
             accessTokenObtainedAt: Date.now(),
           };
@@ -617,8 +613,37 @@ export const useAuth = create(
             api.defaults.headers.Authorization = `Bearer ${token}`;
 
             try {
-              const user = await get().fetchUser();
-            } catch (e) {}
+              const base =
+                typeof window !== 'undefined'
+                  ? ''
+                  : process.env.NEXT_PUBLIC_API_URL || '';
+
+              const profileRes = await fetch('/api/profile/me', {
+                method: 'GET',
+                credentials: 'include',
+                headers: {
+                  'Content-Type': 'application/json',
+                  Authorization: `Bearer ${token}`,
+                },
+              });
+
+              if (profileRes.ok) {
+                const json = await profileRes.json();
+                const userObj = json?.data || null;
+                if (userObj) {
+                  set({ user: userObj, isAuthChecked: true });
+                }
+              } else {
+                if (profileRes.status === 401) {
+                  set({ user: null });
+                }
+              }
+            } catch (e) {
+              console.warn(
+                '[useAuth.refresh] profile fetch (native) failed',
+                e
+              );
+            }
 
             get().scheduleRefresh();
 
@@ -667,9 +692,7 @@ export const useAuth = create(
       logout: async () => {
         try {
           await logoutUser();
-        } catch (e) {
-          // ignore
-        }
+        } catch (e) {}
 
         get().stopRefresh();
 
