@@ -5,7 +5,7 @@ import { toast } from 'react-hot-toast';
 import FormInput from '@/shared/FormInput/FormInput';
 import { updateProfile } from '@/services/api/profileEdit/media';
 import RoleSelector from '@/modules/RegisterPage/RoleSelector/RoleSelector';
-
+import s from './EditProfileForm.module.scss';
 export default function EditProfileForm({
   user,
   ProfileSchema,
@@ -20,7 +20,7 @@ export default function EditProfileForm({
     city: user.city || '',
     aboutMe: user.aboutMe || '',
     experience: user.experience || '',
-    role: user.role || 'model',
+    roles: user.roles || [],
   };
 
   return (
@@ -30,17 +30,26 @@ export default function EditProfileForm({
       validationSchema={ProfileSchema}
       onSubmit={async (values, actions) => {
         actions.setSubmitting(true);
-
         try {
-          const { role, ...cleanValues } = values;
-
-          await updateProfile(cleanValues);
+          await updateProfile(values);
           await refreshUser();
-
           toast.success(t('saved'));
         } catch (err) {
-          console.error('Update profile error:', err.response?.data || err);
-          toast.error(t('update_error'));
+          const serverError = err.response?.data;
+          if (serverError?.details) {
+            const rolesError = serverError.details.find((d) =>
+              d.path.includes('roles')
+            );
+            if (rolesError) {
+              if (rolesError.type === 'array.min') {
+                actions.setFieldError('roles', t('roles.choose_at_least_one'));
+              } else if (rolesError.type === 'array.max') {
+                actions.setFieldError('roles', t('roles.max_three'));
+              }
+            }
+          } else {
+            toast.error(t('update_error'));
+          }
         } finally {
           actions.setSubmitting(false);
         }
@@ -83,8 +92,8 @@ export default function EditProfileForm({
           />
 
           <RoleSelector
-            value={values.role}
-            onChange={(role) => setFieldValue('role', role)}
+            values={values.roles}
+            onChange={(newRoles) => setFieldValue('roles', newRoles)}
           />
 
           <button type="submit" disabled={isSubmitting || uploadingPhoto}>

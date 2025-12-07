@@ -17,5 +17,8 @@ export const RegisterSchema = (t) =>
       .min(6, t('password_min'))
       .max(128, t('password_max'))
       .required(t('required_field')),
-    role: Yup.string().required(t('required_field')),
+    roles: Yup.array()
+      .min(1, t('choose_at_least_one'))
+      .max(3, t('choose_max_three'))
+      .required(t('required_field')),
   });

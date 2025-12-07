@@ -14,5 +14,7 @@
   "fashionOwner": "Власник бренду",
   "stylist": "Стиліст",
   "lighting": "Світлотехнік",
-  "soundEngineer": "Звукорежисер"
+  "soundEngineer": "Звукорежисер",
+  "choose_at_least_one": "Оберіть хоча б одну роль",
+  "max_three": "Можна обрати максимум 3 ролі"
 }

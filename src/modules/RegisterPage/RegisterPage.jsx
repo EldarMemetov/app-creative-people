@@ -30,7 +30,7 @@ export default function RegisterPage() {
             city: '',
             email: '',
             password: '',
-            role: 'model',
+            roles: [],
           }}
           validationSchema={GetRegisterSchema}
           onSubmit={async (values, actions) => {
@@ -74,8 +74,8 @@ export default function RegisterPage() {
               />
 
               <RoleSelector
-                value={values.role}
-                onChange={(role) => setFieldValue('role', role)}
+                values={values.roles}
+                onChange={(roles) => setFieldValue('roles', roles)}
               />
               <ErrorMessage name="role" component="p" className={s.error} />
 

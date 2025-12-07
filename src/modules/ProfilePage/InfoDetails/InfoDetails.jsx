@@ -46,8 +46,12 @@ export default function InfoDetails() {
             <strong>Електронна пошта:</strong> {user.email}
           </p>
           <p>
-            <strong>Роль:</strong> {t(user.role)}
+            <strong>Ролі:</strong>{' '}
+            {user.roles && user.roles.length > 0
+              ? user.roles.map((r) => t(r)).join(', ')
+              : 'не вказано'}
           </p>
+
           <p>
             <strong>Рівень доступу:</strong> {user.accessRole}
           </p>

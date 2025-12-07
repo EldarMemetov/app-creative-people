@@ -14,5 +14,7 @@
   "fashionOwner": "Modebrand-Inhaber",
   "stylist": "Stylist",
   "lighting": "Lichttechniker",
-  "soundEngineer": "Tontechniker"
+  "soundEngineer": "Tontechniker",
+  "choose_at_least_one": "Wählen Sie mindestens eine Rolle",
+  "max_three": "Sie können bis zu 3 Rollen auswählen"
 }

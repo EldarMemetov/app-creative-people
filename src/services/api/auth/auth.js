@@ -19,37 +19,6 @@ export const loginUser = async (data) => {
   }
 };
 
-// export const refreshAccessToken = async (timeoutMs = 10000) => {
-//   try {
-//     const controller = new AbortController();
-//     const id = setTimeout(() => controller.abort(), timeoutMs);
-
-//     const res = await fetch('/api/auth/refresh', {
-//       method: 'POST',
-//       credentials: 'include',
-//       headers: { 'Content-Type': 'application/json' },
-//       body: JSON.stringify({}),
-//       signal: controller.signal,
-//     });
-//     clearTimeout(id);
-
-//     if (!res.ok) {
-//       console.warn('[refresh] fetch failed status', res.status);
-//       return null;
-//     }
-
-//     const data = await res.json();
-//     console.debug('[refresh] response body', data);
-//     return data?.data?.accessToken || null;
-//   } catch (err) {
-//     if (err.name === 'AbortError') {
-//       console.warn('[refresh] aborted by timeout');
-//     } else {
-//       console.warn('[refresh] fetch error', err);
-//     }
-//     return null;
-//   }
-// };
 export const refreshAccessToken = async (timeoutMs = 10000, retry = true) => {
   try {
     const controller = new AbortController();
