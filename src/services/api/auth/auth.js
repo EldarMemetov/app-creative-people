@@ -19,17 +19,19 @@ export const loginUser = async (data) => {
   }
 };
 
-// export const refreshAccessToken = async () => {
+// export const refreshAccessToken = async (timeoutMs = 10000) => {
 //   try {
-//     const url = `${process.env.NEXT_PUBLIC_API_URL}/auth/refresh`;
-//     const res = await fetch(url, {
+//     const controller = new AbortController();
+//     const id = setTimeout(() => controller.abort(), timeoutMs);
+
+//     const res = await fetch('/api/auth/refresh', {
 //       method: 'POST',
 //       credentials: 'include',
-//       headers: {
-//         'Content-Type': 'application/json',
-//       },
+//       headers: { 'Content-Type': 'application/json' },
 //       body: JSON.stringify({}),
+//       signal: controller.signal,
 //     });
+//     clearTimeout(id);
 
 //     if (!res.ok) {
 //       console.warn('[refresh] fetch failed status', res.status);
@@ -37,15 +39,18 @@ export const loginUser = async (data) => {
 //     }
 
 //     const data = await res.json();
-
 //     console.debug('[refresh] response body', data);
 //     return data?.data?.accessToken || null;
 //   } catch (err) {
-//     console.warn('[refresh] fetch error', err);
+//     if (err.name === 'AbortError') {
+//       console.warn('[refresh] aborted by timeout');
+//     } else {
+//       console.warn('[refresh] fetch error', err);
+//     }
 //     return null;
 //   }
 // };
-export const refreshAccessToken = async (timeoutMs = 10000) => {
+export const refreshAccessToken = async (timeoutMs = 10000, retry = true) => {
   try {
     const controller = new AbortController();
     const id = setTimeout(() => controller.abort(), timeoutMs);
@@ -70,6 +75,10 @@ export const refreshAccessToken = async (timeoutMs = 10000) => {
   } catch (err) {
     if (err.name === 'AbortError') {
       console.warn('[refresh] aborted by timeout');
+
+      if (retry) {
+        return refreshAccessToken(timeoutMs, false);
+      }
     } else {
       console.warn('[refresh] fetch error', err);
     }
