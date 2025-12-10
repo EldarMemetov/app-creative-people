@@ -61,12 +61,7 @@ export default function InfoDetails() {
           <p>
             <strong>Досвід:</strong> {user.experience || 'не вказано'}
           </p>
-          <p>
-            <strong>Напрямки:</strong>{' '}
-            {user.directions && user.directions.length > 0
-              ? user.directions.join(', ')
-              : 'не вказано'}
-          </p>
+
           <p>
             <strong>Онлайн статус:</strong>{' '}
             {user.onlineStatus ? 'Онлайн' : 'Офлайн'}
@@ -80,6 +75,14 @@ export default function InfoDetails() {
           <p>
             <strong>Потребує перевірки:</strong>{' '}
             {user.needsReview ? 'Так' : 'Ні'}
+          </p>
+          <p>
+            <strong>Напрямки:</strong>{' '}
+            {user.directions && user.directions.length > 0
+              ? user.directions
+                  .map((d) => t(d, { ns: 'directions' }))
+                  .join(', ')
+              : 'не вказано'}
           </p>
 
           {user.portfolio && user.portfolio.length > 0 && (

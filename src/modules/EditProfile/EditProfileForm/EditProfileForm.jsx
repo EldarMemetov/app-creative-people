@@ -5,6 +5,7 @@ import { toast } from 'react-hot-toast';
 import FormInput from '@/shared/FormInput/FormInput';
 import { updateProfile } from '@/services/api/profileEdit/media';
 import RoleSelector from '@/modules/RegisterPage/RoleSelector/RoleSelector';
+import DirectionsSelector from '../DirectionsSelector/DirectionsSelector';
 import s from './EditProfileForm.module.scss';
 export default function EditProfileForm({
   user,
@@ -21,6 +22,7 @@ export default function EditProfileForm({
     aboutMe: user.aboutMe || '',
     experience: user.experience || '',
     roles: user.roles || [],
+    directions: user.directions || [],
   };
 
   return (
@@ -94,6 +96,13 @@ export default function EditProfileForm({
           <RoleSelector
             values={values.roles}
             onChange={(newRoles) => setFieldValue('roles', newRoles)}
+          />
+          <DirectionsSelector
+            values={values.directions}
+            onChange={(newDirections) =>
+              setFieldValue('directions', newDirections)
+            }
+            label={t('directions')}
           />
 
           <button type="submit" disabled={isSubmitting || uploadingPhoto}>

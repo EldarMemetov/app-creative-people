@@ -1,0 +1,46 @@
+.container {
+  margin-bottom: 20px;
+}
+
+.label {
+  font-weight: 600;
+  margin-bottom: 8px;
+  display: block;
+}
+
+.directionsGrid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.directionCard {
+  padding: 6px 12px;
+  border: 1px solid #ccc;
+  border-radius: 20px;
+  background-color: #f8f8f8;
+  cursor: pointer;
+  font-size: 14px;
+  transition: all 0.2s ease;
+  position: relative;
+
+  &:hover {
+    background-color: #e6e6e6;
+  }
+}
+
+.directionCard.active {
+  background-color: #0070f3;
+  color: white;
+  border-color: #0070f3;
+}
+
+.checkmark {
+  margin-left: 6px;
+  font-weight: bold;
+}
+.hint {
+  color: #888;
+  font-size: 13px;
+  margin-top: 4px;
+}
