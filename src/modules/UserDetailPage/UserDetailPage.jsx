@@ -7,6 +7,7 @@ import Loader from '@/shared/Loader/Loader';
 import { ImageWithFallback } from '@/shared/ImageWithFallback/ImageWithFallback';
 import Container from '@/shared/container/Container';
 import { useTranslation } from 'react-i18next';
+import { useSocket } from '@/hooks/useSocket';
 
 export default function UserDetailPage() {
   const { id } = useParams();
@@ -15,14 +16,7 @@ export default function UserDetailPage() {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
-
-  const getSafePhoto = (url) => {
-    if (!url) return '/image/logo.png';
-    return url.startsWith('https://cdn.sanity.io') ||
-      url.startsWith('https://res.cloudinary.com')
-      ? url
-      : '/image/logo.png';
-  };
+  const { usersStatus } = useSocket();
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -42,6 +36,17 @@ export default function UserDetailPage() {
   if (loading) return <Loader />;
   if (error) return <div>Помилка: {error}</div>;
   if (!user) return <div>Користувача не знайдено</div>;
+
+  const userIdKey = (user._id ?? user.id ?? '').toString();
+  const isOnline = usersStatus[userIdKey] ?? false;
+
+  const getSafePhoto = (url) => {
+    if (!url) return '/image/logo.png';
+    return url.startsWith('https://cdn.sanity.io') ||
+      url.startsWith('https://res.cloudinary.com')
+      ? url
+      : '/image/logo.png';
+  };
 
   return (
     <Container>
@@ -91,19 +96,24 @@ export default function UserDetailPage() {
                 ? user.directions.join(', ')
                 : 'не вказано'}
             </p>
-            <p>
-              <strong>Онлайн статус:</strong>{' '}
-              {user.onlineStatus ? 'Онлайн' : 'Офлайн'}
-            </p>
+
+            <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+              <div
+                style={{
+                  width: 12,
+                  height: 12,
+                  borderRadius: '50%',
+                  backgroundColor: isOnline ? 'green' : 'red',
+                }}
+              />
+              <span>{isOnline ? 'Онлайн' : 'Офлайн'}</span>
+            </div>
+
             <p>
               <strong>Про себе:</strong> {user.aboutMe || 'не вказано'}
             </p>
             <p>
               <strong>Заблокований:</strong> {user.isBlocked ? 'Так' : 'Ні'}
-            </p>
-            <p>
-              <strong>Потребує перевірки:</strong>{' '}
-              {user.needsReview ? 'Так' : 'Ні'}
             </p>
 
             {user.portfolio?.length > 0 && (
