@@ -35,5 +35,6 @@
   "retouch": "Retouch",
   "color_grading": "Color Grading",
   "editing": "Editing",
-  "choose_at_least_one": "Choose at least one direction"
+  "choose_at_least_one": "Choose at least one direction",
+  "max_six": "You can select up to 6 directions"
 }

@@ -1,46 +1,108 @@
 .container {
-  margin-bottom: 20px;
+  margin-bottom: 32px;
+  font-family: 'Inter', sans-serif;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
 }
 
 .label {
   font-weight: 600;
-  margin-bottom: 8px;
-  display: block;
+  font-size: 16px;
+  color: #111827;
+}
+
+.counter {
+  font-size: 14px;
+  color: #6b7280;
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+
+.counterLimit {
+  color: #ef4444; /* red-500 */
+  font-weight: 700;
 }
 
 .directionsGrid {
   display: flex;
   flex-wrap: wrap;
-  gap: 8px;
+  gap: 12px;
 }
 
-.directionCard {
-  padding: 6px 12px;
-  border: 1px solid #ccc;
-  border-radius: 20px;
-  background-color: #f8f8f8;
-  cursor: pointer;
-  font-size: 14px;
-  transition: all 0.2s ease;
+.card {
   position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 18px;
+  border-radius: 999px;
+  border: 1px solid #d1d5db;
+  background: #f9fafb;
+  font-size: 14px;
+  font-weight: 500;
+  color: #374151;
+  cursor: pointer;
+  transition:
+    all 0.25s ease,
+    box-shadow 0.25s ease;
 
-  &:hover {
-    background-color: #e6e6e6;
+  &:hover:not(.disabled) {
+    background: linear-gradient(135deg, #e0f2fe, #dbeafe);
+    border-color: #6366f1;
+    box-shadow: 0 6px 16px rgba(99, 102, 241, 0.15);
   }
 }
 
-.directionCard.active {
-  background-color: #0070f3;
-  color: white;
-  border-color: #0070f3;
+.active {
+  background: linear-gradient(135deg, #c7d2fe, #a5b4fc);
+  border-color: #4f46e5;
+  color: #1e3a8a;
+  font-weight: 600;
+  box-shadow: 0 4px 12px rgba(99, 102, 241, 0.25);
 }
 
-.checkmark {
-  margin-left: 6px;
-  font-weight: bold;
+.disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+  filter: grayscale(0.3);
+  background: #f3f4f6;
+  color: #9ca3af;
 }
-.hint {
-  color: #888;
+
+.text {
+  white-space: nowrap;
+}
+
+.check {
+  font-size: 14px;
+  font-weight: 700;
+  color: #2563eb;
+  opacity: 0;
+  transform: translateY(-2px);
+  transition: all 0.25s ease;
+}
+
+.active .check {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.message {
+  min-height: 20px;
   font-size: 13px;
-  margin-top: 4px;
+  color: #dc2626;
+  margin-top: 6px;
+  opacity: 0;
+  transform: translateY(-6px);
+  transition: all 0.3s ease;
+}
+
+.errorVisible {
+  opacity: 1;
+  transform: translateY(0);
 }

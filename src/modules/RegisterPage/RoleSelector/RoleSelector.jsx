@@ -4,42 +4,57 @@ import { useTranslation } from 'react-i18next';
 import s from './RoleSelector.module.scss';
 import roles from '@/utils/roles.js';
 
-export default function RoleSelector({ values = [], onChange, label }) {
+const MAX_ROLES = 3;
+
+export default function RoleSelector({ values = [], onChange, label, error }) {
   const { t } = useTranslation(['roles']);
 
   const toggleRole = (role) => {
-    const alreadySelected = values.includes(role);
+    const isActive = values.includes(role);
 
-    if (alreadySelected) {
+    if (isActive) {
       onChange(values.filter((r) => r !== role));
-    } else {
-      if (values.length >= 3) return;
-      onChange([...values, role]);
+      return;
     }
+
+    if (values.length >= MAX_ROLES) return;
+
+    onChange([...values, role]);
   };
 
+  const limitReached = values.length >= MAX_ROLES;
+
   return (
-    <div>
-      <h2>{t('role')}</h2>
+    <div className={s.container}>
+      <div className={s.header}>
+        {label && <label className={s.label}>{label}</label>}
+        <span className={`${s.counter} ${limitReached ? s.counterLimit : ''}`}>
+          {values.length} / {MAX_ROLES}
+        </span>
+      </div>
 
-      <div className={s.roleSelector}>
-        {label && <label>{label}</label>}
+      <div className={s.roleGrid}>
+        {roles.map((role) => {
+          const isActive = values.includes(role);
+          const isDisabled = !isActive && limitReached;
 
-        <div className={s.roleGrid}>
-          {roles.map((role) => (
-            <div
+          return (
+            <button
               key={role}
-              className={`${s.roleCard} ${values.includes(role) ? s.active : ''}`}
+              type="button"
+              disabled={isDisabled}
               onClick={() => toggleRole(role)}
+              className={`${s.roleCard} ${isActive ? s.active : ''} ${isDisabled ? s.disabled : ''}`}
             >
-              {t(role)}
-            </div>
-          ))}
-        </div>
+              <span className={s.text}>{t(role)}</span>
+              <span className={s.check}>✓</span>
+            </button>
+          );
+        })}
+      </div>
 
-        {values.length === 0 && (
-          <p className={s.hint}>{t('choose_at_least_one')}</p>
-        )}
+      <div className={`${s.message} ${error ? s.errorVisible : ''}`}>
+        {error}
       </div>
     </div>
   );

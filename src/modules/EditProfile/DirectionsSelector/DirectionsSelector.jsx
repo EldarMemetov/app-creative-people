@@ -4,43 +4,67 @@ import { useTranslation } from 'react-i18next';
 import s from './DirectionsSelector.module.scss';
 import { directionsEnum } from '@/utils/rolesEnum';
 
-export default function DirectionsSelector({ values = [], onChange, label }) {
+const MAX_DIRECTIONS = 6;
+
+export default function DirectionsSelector({
+  values = [],
+  onChange,
+  label,
+  error,
+}) {
   const { t } = useTranslation(['directions']);
 
   const toggleDirection = (direction) => {
-    const alreadySelected = values.includes(direction);
-    if (alreadySelected) {
+    const isActive = values.includes(direction);
+
+    if (isActive) {
       onChange(values.filter((d) => d !== direction));
-    } else {
-      if (values.length >= 6) return;
-      onChange([...values, direction]);
+      return;
     }
+
+    if (values.length >= MAX_DIRECTIONS) return;
+
+    onChange([...values, direction]);
   };
+
+  const limitReached = values.length >= MAX_DIRECTIONS;
 
   return (
     <div className={s.container}>
-      {label && <label className={s.label}>{label}</label>}
+      <div className={s.header}>
+        {label && <label className={s.label}>{label}</label>}
+
+        <span className={`${s.counter} ${limitReached ? s.counterLimit : ''}`}>
+          {values.length} / {MAX_DIRECTIONS}
+        </span>
+      </div>
 
       <div className={s.directionsGrid}>
         {directionsEnum.map((direction) => {
           const isActive = values.includes(direction);
+          const isDisabled = !isActive && limitReached;
+
           return (
             <button
               key={direction}
               type="button"
-              className={`${s.directionCard} ${isActive ? s.active : ''}`}
+              disabled={isDisabled}
               onClick={() => toggleDirection(direction)}
+              className={`${s.card}
+                ${isActive ? s.active : ''}
+                ${isDisabled ? s.disabled : ''}
+              `}
             >
-              {t(direction)}
-              {isActive && <span className={s.checkmark}>✓</span>}
+              <span className={s.text}>{t(direction)}</span>
+              {isActive && <span className={s.check}>✓</span>}
             </button>
           );
         })}
       </div>
 
-      {values.length === 0 && (
-        <p className={s.hint}>{t('choose_at_least_one')}</p>
-      )}
+      <div className={`${s.message} ${error ? s.errorVisible : ''}`}>
+        {error}
+      </div>
     </div>
   );
 }

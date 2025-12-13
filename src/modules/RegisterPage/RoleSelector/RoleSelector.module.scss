@@ -1,29 +1,108 @@
+.container {
+  margin-bottom: 32px;
+  font-family: 'Inter', sans-serif;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.label {
+  font-weight: 600;
+  font-size: 16px;
+  color: #111827;
+}
+
+.counter {
+  font-size: 14px;
+  color: #6b7280;
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+
+.counterLimit {
+  color: #ef4444; /* red-500 */
+  font-weight: 700;
+}
+
 .roleGrid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-  gap: 14px;
-  margin-bottom: 20px;
+  gap: 12px;
 }
 
 .roleCard {
-  padding: 14px 18px;
-  background: #3b1818;
-  border: 2px solid #ddd;
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 12px 18px;
   border-radius: 12px;
-  text-align: center;
-  cursor: pointer;
-  user-select: none;
+  border: 2px solid #d1d5db;
+  background: #f9fafb;
+  font-size: 14px;
   font-weight: 500;
+  color: #374151;
+  cursor: pointer;
   transition: all 0.25s ease;
+}
 
-  &:hover {
-    background: #ed8686;
-    border-color: #999;
-  }
+.roleCard:hover:not(.disabled) {
+  background: linear-gradient(135deg, #e0f2fe, #dbeafe);
+  border-color: #6366f1;
+  box-shadow: 0 6px 16px rgba(99, 102, 241, 0.15);
 }
 
 .active {
-  background: #0f75f1;
-  border-color: #0070f3;
-  box-shadow: 0px 0px 8px rgba(0, 112, 243, 0.4);
+  background: linear-gradient(135deg, #c7d2fe, #a5b4fc);
+  border-color: #4f46e5;
+  color: #1e3a8a;
+  font-weight: 600;
+  box-shadow: 0 4px 12px rgba(99, 102, 241, 0.25);
+}
+
+.disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+  filter: grayscale(0.3);
+  background: #f3f4f6;
+  color: #9ca3af;
+}
+
+.text {
+  white-space: nowrap;
+}
+
+.check {
+  font-size: 14px;
+  font-weight: 700;
+  color: #2563eb;
+  opacity: 0;
+  width: 16px;
+  display: inline-block;
+  text-align: center;
+  transition: opacity 0.25s ease;
+}
+
+.active .check {
+  opacity: 1;
+}
+
+.message {
+  min-height: 20px;
+  font-size: 13px;
+  color: #dc2626;
+  margin-top: 6px;
+  opacity: 0;
+  transform: translateY(-6px);
+  transition: all 0.3s ease;
+}
+
+.errorVisible {
+  opacity: 1;
+  transform: translateY(0);
 }

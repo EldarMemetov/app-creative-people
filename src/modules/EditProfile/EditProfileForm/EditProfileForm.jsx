@@ -57,7 +57,14 @@ export default function EditProfileForm({
         }
       }}
     >
-      {({ isSubmitting, values, setFieldValue }) => (
+      {({
+        isSubmitting,
+        values,
+        setFieldValue,
+        setFieldTouched,
+        errors,
+        touched,
+      }) => (
         <Form className="profile-form">
           <FormInput
             label={t('name')}
@@ -95,14 +102,21 @@ export default function EditProfileForm({
 
           <RoleSelector
             values={values.roles}
-            onChange={(newRoles) => setFieldValue('roles', newRoles)}
+            onChange={(newRoles) => {
+              setFieldValue('roles', newRoles);
+              setFieldTouched('roles', true);
+            }}
+            label={t('role')}
+            error={touched.roles && errors.roles}
           />
+
           <DirectionsSelector
             values={values.directions}
             onChange={(newDirections) =>
               setFieldValue('directions', newDirections)
             }
             label={t('directions')}
+            error={touched.directions && errors.directions}
           />
 
           <button type="submit" disabled={isSubmitting || uploadingPhoto}>
