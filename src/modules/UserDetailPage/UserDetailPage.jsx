@@ -40,9 +40,13 @@ export default function UserDetailPage() {
   if (!user) return <div>Користувача не знайдено</div>;
 
   const userIdKey = String(user._id ?? user.id ?? '');
-  const isOnline = userIdKey
-    ? (usersStatus[userIdKey] ?? Boolean(user.onlineStatus))
-    : Boolean(user.onlineStatus);
+  const isOnline = usersStatus[userIdKey] ?? Boolean(user.onlineStatus);
+  console.debug('[UserDetailPage] user', {
+    id: userIdKey,
+    dbOnlineStatus: user.onlineStatus,
+    liveStatus: usersStatus[userIdKey],
+    computed: isOnline,
+  });
 
   const getSafePhoto = (url) => {
     if (!url) return '/image/logo.png';

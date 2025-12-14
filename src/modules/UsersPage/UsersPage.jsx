@@ -57,7 +57,11 @@ export default function UsersPage() {
           {users.map((user) => {
             const userIdKey = String(user._id ?? user.id ?? '');
             const isOnline = usersStatus[userIdKey] ?? false;
-
+            console.debug('[UsersPage] render user', {
+              id: userIdKey,
+              name: user.name,
+              isOnline,
+            });
             return (
               <Link
                 key={user._id}
