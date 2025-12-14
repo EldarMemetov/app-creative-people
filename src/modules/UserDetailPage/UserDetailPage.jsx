@@ -8,6 +8,8 @@ import { ImageWithFallback } from '@/shared/ImageWithFallback/ImageWithFallback'
 import Container from '@/shared/container/Container';
 import { useTranslation } from 'react-i18next';
 import { useSocket } from '@/hooks/useSocket';
+import LinkButton from '@/shared/components/LinkButton/LinkButton';
+import { LINKDATA, ROUTES } from '@/shared/constants';
 
 export default function UserDetailPage() {
   const { id } = useParams();
@@ -37,8 +39,10 @@ export default function UserDetailPage() {
   if (error) return <div>Помилка: {error}</div>;
   if (!user) return <div>Користувача не знайдено</div>;
 
-  const userIdKey = (user._id ?? user.id ?? '').toString();
-  const isOnline = usersStatus[userIdKey] ?? false;
+  const userIdKey = String(user._id ?? user.id ?? '');
+  const isOnline = userIdKey
+    ? (usersStatus[userIdKey] ?? Boolean(user.onlineStatus))
+    : Boolean(user.onlineStatus);
 
   const getSafePhoto = (url) => {
     if (!url) return '/image/logo.png';
@@ -137,6 +141,9 @@ export default function UserDetailPage() {
               </div>
             )}
           </div>
+          <LinkButton path={ROUTES.TALENTS} type={LINKDATA.HOME}>
+            Повернутись до профілей
+          </LinkButton>
         </div>
       </section>
     </Container>

@@ -7,11 +7,13 @@ import Loader from '@/shared/Loader/Loader';
 import Link from 'next/link';
 import Container from '@/shared/container/Container';
 import s from './UsersPage.module.scss';
+import { useSocket } from '@/hooks/useSocket';
 
 export default function UsersPage() {
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const { usersStatus } = useSocket();
 
   useEffect(() => {
     const fetchUsers = async () => {
@@ -52,42 +54,65 @@ export default function UsersPage() {
         <h1 className={s.title}>Усі користувачі</h1>
 
         <div className={s.grid}>
-          {users.map((user) => (
-            <Link
-              key={user._id}
-              href={`/talents/${user._id}`}
-              className={s.link}
-            >
-              <div className={s.card}>
-                <div className={s.photoWrapper}>
-                  <ImageWithFallback
-                    src={user.safePhoto}
-                    alt={`${user.name} ${user.surname}`}
-                    width={500}
-                    height={700}
-                    className={s.photo}
-                  />
+          {users.map((user) => {
+            const userIdKey = String(user._id ?? user.id ?? '');
+            const isOnline = usersStatus[userIdKey] ?? false;
+
+            return (
+              <Link
+                key={user._id}
+                href={`/talents/${user._id}`}
+                className={s.link}
+              >
+                <div className={s.card}>
+                  <div className={s.photoWrapper}>
+                    <ImageWithFallback
+                      src={user.safePhoto}
+                      alt={`${user.name} ${user.surname}`}
+                      width={500}
+                      height={700}
+                      className={s.photo}
+                    />
+                  </div>
+
+                  <div className={s.infoBlur}>
+                    <p className={s.infoRow}>
+                      <span className={s.label}>Ім’я:</span>
+                      <span className={s.value}>{user.name}</span>
+                    </p>
+
+                    <p className={s.infoRow}>
+                      <span className={s.label}>Прізвище:</span>
+                      <span className={s.value}>{user.surname}</span>
+                    </p>
+
+                    <p className={s.infoRow}>
+                      <span className={s.label}>Місто:</span>
+                      <span className={s.value}>{user.city}</span>
+                    </p>
+
+                    <div
+                      style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '10px',
+                      }}
+                    >
+                      <div
+                        style={{
+                          width: 12,
+                          height: 12,
+                          borderRadius: '50%',
+                          backgroundColor: isOnline ? 'green' : 'red',
+                        }}
+                      />
+                      <span>{isOnline ? 'Онлайн' : 'Офлайн'}</span>
+                    </div>
+                  </div>
                 </div>
-
-                <div className={s.infoBlur}>
-                  <p className={s.infoRow}>
-                    <span className={s.label}>Ім’я:</span>
-                    <span className={s.value}>{user.name}</span>
-                  </p>
-
-                  <p className={s.infoRow}>
-                    <span className={s.label}>Прізвище:</span>
-                    <span className={s.value}>{user.surname}</span>
-                  </p>
-
-                  <p className={s.infoRow}>
-                    <span className={s.label}>Місто:</span>
-                    <span className={s.value}>{user.city}</span>
-                  </p>
-                </div>
-              </div>
-            </Link>
-          ))}
+              </Link>
+            );
+          })}
         </div>
       </section>
     </Container>

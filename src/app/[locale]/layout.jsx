@@ -12,6 +12,7 @@ import clsx from 'clsx';
 import { Toaster } from 'react-hot-toast';
 import Footer from '@/modules/Footer/Footer';
 import AuthProvider from '../AuthProvider';
+import { SocketProvider } from '@/providers/SocketProvider';
 const manrope = Manrope({
   subsets: ['latin', 'cyrillic'],
   weight: ['400', '500', '600', '700', '800'],
@@ -91,11 +92,13 @@ export default async function Layout({ children, params }) {
           resources={resources}
         >
           <AuthProvider>
-            <ErrorBoundaryWithTranslation>
-              <Header />
-              <main>{children}</main>
-              <Footer />
-            </ErrorBoundaryWithTranslation>
+            <SocketProvider>
+              <ErrorBoundaryWithTranslation>
+                <Header />
+                <main>{children}</main>
+                <Footer />
+              </ErrorBoundaryWithTranslation>
+            </SocketProvider>
           </AuthProvider>
         </TranslationsProvider>
         <Toaster position="top-right" reverseOrder={false} />
