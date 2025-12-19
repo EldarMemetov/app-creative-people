@@ -8,14 +8,37 @@ import { LINKDATA } from '@/shared/constants';
 import { useSocket } from '@/hooks/useSocket';
 import s from './InfoDetails.module.scss';
 import Container from '@/shared/container/Container';
-
+import { getLikeStatus } from '@/services/api/users/api';
+import { useEffect, useState } from 'react';
 export default function InfoDetails() {
   const { user, loading } = useAuthGuard();
   const { socket } = useSocket();
   const { t } = useTranslation(['roles']);
+  const [likesCount, setLikesCount] = useState(0);
+  useEffect(() => {
+    if (!user) return;
+    let active = true;
+
+    const fetchLikes = async () => {
+      try {
+        const data = await getLikeStatus(user._id);
+        if (!active) return;
+        setLikesCount(data.likesCount ?? 0);
+      } catch (err) {
+        console.warn('Не удалось получить количество лайков', err);
+      }
+    };
+
+    fetchLikes();
+
+    return () => {
+      active = false;
+    };
+  }, [user]);
 
   if (loading) return <Loader />;
   if (!user) return null;
+
   const isOnline = Boolean(socket?.connected);
   return (
     <section>
@@ -43,7 +66,10 @@ export default function InfoDetails() {
                 <strong className={s.label}>Ім’я:</strong>
                 <span className={s.value}>{user.name || 'не вказано'}</span>
               </p>
-
+              <p className={s.pWithStrong}>
+                <strong className={s.label}>Лайки:</strong>
+                <span className={s.value}>{likesCount}</span>
+              </p>
               <p className={s.pWithStrong}>
                 <strong className={s.label}>Прізвище:</strong>
                 <span className={s.value}>{user.surname || 'не вказано'}</span>

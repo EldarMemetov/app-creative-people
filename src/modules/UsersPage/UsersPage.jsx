@@ -8,12 +8,14 @@ import Link from 'next/link';
 import Container from '@/shared/container/Container';
 import s from './UsersPage.module.scss';
 import { useSocket } from '@/hooks/useSocket';
+import { useAuthGuard } from '@/hooks/useAuthGuard';
 
 export default function UsersPage() {
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const { usersStatus } = useSocket();
+  const { user: currentUser, loading: authLoading } = useAuthGuard();
 
   useEffect(() => {
     const fetchUsers = async () => {
@@ -43,7 +45,7 @@ export default function UsersPage() {
     fetchUsers();
   }, []);
 
-  if (loading) return <Loader />;
+  if (loading || authLoading) return <Loader />;
   if (error) return <div className={s.error}>Помилка: {error}</div>;
   if (users.length === 0)
     return <div className={s.noUsers}>Немає зареєстрованих користувачів</div>;
@@ -57,17 +59,15 @@ export default function UsersPage() {
           {users.map((user) => {
             const userIdKey = String(user._id ?? user.id ?? '');
             const isOnline = usersStatus[userIdKey] ?? false;
-            console.debug('[UsersPage] render user', {
-              id: userIdKey,
-              name: user.name,
-              isOnline,
-            });
+
+            // если это текущий пользователь, ведём на /profile
+            const href =
+              currentUser && currentUser._id === user._id
+                ? '/profile'
+                : `/talents/${user._id}`;
+
             return (
-              <Link
-                key={user._id}
-                href={`/talents/${user._id}`}
-                className={s.link}
-              >
+              <Link key={user._id} href={href} className={s.link}>
                 <div className={s.card}>
                   <div className={s.photoWrapper}>
                     <ImageWithFallback

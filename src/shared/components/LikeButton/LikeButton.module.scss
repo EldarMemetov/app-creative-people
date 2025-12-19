@@ -1,0 +1,38 @@
+.likeWrapper {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.likeButton {
+  background: linear-gradient(135deg, #f0edeb, #ef89a7);
+  border: none;
+  border-radius: 50%;
+
+  font-size: 20px;
+  cursor: pointer;
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+
+  &:hover {
+    transform: scale(1.1);
+    box-shadow: 0 4px 12px rgba(255, 44, 109, 0.5);
+  }
+
+  &:disabled {
+    cursor: not-allowed;
+    opacity: 0.6;
+  }
+}
+
+.liked {
+  animation: pulse 0.3s ease;
+}
+
+.likesCount {
+  font-weight: bold;
+  font-size: 16px;
+  color: #fffefe;
+  margin: 0;
+}

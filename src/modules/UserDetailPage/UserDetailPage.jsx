@@ -10,6 +10,7 @@ import { useTranslation } from 'react-i18next';
 import { useSocket } from '@/hooks/useSocket';
 import LinkButton from '@/shared/components/LinkButton/LinkButton';
 import { LINKDATA, ROUTES } from '@/shared/constants';
+import LikeButton from '@/shared/components/LikeButton/LikeButton';
 
 export default function UserDetailPage() {
   const { id } = useParams();
@@ -41,12 +42,6 @@ export default function UserDetailPage() {
 
   const userIdKey = String(user._id ?? user.id ?? '');
   const isOnline = usersStatus[userIdKey] ?? Boolean(user.onlineStatus);
-  console.debug('[UserDetailPage] user', {
-    id: userIdKey,
-    dbOnlineStatus: user.onlineStatus,
-    liveStatus: usersStatus[userIdKey],
-    computed: isOnline,
-  });
 
   const getSafePhoto = (url) => {
     if (!url) return '/image/logo.png';
@@ -116,7 +111,7 @@ export default function UserDetailPage() {
               />
               <span>{isOnline ? 'Онлайн' : 'Офлайн'}</span>
             </div>
-
+            <LikeButton userId={user._id} />
             <p>
               <strong>Про себе:</strong> {user.aboutMe || 'не вказано'}
             </p>
