@@ -12,9 +12,10 @@ import { getLikeStatus } from '@/services/api/users/api';
 import { useEffect, useState } from 'react';
 export default function InfoDetails() {
   const { user, loading } = useAuthGuard();
-  const { socket } = useSocket();
+  const { socket, likesMap } = useSocket();
   const { t } = useTranslation(['roles']);
   const [likesCount, setLikesCount] = useState(0);
+
   useEffect(() => {
     if (!user) return;
     let active = true;
@@ -35,6 +36,16 @@ export default function InfoDetails() {
       active = false;
     };
   }, [user]);
+
+  useEffect(() => {
+    if (!user) return;
+
+    const currentUserLikes = likesMap?.[user._id];
+
+    if (currentUserLikes?.count !== undefined) {
+      setLikesCount(currentUserLikes.count);
+    }
+  }, [user, likesMap]);
 
   if (loading) return <Loader />;
   if (!user) return null;
@@ -60,7 +71,6 @@ export default function InfoDetails() {
               />
             </div>
 
-            {/* Детали */}
             <div className={s.details}>
               <p className={s.pWithStrong}>
                 <strong className={s.label}>Ім’я:</strong>
