@@ -12,45 +12,58 @@ import { getLikeStatus } from '@/services/api/users/api';
 import { useEffect, useState } from 'react';
 export default function InfoDetails() {
   const { user, loading } = useAuthGuard();
-  const { socket, likesMap } = useSocket();
+  const { usersStatus, usersStatusInitialized, likesMap } = useSocket();
   const { t } = useTranslation(['roles']);
-  const [likesCount, setLikesCount] = useState(0);
+
+  const [likesCount, setLikesCount] = useState(user?.likesCount ?? null);
 
   useEffect(() => {
-    if (!user) return;
-    let active = true;
+    if (!user) {
+      setLikesCount(null);
+      return;
+    }
 
-    const fetchLikes = async () => {
+    if (typeof user.likesCount === 'number') {
+      setLikesCount(user.likesCount);
+      return;
+    }
+
+    let mounted = true;
+    (async () => {
       try {
         const data = await getLikeStatus(user._id);
-        if (!active) return;
-        setLikesCount(data.likesCount ?? 0);
-      } catch (err) {
-        console.warn('Не удалось получить количество лайков', err);
+        if (!mounted) return;
+        setLikesCount(
+          typeof data.likesCount === 'number' ? data.likesCount : 0
+        );
+      } catch (e) {
+        if (!mounted) return;
+        setLikesCount(0);
       }
-    };
-
-    fetchLikes();
+    })();
 
     return () => {
-      active = false;
+      mounted = false;
     };
   }, [user]);
 
   useEffect(() => {
     if (!user) return;
-
-    const currentUserLikes = likesMap?.[user._id];
-
-    if (currentUserLikes?.count !== undefined) {
-      setLikesCount(currentUserLikes.count);
+    const payload = likesMap[String(user._id)];
+    if (!payload) return;
+    if (typeof payload.count === 'number') {
+      setLikesCount(payload.count);
+      return;
     }
-  }, [user, likesMap]);
+  }, [likesMap, user]);
 
   if (loading) return <Loader />;
   if (!user) return null;
 
-  const isOnline = Boolean(socket?.connected);
+  const userIdKey = String(user._id ?? user.id ?? '');
+  const isOnline = usersStatusInitialized
+    ? Boolean(usersStatus[userIdKey])
+    : Boolean(user.onlineStatus);
   return (
     <section>
       <Container>
@@ -78,7 +91,9 @@ export default function InfoDetails() {
               </p>
               <p className={s.pWithStrong}>
                 <strong className={s.label}>Лайки:</strong>
-                <span className={s.value}>{likesCount}</span>
+                <span className={s.value}>
+                  {likesCount === null ? '…' : likesCount}
+                </span>
               </p>
               <p className={s.pWithStrong}>
                 <strong className={s.label}>Прізвище:</strong>
@@ -100,7 +115,6 @@ export default function InfoDetails() {
                 <span className={s.value}>{user.email || 'не вказано'}</span>
               </p>
 
-              {/* Ролі */}
               <div className={s.row}>
                 <span className={s.label}>Ролі</span>
                 {user.roles && user.roles.length > 0 ? (

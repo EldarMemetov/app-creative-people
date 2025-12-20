@@ -1,5 +1,5 @@
 'use client';
-
+import s from './UserDetailPage.module.scss';
 import { useParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { getUserById } from '@/services/api/users/api';
@@ -11,7 +11,7 @@ import { useSocket } from '@/hooks/useSocket';
 import LinkButton from '@/shared/components/LinkButton/LinkButton';
 import { LINKDATA, ROUTES } from '@/shared/constants';
 import LikeButton from '@/shared/components/LikeButton/LikeButton';
-
+import { useAuth } from '@/services/store/useAuth';
 export default function UserDetailPage() {
   const { id } = useParams();
   const { t } = useTranslation(['roles']);
@@ -19,8 +19,8 @@ export default function UserDetailPage() {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
-  const { usersStatus } = useSocket();
-
+  const { usersStatus, usersStatusInitialized } = useSocket();
+  const { user: currentUser, loading: authLoading } = useAuth();
   useEffect(() => {
     const fetchUser = async () => {
       try {
@@ -35,13 +35,15 @@ export default function UserDetailPage() {
 
     fetchUser();
   }, [id]);
-
+  if (authLoading) return <Loader />;
   if (loading) return <Loader />;
   if (error) return <div>Помилка: {error}</div>;
   if (!user) return <div>Користувача не знайдено</div>;
 
   const userIdKey = String(user._id ?? user.id ?? '');
-  const isOnline = usersStatus[userIdKey] ?? Boolean(user.onlineStatus);
+  const isOnline = usersStatusInitialized
+    ? Boolean(usersStatus[userIdKey])
+    : Boolean(user.onlineStatus);
 
   const getSafePhoto = (url) => {
     if (!url) return '/image/logo.png';
@@ -111,7 +113,17 @@ export default function UserDetailPage() {
               />
               <span>{isOnline ? 'Онлайн' : 'Офлайн'}</span>
             </div>
-            <LikeButton userId={user._id} />
+
+            {currentUser ? (
+              <LikeButton
+                userId={user._id}
+                initialCount={user.likesCount}
+                initialLiked={user.liked}
+              />
+            ) : (
+              <div className={s.likesReadonly}>❤️ {user.likesCount}</div>
+            )}
+
             <p>
               <strong>Про себе:</strong> {user.aboutMe || 'не вказано'}
             </p>

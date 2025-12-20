@@ -14,13 +14,9 @@ const SocketContext = createContext({
   socket: null,
   connected: false,
   usersStatus: {},
+  usersStatusInitialized: false,
   likesMap: {},
 });
-
-function maskToken(t) {
-  if (!t) return 'no-token';
-  return t.length > 8 ? `${t.slice(0, 6)}...${t.slice(-4)}` : 'short-token';
-}
 
 export function SocketProvider({ children }) {
   const { accessToken } = useAuth();
@@ -28,6 +24,7 @@ export function SocketProvider({ children }) {
   const tokenRef = useRef(null);
   const [connected, setConnected] = useState(false);
   const [usersStatus, setUsersStatus] = useState({});
+  const [usersStatusInitialized, setUsersStatusInitialized] = useState(false);
   const [likesMap, setLikesMap] = useState({});
 
   useEffect(() => {
@@ -39,6 +36,7 @@ export function SocketProvider({ children }) {
       tokenRef.current = null;
       setConnected(false);
       setUsersStatus({});
+      setUsersStatusInitialized(false);
       setLikesMap({});
       return;
     }
@@ -50,6 +48,7 @@ export function SocketProvider({ children }) {
       socketRef.current = null;
       setConnected(false);
       setUsersStatus({});
+      setUsersStatusInitialized(false);
       setLikesMap({});
     }
 
@@ -62,24 +61,36 @@ export function SocketProvider({ children }) {
     socketRef.current = socket;
     tokenRef.current = accessToken;
 
-    const handleInitial = (map = {}) =>
-      setUsersStatus((prev) => ({ ...prev, ...map }));
-    const handleUpdate = ({ userId, onlineStatus }) => {
-      if (!userId) return;
-      setUsersStatus((prev) => ({ ...prev, [userId]: Boolean(onlineStatus) }));
+    const handleInitial = (map = {}) => {
+      setUsersStatus(map || {});
+      setUsersStatusInitialized(true);
+      console.debug(
+        '[socket] initialUsersStatus received count=',
+        Object.keys(map || {}).length
+      );
     };
 
-    const handleLikeUpdate = ({ toUserId, liked }) => {
-      setLikesMap((prev) => {
-        const prevCount = prev[toUserId]?.count ?? 0;
-        return {
-          ...prev,
-          [toUserId]: {
-            liked,
-            count: liked ? prevCount + 1 : Math.max(prevCount - 1, 0),
-          },
-        };
-      });
+    const handleUpdate = ({ userId, onlineStatus }) => {
+      if (!userId) return;
+      setUsersStatus((prev) => ({
+        ...prev,
+        [String(userId)]: Boolean(onlineStatus),
+      }));
+    };
+
+    const handleLikeUpdate = (payload) => {
+      const { toUserId, liked, likesCount } = payload || {};
+      if (!toUserId) return;
+      setLikesMap((prev) => ({
+        ...prev,
+        [String(toUserId)]: {
+          liked: Boolean(liked),
+          count:
+            typeof likesCount === 'number'
+              ? likesCount
+              : (prev[String(toUserId)]?.count ?? 0),
+        },
+      }));
     };
 
     socket.on('connect', () => setConnected(true));
@@ -89,20 +100,29 @@ export function SocketProvider({ children }) {
     socket.on('likeUpdate', handleLikeUpdate);
 
     return () => {
-      socket.off('initialUsersStatus', handleInitial);
-      socket.off('userStatusUpdate', handleUpdate);
-      socket.off('likeUpdate', handleLikeUpdate);
-      socket.disconnect();
+      try {
+        socket.off('initialUsersStatus', handleInitial);
+        socket.off('userStatusUpdate', handleUpdate);
+        socket.off('likeUpdate', handleLikeUpdate);
+        socket.disconnect();
+      } catch (e) {}
       socketRef.current = null;
       setConnected(false);
       setUsersStatus({});
+      setUsersStatusInitialized(false);
       setLikesMap({});
     };
   }, [accessToken]);
 
   return (
     <SocketContext.Provider
-      value={{ socket: socketRef.current, connected, usersStatus, likesMap }}
+      value={{
+        socket: socketRef.current,
+        connected,
+        usersStatus,
+        usersStatusInitialized,
+        likesMap,
+      }}
     >
       {children}
     </SocketContext.Provider>

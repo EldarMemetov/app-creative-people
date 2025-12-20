@@ -8,14 +8,14 @@ import Link from 'next/link';
 import Container from '@/shared/container/Container';
 import s from './UsersPage.module.scss';
 import { useSocket } from '@/hooks/useSocket';
-import { useAuthGuard } from '@/hooks/useAuthGuard';
+import { useAuth } from '@/services/store/useAuth';
 
 export default function UsersPage() {
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
-  const { usersStatus } = useSocket();
-  const { user: currentUser, loading: authLoading } = useAuthGuard();
+  const { usersStatus, usersStatusInitialized } = useSocket();
+  const { user: currentUser, loading: authLoading } = useAuth();
 
   useEffect(() => {
     const fetchUsers = async () => {
@@ -58,11 +58,13 @@ export default function UsersPage() {
         <div className={s.grid}>
           {users.map((user) => {
             const userIdKey = String(user._id ?? user.id ?? '');
-            const isOnline = usersStatus[userIdKey] ?? false;
 
-            // если это текущий пользователь, ведём на /profile
+            const isOnline = usersStatusInitialized
+              ? Boolean(usersStatus[userIdKey])
+              : Boolean(user.onlineStatus);
+
             const href =
-              currentUser && currentUser._id === user._id
+              currentUser && String(currentUser._id) === String(user._id)
                 ? '/profile'
                 : `/talents/${user._id}`;
 

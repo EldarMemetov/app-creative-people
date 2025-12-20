@@ -1,73 +1,93 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { likeUser, unlikeUser, getLikeStatus } from '@/services/api/users/api';
 import { useSocket } from '@/hooks/useSocket';
-import { useAuth } from '@/services/store/useAuth';
 import s from './LikeButton.module.scss';
 
-export default function LikeButton({ userId }) {
+export default function LikeButton({
+  userId,
+  initialCount = undefined,
+  initialLiked = undefined,
+}) {
   const { likesMap } = useSocket();
-  const { user } = useAuth();
 
-  const [liked, setLiked] = useState(false);
-  const [likesCount, setLikesCount] = useState(0);
+  const [liked, setLiked] = useState(
+    typeof initialLiked !== 'undefined' ? Boolean(initialLiked) : false
+  );
+
+  const [likesCount, setLikesCount] = useState(
+    typeof initialCount === 'number' ? initialCount : 0
+  );
+
+  const [fetched, setFetched] = useState(typeof initialLiked !== 'undefined');
+
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    let active = true;
+    if (fetched) return;
+    let mounted = true;
 
-    const init = async () => {
+    (async () => {
       try {
         const { liked: likedStatus, likesCount: count } =
           await getLikeStatus(userId);
-        if (!active) return;
-        setLiked(likedStatus);
-        setLikesCount(count);
-      } catch {}
-    };
 
-    init();
+        if (!mounted) return;
+        setLiked(Boolean(likedStatus));
+        if (typeof count === 'number') setLikesCount(count);
+      } catch (err) {
+        console.warn('[LikeButton] failed to fetch like status', err);
+      } finally {
+        if (mounted) setFetched(true);
+      }
+    })();
+
     return () => {
-      active = false;
+      mounted = false;
     };
-  }, [userId]);
+  }, [userId, fetched]);
 
   useEffect(() => {
-    if (!likesMap[userId]) return;
-
-    const { liked: socketLiked, count } = likesMap[userId];
-
-    if (socketLiked !== undefined) setLiked(socketLiked);
-    if (count !== undefined) setLikesCount(count);
+    const payload = likesMap[String(userId)];
+    if (!payload) return;
+    if (typeof payload.liked !== 'undefined') setLiked(Boolean(payload.liked));
+    if (typeof payload.count === 'number') setLikesCount(payload.count);
   }, [likesMap, userId]);
 
   const handleClick = async () => {
     if (loading) return;
     setLoading(true);
 
+    const prevLiked = liked;
+    const prevCount = likesCount;
+
+    const newLiked = !prevLiked;
+    const newCount = prevCount + (newLiked ? 1 : -1);
+
+    setLiked(newLiked);
+    setLikesCount(Math.max(newCount, 0));
+
     try {
-      if (liked) {
-        const res = await unlikeUser(userId);
-        setLiked(false);
-        setLikesCount(res?.likesCount ?? Math.max(likesCount - 1, 0));
-      } else {
+      if (newLiked) {
         const res = await likeUser(userId);
-        setLiked(true);
-        setLikesCount(res?.likesCount ?? likesCount + 1);
+
+        if (res?.likesCount !== undefined) setLikesCount(res.likesCount);
+
+        if (typeof res?.liked !== 'undefined') setLiked(Boolean(res.liked));
+      } else {
+        const res = await unlikeUser(userId);
+        if (res?.likesCount !== undefined) setLikesCount(res.likesCount);
+        if (typeof res?.liked !== 'undefined') setLiked(Boolean(res.liked));
       }
     } catch (err) {
-      if (err?.status >= 500) {
-        console.error('Like server error:', err);
-      }
+      console.error('[LikeButton] Like/unlike error', err);
+      setLiked(prevLiked);
+      setLikesCount(prevCount);
     } finally {
       setLoading(false);
     }
   };
-
-  if (!user || user._id === userId) {
-    return null;
-  }
 
   return (
     <button
