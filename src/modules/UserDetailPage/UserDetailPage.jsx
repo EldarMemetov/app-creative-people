@@ -19,7 +19,7 @@ export default function UserDetailPage() {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
-  const { usersStatus, usersStatusInitialized } = useSocket();
+  const { usersStatus, usersStatusInitialized, connected } = useSocket();
   const { user: currentUser, loading: authLoading } = useAuth();
   useEffect(() => {
     const fetchUser = async () => {
@@ -41,9 +41,7 @@ export default function UserDetailPage() {
   if (!user) return <div>Користувача не знайдено</div>;
 
   const userIdKey = String(user._id ?? user.id ?? '');
-  const isOnline = usersStatusInitialized
-    ? Boolean(usersStatus[userIdKey])
-    : Boolean(user.onlineStatus);
+  const isOwn = currentUser && String(currentUser._id) === userIdKey;
 
   const getSafePhoto = (url) => {
     if (!url) return '/image/logo.png';
@@ -52,7 +50,18 @@ export default function UserDetailPage() {
       ? url
       : '/image/logo.png';
   };
-
+  let isOnline;
+  if (isOwn) {
+    isOnline =
+      connected ||
+      (usersStatusInitialized
+        ? Boolean(usersStatus[userIdKey])
+        : Boolean(user.onlineStatus));
+  } else {
+    isOnline = usersStatusInitialized
+      ? Boolean(usersStatus[userIdKey])
+      : Boolean(user.onlineStatus);
+  }
   return (
     <Container>
       <section>

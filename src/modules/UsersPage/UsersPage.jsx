@@ -14,7 +14,7 @@ export default function UsersPage() {
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
-  const { usersStatus, usersStatusInitialized } = useSocket();
+  const { usersStatus, usersStatusInitialized, connected } = useSocket();
   const { user: currentUser, loading: authLoading } = useAuth();
 
   useEffect(() => {
@@ -59,14 +59,18 @@ export default function UsersPage() {
           {users.map((user) => {
             const userIdKey = String(user._id ?? user.id ?? '');
 
-            const isOnline = usersStatusInitialized
-              ? Boolean(usersStatus[userIdKey])
-              : Boolean(user.onlineStatus);
+            const isOwn = currentUser && String(currentUser._id) === userIdKey;
 
-            const href =
-              currentUser && String(currentUser._id) === String(user._id)
-                ? '/profile'
-                : `/talents/${user._id}`;
+            const isOnline = isOwn
+              ? Boolean(connected) ||
+                (usersStatusInitialized
+                  ? Boolean(usersStatus[userIdKey])
+                  : Boolean(user.onlineStatus))
+              : usersStatusInitialized
+                ? Boolean(usersStatus[userIdKey])
+                : Boolean(user.onlineStatus);
+
+            const href = isOwn ? '/profile' : `/talents/${user._id}`;
 
             return (
               <Link key={user._id} href={href} className={s.link}>

@@ -12,7 +12,8 @@ import { getLikeStatus } from '@/services/api/users/api';
 import { useEffect, useState } from 'react';
 export default function InfoDetails() {
   const { user, loading } = useAuthGuard();
-  const { usersStatus, usersStatusInitialized, likesMap } = useSocket();
+  const { usersStatus, usersStatusInitialized, likesMap, connected } =
+    useSocket();
   const { t } = useTranslation(['roles']);
 
   const [likesCount, setLikesCount] = useState(user?.likesCount ?? null);
@@ -61,9 +62,11 @@ export default function InfoDetails() {
   if (!user) return null;
 
   const userIdKey = String(user._id ?? user.id ?? '');
-  const isOnline = usersStatusInitialized
-    ? Boolean(usersStatus[userIdKey])
-    : Boolean(user.onlineStatus);
+  const isOnline =
+    connected ||
+    (usersStatusInitialized
+      ? Boolean(usersStatus[userIdKey])
+      : Boolean(user.onlineStatus));
   return (
     <section>
       <Container>
