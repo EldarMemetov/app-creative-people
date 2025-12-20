@@ -12,15 +12,18 @@ import LinkButton from '@/shared/components/LinkButton/LinkButton';
 import { LINKDATA, ROUTES } from '@/shared/constants';
 import LikeButton from '@/shared/components/LikeButton/LikeButton';
 import { useAuth } from '@/services/store/useAuth';
+
 export default function UserDetailPage() {
   const { id } = useParams();
-  const { t } = useTranslation(['roles']);
+
+  const { t } = useTranslation(['roles', 'directions']);
 
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const { usersStatus, usersStatusInitialized, connected } = useSocket();
   const { user: currentUser, loading: authLoading } = useAuth();
+
   useEffect(() => {
     const fetchUser = async () => {
       try {
@@ -35,6 +38,7 @@ export default function UserDetailPage() {
 
     fetchUser();
   }, [id]);
+
   if (authLoading) return <Loader />;
   if (loading) return <Loader />;
   if (error) return <div>Помилка: {error}</div>;
@@ -50,6 +54,7 @@ export default function UserDetailPage() {
       ? url
       : '/image/logo.png';
   };
+
   let isOnline;
   if (isOwn) {
     isOnline =
@@ -62,6 +67,22 @@ export default function UserDetailPage() {
       ? Boolean(usersStatus[userIdKey])
       : Boolean(user.onlineStatus);
   }
+
+  const rolesArray =
+    Array.isArray(user.roles) && user.roles.length
+      ? user.roles
+      : user.role
+        ? [user.role]
+        : [];
+
+  const directionsTranslated =
+    user.directions && user.directions.length
+      ? user.directions.map((d) => t(d, { ns: 'directions' })).join(', ')
+      : 'не вказано';
+
+  const likesCountDisplay =
+    typeof user.likesCount === 'number' ? user.likesCount : 0;
+
   return (
     <Container>
       <section>
@@ -70,45 +91,61 @@ export default function UserDetailPage() {
           <div style={{ flexShrink: 0 }}>
             <ImageWithFallback
               src={getSafePhoto(user.photo)}
-              alt={`${user.name} ${user.surname}`}
-              width={80}
-              height={80}
+              alt={
+                `${user.name || ''} ${user.surname || ''}`.trim() || 'Аватар'
+              }
+              width={160}
+              height={160}
             />
           </div>
 
           <div>
             <p>
-              <strong>Ім’я:</strong> {user.name}
+              <strong>Ім’я:</strong> {user.name || 'не вказано'}
             </p>
             <p>
-              <strong>Прізвище:</strong> {user.surname}
+              <strong>Прізвище:</strong> {user.surname || 'не вказано'}
             </p>
             <p>
-              <strong>Місто:</strong> {user.city}
+              <strong>Місто:</strong> {user.city || 'не вказано'}
             </p>
             <p>
-              <strong>Країна:</strong> {user.country}
+              <strong>Країна:</strong> {user.country || 'не вказано'}
             </p>
             <p>
-              <strong>Email:</strong> {user.email}
+              <strong>Email:</strong> {user.email || 'не вказано'}
+            </p>
+
+            <div>
+              <strong>Ролі:</strong>{' '}
+              {rolesArray.length > 0 ? (
+                <ul className={s.rolesList} aria-label="Ролі користувача">
+                  {rolesArray.map((r, idx) => (
+                    <li key={idx} className={s.roleItem}>
+                      {t(r)}
+                    </li>
+                  ))}
+                </ul>
+              ) : (
+                <span>не вказано</span>
+              )}
+            </div>
+
+            <p>
+              <strong>Рівень доступу:</strong> {user.accessRole || 'не вказано'}
             </p>
             <p>
-              <strong>Роль:</strong> {t(user.role)}
-            </p>
-            <p>
-              <strong>Рівень доступу:</strong> {user.accessRole}
-            </p>
-            <p>
-              <strong>Рейтинг:</strong> {user.rating}
+              <strong>Рейтинг:</strong>{' '}
+              {user.rating !== undefined && user.rating !== null
+                ? user.rating
+                : 'не вказано'}
             </p>
             <p>
               <strong>Досвід:</strong> {user.experience || 'не вказано'}
             </p>
+
             <p>
-              <strong>Напрямки:</strong>{' '}
-              {user.directions?.length
-                ? user.directions.join(', ')
-                : 'не вказано'}
+              <strong>Напрямки:</strong> {directionsTranslated}
             </p>
 
             <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
@@ -130,7 +167,7 @@ export default function UserDetailPage() {
                 initialLiked={user.liked}
               />
             ) : (
-              <div className={s.likesReadonly}>❤️ {user.likesCount}</div>
+              <div className={s.likesReadonly}>❤️ {likesCountDisplay}</div>
             )}
 
             <p>
@@ -161,6 +198,7 @@ export default function UserDetailPage() {
               </div>
             )}
           </div>
+
           <LinkButton path={ROUTES.TALENTS} type={LINKDATA.HOME}>
             Повернутись до профілей
           </LinkButton>
