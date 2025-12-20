@@ -10,6 +10,7 @@ import s from './InfoDetails.module.scss';
 import Container from '@/shared/container/Container';
 import { getLikeStatus } from '@/services/api/users/api';
 import { useEffect, useState } from 'react';
+import NotificationsIndicator from '@/modules/NotificationPage/NotificationsIndicator/NotificationsIndicator';
 export default function InfoDetails() {
   const { user, loading } = useAuthGuard();
   const { usersStatus, usersStatusInitialized, likesMap, connected } =
@@ -86,7 +87,14 @@ export default function InfoDetails() {
                 height={160}
               />
             </div>
-
+            <NotificationsIndicator>
+              <LinkButton
+                className={s.editButton}
+                path="notification"
+                type={LINKDATA.NOTIFICATION}
+                linkText="Сповіщання"
+              />
+            </NotificationsIndicator>
             <div className={s.details}>
               <p className={s.pWithStrong}>
                 <strong className={s.label}>Ім’я:</strong>

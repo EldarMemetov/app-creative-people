@@ -9,6 +9,7 @@ export const ROUTES = {
   COMMUNITY: 'community',
   BLOG: 'blog',
   POLICY: 'privacy-policy',
+  NOTIFICATION: 'notification',
 };
 
 export const LINKDATA = {
@@ -16,6 +17,7 @@ export const LINKDATA = {
   PROFILE: '/profile',
   LOGIN: '/login',
   REGISTER: '/register',
+  NOTIFICATION: '/notification',
   ABOUT: 'about-us',
   TALENTS: 'talents',
   OFFERS: 'offers',

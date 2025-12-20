@@ -1,8 +1,6 @@
 import { api } from '../lib/api';
 import { handleError } from '@/utils/errorHandler';
 
-// Получить всех пользователей
-
 export const getAllUsers = async () => {
   try {
     const response = await api.get('/people/all');
@@ -42,7 +40,7 @@ export const unlikeUser = async (userId) => {
 export const getLikeStatus = async (userId) => {
   try {
     const { data } = await api.get(`/people/${userId}/like`);
-    return data.data; // { liked: boolean, likesCount: number }
+    return data.data;
   } catch (error) {
     throw handleError(error);
   }

@@ -1,0 +1,145 @@
+.wrapper {
+  padding: 24px 0;
+}
+
+.page {
+  max-width: 980px;
+  margin: 0 auto;
+  padding: 36px 20px;
+}
+
+/* Заголовок */
+.heading {
+  margin-bottom: 28px;
+  font-size: 28px;
+  font-weight: 700;
+  color: #0b1220;
+}
+
+/* Список */
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: 0;
+  margin: 0;
+}
+
+/* Пусто */
+.empty {
+  list-style: none;
+  padding: 28px;
+  text-align: center;
+  border-radius: 18px;
+  background: linear-gradient(180deg, #fbfdff, #f5f7fb);
+  color: #6b7280;
+  font-size: 15px;
+}
+
+/* Элемент */
+.item {
+  list-style: none;
+  padding: 18px 20px;
+  border-radius: 18px;
+  background: linear-gradient(180deg, #ffffff, #fbfcff);
+  border: 1px solid rgba(12, 18, 32, 0.06);
+  box-shadow: 0 8px 20px rgba(12, 18, 32, 0.04);
+  cursor: pointer;
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.25s ease;
+  display: block;
+  outline: none;
+}
+
+.item:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 18px 40px rgba(12, 18, 32, 0.08);
+}
+
+/* Непрочитано / маркер слева */
+.unread {
+  border-left: 4px solid #3b82f6;
+  background: linear-gradient(180deg, #f6fbff, #ffffff);
+}
+
+/* Прочитано */
+.read {
+  opacity: 0.86;
+}
+
+/* Заголовок в нотификации */
+.title {
+  font-size: 16px;
+  font-weight: 700;
+  color: #071226;
+  margin-bottom: 8px;
+}
+
+/* Текст */
+.message {
+  font-size: 14px;
+  line-height: 1.6;
+  color: #2f3746;
+  margin-bottom: 12px;
+}
+
+/* Нижняя строка — слева и справа */
+.meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+}
+
+/* Левая часть (имя) */
+.metaLeft {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+/* Правая часть (время + кнопка) */
+.metaRight {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.metaUser {
+  font-size: 13px;
+  font-weight: 600;
+  color: #1d4ed8;
+}
+
+.time {
+  font-size: 12px;
+  color: #98a0b2;
+  white-space: nowrap;
+}
+
+.viewProfile {
+  appearance: none;
+  border: none;
+  background: transparent;
+  padding: 6px 10px;
+  font-size: 13px;
+  font-weight: 600;
+  color: #0b60ff;
+  border-radius: 8px;
+  cursor: pointer;
+  transition:
+    background 0.15s ease,
+    transform 0.08s ease;
+  text-transform: none;
+}
+
+.viewProfile:hover {
+  background: rgba(11, 96, 255, 0.08);
+  transform: translateY(-1px);
+}
+
+.viewProfile:active {
+  transform: translateY(0);
+  background: rgba(11, 96, 255, 0.12);
+}
