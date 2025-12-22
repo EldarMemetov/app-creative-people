@@ -13,6 +13,7 @@ import EditProfileAvatar from './EditProfileAvatar/EditProfileAvatar';
 import EditProfileForm from './EditProfileForm/EditProfileForm';
 
 import { getProfile } from '@/services/api/auth/auth';
+import PortfolioManager from './PortfolioManager/PortfolioManager';
 
 export default function EditProfile() {
   const { user: authUser, loading: guardLoading } = useAuthGuard();
@@ -67,6 +68,10 @@ export default function EditProfile() {
           uploadingPhoto={uploadingPhoto}
           refreshUser={refreshUser}
           refreshing={refreshing}
+        />
+        <PortfolioManager
+          initialPortfolio={authUser.portfolio}
+          refreshUser={refreshUser}
         />
       </section>
     </Container>

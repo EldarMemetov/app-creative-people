@@ -11,12 +11,15 @@ import Container from '@/shared/container/Container';
 import { getLikeStatus } from '@/services/api/users/api';
 import { useEffect, useState } from 'react';
 import NotificationsIndicator from '@/modules/NotificationPage/NotificationsIndicator/NotificationsIndicator';
+import PortfolioList from '../PortfolioList/PortfolioList';
+import { useAuth } from '@/services/store/useAuth';
 export default function InfoDetails() {
-  const { user, loading } = useAuthGuard();
+  const { user: guardUser, loading } = useAuthGuard();
   const { usersStatus, usersStatusInitialized, likesMap, connected } =
     useSocket();
   const { t } = useTranslation(['roles']);
-
+  const storeUser = useAuth((s) => s.user);
+  const user = storeUser ?? guardUser;
   const [likesCount, setLikesCount] = useState(user?.likesCount ?? null);
 
   useEffect(() => {
@@ -213,39 +216,7 @@ export default function InfoDetails() {
                 )}
               </div>
 
-              {user.portfolio && user.portfolio.length > 0 && (
-                <div className={s.portfolio}>
-                  <div className={s.portfolioTitle}>Портфоліо</div>
-                  <ul className={s.portfolioList}>
-                    {user.portfolio.map((item, index) => (
-                      <li key={index} className={s.portfolioItem}>
-                        <div className={s.portfolioRow}>
-                          <span className={s.portfolioLabel}>Тип:</span>
-                          <span className={s.portfolioValue}>
-                            {item.type === 'photo' ? 'Фото' : 'Відео'}
-                          </span>
-                        </div>
-
-                        <div className={s.portfolioRow}>
-                          <span className={s.portfolioLabel}>Опис:</span>
-                          <span className={s.portfolioValue}>
-                            {item.description || 'немає опису'}
-                          </span>
-                        </div>
-
-                        <a
-                          className={s.portfolioLink}
-                          href={item.url}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                        >
-                          Переглянути
-                        </a>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              )}
+              <PortfolioList items={user.portfolio} />
             </div>
           </div>
 

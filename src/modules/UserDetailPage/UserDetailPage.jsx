@@ -12,6 +12,7 @@ import LinkButton from '@/shared/components/LinkButton/LinkButton';
 import { LINKDATA, ROUTES } from '@/shared/constants';
 import LikeButton from '@/shared/components/LikeButton/LikeButton';
 import { useAuth } from '@/services/store/useAuth';
+import PortfolioList from '../ProfilePage/PortfolioList/PortfolioList';
 
 export default function UserDetailPage() {
   const { id } = useParams();
@@ -177,26 +178,7 @@ export default function UserDetailPage() {
               <strong>Заблокований:</strong> {user.isBlocked ? 'Так' : 'Ні'}
             </p>
 
-            {user.portfolio?.length > 0 && (
-              <div>
-                <strong>Портфоліо:</strong>
-                <ul>
-                  {user.portfolio.map((item, index) => (
-                    <li key={index}>
-                      <p>Тип: {item.type === 'photo' ? 'Фото' : 'Відео'}</p>
-                      <p>Опис: {item.description || 'немає опису'}</p>
-                      <a
-                        href={item.url}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                      >
-                        Переглянути
-                      </a>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            )}
+            <PortfolioList items={user.portfolio} />
           </div>
 
           <LinkButton path={ROUTES.TALENTS} type={LINKDATA.HOME}>
