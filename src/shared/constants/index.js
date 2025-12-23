@@ -5,6 +5,7 @@ export const ROUTES = {
   REGISTER: '/register',
   ABOUT: 'about-us',
   TALENTS: '/talents',
+  FORGOT: '/forgot-password',
   OFFERS: 'offers',
   COMMUNITY: 'community',
   BLOG: 'blog',
@@ -18,12 +19,14 @@ export const LINKDATA = {
   LOGIN: '/login',
   REGISTER: '/register',
   NOTIFICATION: '/notification',
+  FORGOT: '/forgot-password',
   ABOUT: 'about-us',
   TALENTS: 'talents',
   OFFERS: 'offers',
   COMMUNITY: 'community',
   BLOG: 'blog',
   POLICY: 'privacy-policy',
+
   TYPE_LIGHT_BORDER: 'light-border',
 };
 
@@ -42,6 +45,7 @@ export const NAMESPACES = [
   'editProfile',
   'roles',
   'directions',
+  'resetPassword',
 ];
 
 export const FLIPPED_TIME_MS = 15000;

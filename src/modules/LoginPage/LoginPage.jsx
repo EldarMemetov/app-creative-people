@@ -8,6 +8,8 @@ import { useTranslation } from 'react-i18next';
 import toast from 'react-hot-toast';
 import Container from '@/shared/container/Container';
 import FormInput from '@/shared/FormInput/FormInput';
+import LinkButton from '@/shared/components/LinkButton/LinkButton';
+import { ROUTES, LINKDATA } from '@/shared/constants';
 export default function LoginPage() {
   const auth = useAuth();
   const router = useRouter();
@@ -56,6 +58,9 @@ export default function LoginPage() {
             </Form>
           )}
         </Formik>
+        <LinkButton path={ROUTES.FORGOT} type={LINKDATA.FORGOT}>
+          {t('back_password')}
+        </LinkButton>
       </div>
     </Container>
   );

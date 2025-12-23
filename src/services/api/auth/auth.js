@@ -71,3 +71,32 @@ export const getProfile = async () => {
     throw handleError(err);
   }
 };
+export const requestResetEmail = async (email) => {
+  try {
+    const res = await api.post('/auth/send-reset-email', { email });
+    return res.data;
+  } catch (err) {
+    console.error('[requestResetEmail] err:', err.response?.data || err);
+    throw err.response?.data || err;
+  }
+};
+
+export const resetPassword = async ({ token, password }) => {
+  try {
+    const res = await api.post('/auth/reset-pwd', { token, password });
+    return res.data;
+  } catch (err) {
+    throw err.response?.data || err;
+  }
+};
+export const changePassword = async ({ currentPassword, newPassword }) => {
+  try {
+    const res = await api.post('/auth/change-password', {
+      currentPassword,
+      newPassword,
+    });
+    return res.data;
+  } catch (err) {
+    throw handleError(err);
+  }
+};

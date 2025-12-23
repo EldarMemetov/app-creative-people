@@ -8,5 +8,6 @@
   "invalid_email": "Invalid email",
   "password_min": "Password must be at least 6 characters",
   "submit": "Login",
-  "loading": "Loading..."
+  "loading": "Loading...",
+  "back_password": "Forgot password"
 }

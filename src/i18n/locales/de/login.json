@@ -8,5 +8,6 @@
   "invalid_email": "Ungültige E-Mail",
   "password_min": "Passwort muss mindestens 6 Zeichen lang sein",
   "submit": "Anmelden",
-  "loading": "Lädt..."
+  "loading": "Lädt...",
+  "back_password": "Passwort vergessen"
 }

@@ -8,5 +8,6 @@
   "invalid_email": "Невірний email",
   "password_min": "Пароль має бути не менше 6 символів",
   "submit": "Увійти",
-  "loading": "Завантаження..."
+  "loading": "Завантаження...",
+  "back_password": "Забули пароль"
 }
