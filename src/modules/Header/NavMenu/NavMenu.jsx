@@ -32,7 +32,7 @@ const links = [
   { href: '', key: 'home' },
   { href: '/about-us', key: 'about' },
   { href: '/talents', key: 'talents' },
-  { href: '/offers', key: 'offers' },
+  { href: '/posts', key: 'posts' },
   { href: '/blog', key: 'blog' },
   { href: '/community', key: 'community' },
   { href: '/profile', key: 'profile' },
