@@ -95,19 +95,31 @@ export function SocketProvider({ children }) {
         return `${String(targetType)}:${String(targetId)}`;
       };
 
-      const key = makeKey();
+      const key = makeKey(); // например 'user:694...'
       if (!key) return;
+
+      const payloadObj = {
+        liked: typeof liked !== 'undefined' ? Boolean(liked) : undefined,
+        count: typeof likesCount === 'number' ? likesCount : undefined,
+      };
 
       setLikesMap((prev) => ({
         ...prev,
         [key]: {
-          liked:
-            typeof liked !== 'undefined' ? Boolean(liked) : prev[key]?.liked,
-          count:
-            typeof likesCount === 'number'
-              ? likesCount
-              : (prev[key]?.count ?? 0),
+          liked: payloadObj.liked ?? prev[key]?.liked,
+          count: payloadObj.count ?? prev[key]?.count,
         },
+
+        ...(targetType === 'user'
+          ? {
+              [String(toUserId || targetId)]: {
+                liked:
+                  payloadObj.liked ?? prev[String(toUserId || targetId)]?.liked,
+                count:
+                  payloadObj.count ?? prev[String(toUserId || targetId)]?.count,
+              },
+            }
+          : {}),
       }));
     };
 

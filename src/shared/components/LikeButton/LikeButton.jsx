@@ -49,7 +49,8 @@ export default function LikeButton({
   }, [userId, fetched]);
 
   useEffect(() => {
-    const payload = likesMap[String(userId)];
+    const payload =
+      likesMap[`user:${String(userId)}`] || likesMap[String(userId)];
     if (!payload) return;
     if (typeof payload.liked !== 'undefined') setLiked(Boolean(payload.liked));
     if (typeof payload.count === 'number') setLikesCount(payload.count);
