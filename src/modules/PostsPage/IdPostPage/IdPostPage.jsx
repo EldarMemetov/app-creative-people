@@ -7,7 +7,7 @@ import Image from 'next/image';
 import { getPostById } from '@/services/api/post/api';
 import styles from './IdPostPage.module.scss';
 import Container from '@/shared/container/Container';
-
+import PostLikeButton from '@/shared/PostLikeButton/PostLikeButton';
 export default function IdPostPage() {
   const { id } = useParams();
   const [post, setPost] = useState(null);
@@ -121,7 +121,11 @@ export default function IdPostPage() {
           </div>
 
           <div className={styles.stats}>
-            <div className={styles.stat}>Likes: {post.likes?.length || 0}</div>
+            <PostLikeButton
+              postId={post._id}
+              initialCount={post.likesCount ?? post.likes?.length}
+              initialLiked={post.liked}
+            />
             <div className={styles.stat}>
               Favorites: {post.favorites?.length || 0}
             </div>

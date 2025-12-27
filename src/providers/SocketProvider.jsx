@@ -79,16 +79,34 @@ export function SocketProvider({ children }) {
     };
 
     const handleLikeUpdate = (payload) => {
-      const { toUserId, liked, likesCount } = payload || {};
-      if (!toUserId) return;
+      if (!payload) return;
+
+      const { targetType, targetId, liked, likesCount, toUserId } = payload;
+
+      const makeKey = () => {
+        if (targetType === 'user') {
+          const idKey = String(toUserId || targetId);
+          return `user:${idKey}`;
+        }
+        if (targetType === 'post') {
+          return `post:${String(targetId)}`;
+        }
+
+        return `${String(targetType)}:${String(targetId)}`;
+      };
+
+      const key = makeKey();
+      if (!key) return;
+
       setLikesMap((prev) => ({
         ...prev,
-        [String(toUserId)]: {
-          liked: Boolean(liked),
+        [key]: {
+          liked:
+            typeof liked !== 'undefined' ? Boolean(liked) : prev[key]?.liked,
           count:
             typeof likesCount === 'number'
               ? likesCount
-              : (prev[String(toUserId)]?.count ?? 0),
+              : (prev[key]?.count ?? 0),
         },
       }));
     };

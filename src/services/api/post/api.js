@@ -20,3 +20,29 @@ export const getPostById = async (id) => {
     throw handleError(err);
   }
 };
+export const likePost = async (postId) => {
+  try {
+    const { data } = await api.patch(`/posts/${postId}/like`);
+    return data.data;
+  } catch (error) {
+    throw handleError(error);
+  }
+};
+
+export const unlikePost = async (postId) => {
+  try {
+    const { data } = await api.patch(`/posts/${postId}/like`);
+    return data.data;
+  } catch (error) {
+    throw handleError(error);
+  }
+};
+
+export const getPostLikeStatus = async (postId) => {
+  try {
+    const { data } = await api.get(`/posts/${postId}/like`);
+    return data.data;
+  } catch (error) {
+    throw handleError(error);
+  }
+};
