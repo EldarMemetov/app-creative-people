@@ -95,7 +95,7 @@ export function SocketProvider({ children }) {
         return `${String(targetType)}:${String(targetId)}`;
       };
 
-      const key = makeKey(); // например 'user:694...'
+      const key = makeKey();
       if (!key) return;
 
       const payloadObj = {
