@@ -98,6 +98,11 @@ export default function InfoDetails() {
                 linkText="Сповіщання"
               />
             </NotificationsIndicator>
+            <LinkButton
+              path="favorite"
+              type={LINKDATA.FAVORITE}
+              linkText="Фаворіт"
+            />
             <div className={s.details}>
               <p className={s.pWithStrong}>
                 <strong className={s.label}>Ім’я:</strong>

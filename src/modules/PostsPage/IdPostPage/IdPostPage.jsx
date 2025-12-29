@@ -8,6 +8,7 @@ import { getPostById } from '@/services/api/post/api';
 import styles from './IdPostPage.module.scss';
 import Container from '@/shared/container/Container';
 import PostLikeButton from '@/shared/PostLikeButton/PostLikeButton';
+import PostFavoriteButton from '@/shared/components/PostFavoriteButton/PostFavoriteButton';
 export default function IdPostPage() {
   const { id } = useParams();
   const [post, setPost] = useState(null);
@@ -34,6 +35,10 @@ export default function IdPostPage() {
 
     load();
   }, [id]);
+
+  const handleUnfavorite = () => {
+    setPost((prev) => (prev ? { ...prev, isFavorited: false } : prev));
+  };
 
   if (loading) return <div className={styles.center}>Loading post…</div>;
 
@@ -126,9 +131,11 @@ export default function IdPostPage() {
               initialCount={post.likesCount ?? post.likes?.length}
               initialLiked={post.liked}
             />
-            <div className={styles.stat}>
-              Favorites: {post.favorites?.length || 0}
-            </div>
+            <PostFavoriteButton
+              postId={post._id}
+              initialFavorited={post.isFavorited}
+              onUnfavorite={handleUnfavorite}
+            />
             <div className={styles.stat}>
               Interested: {post.interestedUsers?.length || 0}
             </div>

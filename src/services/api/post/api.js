@@ -46,3 +46,35 @@ export const getPostLikeStatus = async (postId) => {
     throw handleError(error);
   }
 };
+
+export const toggleFavorite = async ({ targetType = 'post', targetId }) => {
+  try {
+    const { data } = await api.patch('/favorites/toggle', {
+      targetType,
+      targetId,
+    });
+    return data;
+  } catch (err) {
+    try {
+      const { data } = await api.patch(`/posts/${targetId}/favorite`);
+      return data;
+    } catch (e) {
+      throw handleError(err);
+    }
+  }
+};
+
+export const getMyFavorites = async ({
+  type = 'post',
+  page = 1,
+  limit = 20,
+} = {}) => {
+  try {
+    const { data } = await api.get('/favorites', {
+      params: { type, page, limit },
+    });
+    return data;
+  } catch (err) {
+    throw handleError(err);
+  }
+};
