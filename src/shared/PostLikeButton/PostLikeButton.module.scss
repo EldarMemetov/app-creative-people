@@ -1,0 +1,11 @@
+.likeReadonly {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 8px;
+  border-radius: 6px;
+  color: #666;
+  background: transparent;
+  cursor: default;
+  user-select: none;
+}

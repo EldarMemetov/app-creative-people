@@ -9,6 +9,7 @@ import styles from './IdPostPage.module.scss';
 import Container from '@/shared/container/Container';
 import PostLikeButton from '@/shared/PostLikeButton/PostLikeButton';
 import PostFavoriteButton from '@/shared/components/PostFavoriteButton/PostFavoriteButton';
+import Comments from '@/modules/Comments/Comments';
 export default function IdPostPage() {
   const { id } = useParams();
   const [post, setPost] = useState(null);
@@ -140,23 +141,7 @@ export default function IdPostPage() {
               Interested: {post.interestedUsers?.length || 0}
             </div>
           </div>
-
-          {post.comments?.length > 0 && (
-            <div className={styles.comments}>
-              <div className={styles.commentsTitle}>Comments</div>
-              {post.comments.map((c) => (
-                <div key={c._id} className={styles.comment}>
-                  <span className={styles.commentAuthor}>
-                    {c.author?.name || 'User'} {c.author?.surname || ''}
-                  </span>
-                  <span className={styles.commentText}>{c.text}</span>
-                  <span className={styles.commentDate}>
-                    {new Date(c.createdAt).toLocaleString()}
-                  </span>
-                </div>
-              ))}
-            </div>
-          )}
+          <Comments postId={post._id} />
         </div>
       </Container>
     </section>
