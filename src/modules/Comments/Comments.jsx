@@ -68,15 +68,34 @@ export default function Comments({ postId }) {
       );
     };
 
+    const onLike = ({ commentId, liked, likesCount, byUserId }) => {
+      setComments((prev) =>
+        prev.map((c) =>
+          String(c._id) === String(commentId)
+            ? {
+                ...c,
+                liked: !!liked,
+                likesCount:
+                  typeof likesCount === 'number'
+                    ? likesCount
+                    : (c.likesCount ?? 0),
+              }
+            : c
+        )
+      );
+    };
+
     socket.on('comment:new', onNew);
     socket.on('comment:updated', onUpdated);
     socket.on('comment:deleted', onDeleted);
+    socket.on('comment:like', onLike);
 
     return () => {
       try {
         socket.off('comment:new', onNew);
         socket.off('comment:updated', onUpdated);
         socket.off('comment:deleted', onDeleted);
+        socket.off('comment:like', onLike);
         leavePost(postId);
       } catch (e) {}
     };
@@ -84,7 +103,6 @@ export default function Comments({ postId }) {
 
   const handleAdd = async (text, opts = {}) => {
     try {
-      // opts может содержать parentComment и replyTo (если форма передаст)
       const res = await apiAdd(postId, text, opts);
       const created = res?.data ?? res;
       setComments((prev) => {
@@ -108,7 +126,6 @@ export default function Comments({ postId }) {
     setComments((prev) => prev.filter((c) => String(c._id) !== String(id)));
   };
 
-  // build tree for rendering
   const tree = useMemo(() => {
     const map = new Map();
     comments.forEach((c) => map.set(String(c._id), { ...c, children: [] }));
@@ -120,7 +137,6 @@ export default function Comments({ postId }) {
         if (parent) {
           parent.children.push(c);
         } else {
-          // parent not in current page => treat as root
           roots.push(c);
         }
       } else {
@@ -128,11 +144,10 @@ export default function Comments({ postId }) {
       }
     }
 
-    // sort roots by createdAt desc (newest first)
     roots.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
-    // optionally sort children by createdAt asc or desc; choose asc so reply appears below
+
     const sortChildrenRec = (nodes) => {
-      nodes.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt)); // older first
+      nodes.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
       nodes.forEach((n) => sortChildrenRec(n.children));
     };
     sortChildrenRec(roots);

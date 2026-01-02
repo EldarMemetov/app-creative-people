@@ -8,7 +8,7 @@ import React, { useState, useRef, useEffect } from 'react';
 export default function EmojiButton({ fieldName }) {
   const { values, setFieldValue } = useFormikContext();
   const [showPicker, setShowPicker] = useState(false);
-  const wrapperRef = useRef(null); // ref для всей обертки
+  const wrapperRef = useRef(null);
 
   const handleEmojiSelect = (emoji) => {
     const char = emoji?.native || emoji?.colons || '';
