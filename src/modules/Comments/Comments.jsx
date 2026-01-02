@@ -68,14 +68,10 @@ export default function Comments({ postId }) {
       );
     };
 
-    const onLike = ({
-      commentId,
-      liked,
-      likesCount,
-      byUserId,
-      postId: pid,
-    }) => {
-      if (String(pid) !== String(postId)) return;
+    const onLike = (payload = {}) => {
+      const { commentId, liked, likesCount, byUserId, postId: pid } = payload;
+
+      if (pid && String(pid) !== String(postId)) return;
 
       setComments((prev) =>
         prev.map((c) => {
@@ -87,7 +83,6 @@ export default function Comments({ postId }) {
 
           return {
             ...c,
-
             likesCount:
               typeof likesCount === 'number' ? likesCount : (c.likesCount ?? 0),
 
