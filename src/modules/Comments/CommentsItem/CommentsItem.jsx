@@ -22,11 +22,11 @@ export default function CommentItem({
   const [editing, setEditing] = useState(false);
   const [replying, setReplying] = useState(false);
   const [busy, setBusy] = useState(false);
-  const [likesCount, setLikesCount] = useState(comment.likesCount ?? 0);
-  const [liked, setLiked] = useState(Boolean(comment.liked));
 
   const authorId = comment.author?._id || comment.author;
   const isAuthor = user && String(user._id) === String(authorId);
+  const liked = Boolean(comment.liked);
+  const likesCount = comment.likesCount ?? 0;
 
   const displayReplyTo = () => {
     const r = comment.replyTo;
@@ -76,20 +76,33 @@ export default function CommentItem({
   const handleToggleLike = async () => {
     if (!user) return;
     setBusy(true);
-    const prevLiked = liked;
-    const prevCount = likesCount;
-    setLiked(!prevLiked);
-    setLikesCount(Math.max(prevCount + (prevLiked ? -1 : 1), 0));
+
+    const newLiked = !liked;
+    const newCount = Math.max(likesCount + (newLiked ? 1 : -1), 0);
+
+    onUpdateLocal?.({
+      ...comment,
+      liked: newLiked,
+      likesCount: newCount,
+    });
 
     try {
       const res = await toggleCommentLike(postId, comment._id);
       const data = res?.data ?? res;
-      if (typeof data?.likesCount === 'number') setLikesCount(data.likesCount);
-      if (typeof data?.liked === 'boolean') setLiked(Boolean(data.liked));
+
+      onUpdateLocal?.({
+        ...comment,
+        liked: Boolean(data.liked),
+        likesCount: data.likesCount ?? newCount,
+      });
     } catch (e) {
       console.error('toggle comment like error', e);
-      setLiked(prevLiked);
-      setLikesCount(prevCount);
+
+      onUpdateLocal?.({
+        ...comment,
+        liked,
+        likesCount,
+      });
     } finally {
       setBusy(false);
     }

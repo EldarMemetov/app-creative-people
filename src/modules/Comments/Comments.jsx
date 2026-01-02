@@ -12,7 +12,7 @@ export default function Comments({ postId }) {
   const { socket, joinPost, leavePost } = useSocket();
   const { user } = useAuth();
 
-  const [comments, setComments] = useState([]); // flat
+  const [comments, setComments] = useState([]);
   const [loading, setLoading] = useState(true);
   const [page] = useState(1);
   const [limit] = useState(100);
