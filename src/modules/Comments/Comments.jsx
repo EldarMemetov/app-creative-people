@@ -1,5 +1,5 @@
 'use client';
-import React, { useEffect, useState, useCallback } from 'react';
+import React, { useEffect, useState, useCallback, useMemo } from 'react';
 import { useSocket } from '@/hooks/useSocket';
 import { useAuth } from '@/services/store/useAuth';
 import { getComments, addComment as apiAdd } from '@/services/api/comments/api';
@@ -12,7 +12,7 @@ export default function Comments({ postId }) {
   const { socket, joinPost, leavePost } = useSocket();
   const { user } = useAuth();
 
-  const [comments, setComments] = useState([]);
+  const [comments, setComments] = useState([]); // flat
   const [loading, setLoading] = useState(true);
   const [page] = useState(1);
   const [limit] = useState(100);
@@ -21,7 +21,6 @@ export default function Comments({ postId }) {
     setLoading(true);
     try {
       const res = await getComments(postId, { page, limit });
-
       const items = res?.data ?? res?.data?.data ?? res?.data ?? [];
       setComments(Array.isArray(items) ? items : []);
     } catch (err) {
@@ -83,11 +82,11 @@ export default function Comments({ postId }) {
     };
   }, [socket, postId, joinPost, leavePost]);
 
-  const handleAdd = async (text) => {
+  const handleAdd = async (text, opts = {}) => {
     try {
-      const res = await apiAdd(postId, text);
+      // opts может содержать parentComment и replyTo (если форма передаст)
+      const res = await apiAdd(postId, text, opts);
       const created = res?.data ?? res;
-
       setComments((prev) => {
         if (prev.some((c) => String(c._id) === String(created._id)))
           return prev;
@@ -109,6 +108,38 @@ export default function Comments({ postId }) {
     setComments((prev) => prev.filter((c) => String(c._id) !== String(id)));
   };
 
+  // build tree for rendering
+  const tree = useMemo(() => {
+    const map = new Map();
+    comments.forEach((c) => map.set(String(c._id), { ...c, children: [] }));
+    const roots = [];
+
+    for (const [, c] of map) {
+      if (c.parentComment) {
+        const parent = map.get(String(c.parentComment));
+        if (parent) {
+          parent.children.push(c);
+        } else {
+          // parent not in current page => treat as root
+          roots.push(c);
+        }
+      } else {
+        roots.push(c);
+      }
+    }
+
+    // sort roots by createdAt desc (newest first)
+    roots.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+    // optionally sort children by createdAt asc or desc; choose asc so reply appears below
+    const sortChildrenRec = (nodes) => {
+      nodes.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt)); // older first
+      nodes.forEach((n) => sortChildrenRec(n.children));
+    };
+    sortChildrenRec(roots);
+
+    return roots;
+  }, [comments]);
+
   if (loading) return <Loader />;
 
   return (
@@ -116,22 +147,37 @@ export default function Comments({ postId }) {
       <h3>Комментарии ({comments.length})</h3>
 
       {user ? (
-        <CommentForm onSubmit={handleAdd} />
+        <CommentForm onSubmit={(text) => handleAdd(text)} />
       ) : (
         <div className={s.loginNotice}>Войдите, чтобы оставить комментарий</div>
       )}
 
       <div className={s.list}>
-        {comments.length === 0 ? (
+        {tree.length === 0 ? (
           <div className={s.empty}>Нет комментариев</div>
         ) : (
-          comments.map((c) => (
+          tree.map((c) => (
             <CommentItem
               key={c._id}
               comment={c}
               postId={postId}
-              onUpdateLocal={onUpdateLocal}
-              onRemoveLocal={onRemoveLocal}
+              onUpdateLocal={(u) =>
+                setComments((prev) =>
+                  prev.map((x) => (String(x._id) === String(u._id) ? u : x))
+                )
+              }
+              onRemoveLocal={(id) =>
+                setComments((prev) =>
+                  prev.filter((x) => String(x._id) !== String(id))
+                )
+              }
+              onAddLocal={(created) =>
+                setComments((prev) =>
+                  prev.some((x) => String(x._id) === String(created._id))
+                    ? prev
+                    : [created, ...prev]
+                )
+              }
             />
           ))
         )}

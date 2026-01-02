@@ -1,0 +1,25 @@
+.commentForm {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.formActions {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+.emojiWrapper {
+  position: relative;
+}
+.picker {
+  z-index: 1000;
+
+  right: 0;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.12);
+}
+.emojiBtn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 20px;
+}

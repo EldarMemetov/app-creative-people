@@ -1,9 +1,10 @@
 'use client';
-import React from 'react';
+
 import { Formik, Form } from 'formik';
 import * as Yup from 'yup';
 import FormInput from '@/shared/FormInput/FormInput';
 import s from './CommentForm.module.scss';
+import EmojiButton from '@/shared/components/EmojiButton/EmojiButton';
 
 const CommentSchema = Yup.object().shape({
   text: Yup.string().min(1).max(500).required('Введите текст'),
@@ -37,6 +38,7 @@ export default function CommentForm({
             placeholder="Написать комментарий..."
           />
           <div className={s.formActions}>
+            <EmojiButton fieldName="text" />
             <button type="submit" className={s.btn} disabled={isSubmitting}>
               {submitLabel}
             </button>
