@@ -68,20 +68,32 @@ export default function Comments({ postId }) {
       );
     };
 
-    const onLike = ({ commentId, liked, likesCount, byUserId }) => {
+    const onLike = ({
+      commentId,
+      liked,
+      likesCount,
+      byUserId,
+      postId: pid,
+    }) => {
+      if (String(pid) !== String(postId)) return;
+
       setComments((prev) =>
-        prev.map((c) =>
-          String(c._id) === String(commentId)
-            ? {
-                ...c,
-                liked: !!liked,
-                likesCount:
-                  typeof likesCount === 'number'
-                    ? likesCount
-                    : (c.likesCount ?? 0),
-              }
-            : c
-        )
+        prev.map((c) => {
+          if (String(c._id) !== String(commentId)) return c;
+
+          const isActorCurrentUser = Boolean(
+            user && String(user._id) === String(byUserId)
+          );
+
+          return {
+            ...c,
+
+            likesCount:
+              typeof likesCount === 'number' ? likesCount : (c.likesCount ?? 0),
+
+            liked: isActorCurrentUser ? Boolean(liked) : Boolean(c.liked),
+          };
+        })
       );
     };
 
@@ -99,7 +111,7 @@ export default function Comments({ postId }) {
         leavePost(postId);
       } catch (e) {}
     };
-  }, [socket, postId, joinPost, leavePost]);
+  }, [socket, postId, joinPost, leavePost, user]);
 
   const handleAdd = async (text, opts = {}) => {
     try {
