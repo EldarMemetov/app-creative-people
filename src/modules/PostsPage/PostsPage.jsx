@@ -1,4 +1,3 @@
-// src/modules/Posts/PostsPage.jsx
 'use client';
 
 import React, { useEffect, useState } from 'react';
