@@ -5,6 +5,8 @@ import Link from 'next/link';
 import { getAllPosts } from '@/services/api/post/api';
 import styles from './PostsPage.module.scss';
 import Container from '@/shared/container/Container';
+import { LINKDATA, ROUTES } from '@/shared/constants';
+import LinkButton from '@/shared/components/LinkButton/LinkButton';
 
 export default function PostsPage() {
   const [posts, setPosts] = useState([]);
@@ -75,7 +77,9 @@ export default function PostsPage() {
         <div className={styles.header}>
           <h1 className={styles.title}>Posts</h1>
         </div>
-
+        <LinkButton path={ROUTES.CREATE} type={LINKDATA.CREATE}>
+          Створити пост
+        </LinkButton>
         <ul className={styles.list}>
           {posts.map((post) => {
             const postHref = `/posts/${post._id}`;

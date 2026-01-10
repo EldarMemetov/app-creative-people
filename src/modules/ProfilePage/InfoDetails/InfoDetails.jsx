@@ -99,9 +99,15 @@ export default function InfoDetails() {
               />
             </NotificationsIndicator>
             <LinkButton
-              path="favorite"
-              type={LINKDATA.FAVORITE}
-              linkText="Фаворіт"
+              path="my-post"
+              type={LINKDATA.MYPOST}
+              linkText="Мої пости"
+            />
+            <LinkButton
+              className={s.editButton}
+              path="notification"
+              type={LINKDATA.NOTIFICATION}
+              linkText="Сповіщання"
             />
             <div className={s.details}>
               <p className={s.pWithStrong}>

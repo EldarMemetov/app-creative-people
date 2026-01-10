@@ -10,6 +10,7 @@ import Container from '@/shared/container/Container';
 import PostLikeButton from '@/shared/PostLikeButton/PostLikeButton';
 import PostFavoriteButton from '@/shared/components/PostFavoriteButton/PostFavoriteButton';
 import Comments from '@/modules/Comments/Comments';
+import { groupRoles } from '@/utils/groupRoles';
 export default function IdPostPage() {
   const { id } = useParams();
   const [post, setPost] = useState(null);
@@ -52,7 +53,7 @@ export default function IdPostPage() {
     );
 
   if (!post) return <div className={styles.center}>Post not found</div>;
-
+  const grouped = groupRoles(post.roleSlots);
   return (
     <section>
       <Container>
@@ -112,9 +113,17 @@ export default function IdPostPage() {
               </div>
             )}
 
-            {post.roleNeeded?.length > 0 && (
+            {grouped.length > 0 && (
               <div className={styles.detailItem}>
-                <strong>Roles needed:</strong> {post.roleNeeded.join(', ')}
+                <strong>Roles needed:</strong>
+                <div className={styles.roleBadges}>
+                  {grouped.map((g) => (
+                    <span key={g.role} className={styles.roleBadge}>
+                      <span className={styles.roleName}>{g.role}</span>
+                      <span className={styles.roleCount}>×{g.count}</span>
+                    </span>
+                  ))}
+                </div>
               </div>
             )}
           </div>

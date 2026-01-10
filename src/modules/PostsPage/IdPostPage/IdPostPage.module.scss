@@ -201,3 +201,28 @@
     grid-template-columns: 1fr;
   }
 }
+.roleBadges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 6px;
+}
+.roleBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: #f3f5f7;
+  border-radius: 999px;
+  padding: 6px 10px;
+  font-size: 0.9rem;
+  color: #111;
+  box-shadow: 0 1px 0 rgba(0, 0, 0, 0.03);
+}
+.roleName {
+  font-weight: 600;
+  text-transform: capitalize;
+}
+.roleCount {
+  color: #333;
+  opacity: 0.8;
+}

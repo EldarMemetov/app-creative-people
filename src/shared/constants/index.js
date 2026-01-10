@@ -7,11 +7,13 @@ export const ROUTES = {
   ABOUT: 'about-us',
   TALENTS: '/talents',
   FORGOT: '/forgot-password',
+  MYPOST: '/my-post',
   POSTS: 'posts',
   COMMUNITY: 'community',
   BLOG: 'blog',
   POLICY: 'privacy-policy',
   NOTIFICATION: 'notification',
+  CREATE: '/posts/create',
 };
 
 export const LINKDATA = {
@@ -21,14 +23,15 @@ export const LINKDATA = {
   REGISTER: '/register',
   NOTIFICATION: '/notification',
   FAVORITE: '/favorite',
+  MYPOST: '/my-post',
   FORGOT: '/forgot-password',
   ABOUT: 'about-us',
   TALENTS: 'talents',
+  CREATE: '/posts/create',
   POSTS: 'posts',
   COMMUNITY: 'community',
   BLOG: 'blog',
   POLICY: 'privacy-policy',
-
   TYPE_LIGHT_BORDER: 'light-border',
 };
 

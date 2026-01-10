@@ -1,0 +1,28 @@
+.selectedRoles {
+  margin-top: 8px;
+}
+.selectedRole {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  margin-bottom: 4px;
+}
+.removeRoleBtn {
+  background: transparent;
+  border: none;
+  color: #c00;
+  cursor: pointer;
+}
+.roleJson {
+  margin-top: 8px;
+}
+.roleTextArea {
+  width: 100%;
+  min-height: 80px;
+  margin-top: 4px;
+}
+.error {
+  color: #b00020;
+  margin-top: 8px;
+  font-size: 0.9rem;
+}
