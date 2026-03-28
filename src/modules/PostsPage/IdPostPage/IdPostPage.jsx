@@ -5,18 +5,22 @@ import { useParams } from 'next/navigation';
 import Link from 'next/link';
 import Image from 'next/image';
 import { getPostById } from '@/services/api/post/api';
+import { useAuth } from '@/services/store/useAuth';
 import styles from './IdPostPage.module.scss';
 import Container from '@/shared/container/Container';
 import PostLikeButton from '@/shared/PostLikeButton/PostLikeButton';
 import PostFavoriteButton from '@/shared/components/PostFavoriteButton/PostFavoriteButton';
 import Comments from '@/modules/Comments/Comments';
+import ApplyToPost from '@/modules/ApplyToPost/ApplyToPost';
 import { groupRoles } from '@/utils/groupRoles';
+import { assignCandidates } from '@/services/api/postRole/api';
 export default function IdPostPage() {
   const { id } = useParams();
   const [post, setPost] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-
+  const currentUser = useAuth((s) => s.user);
+  const [assignLoading, setAssignLoading] = useState(false);
   useEffect(() => {
     if (!id) {
       setError('Post id is missing');
@@ -26,8 +30,8 @@ export default function IdPostPage() {
 
     const load = async () => {
       try {
-        const data = await getPostById(id);
-        setPost(data);
+        const postData = await getPostById(id); // только пост
+        setPost(postData);
       } catch (err) {
         setError(err?.message || 'Failed to load post');
       } finally {
@@ -42,6 +46,47 @@ export default function IdPostPage() {
     setPost((prev) => (prev ? { ...prev, isFavorited: false } : prev));
   };
 
+  // callback when user applied (update local state)
+  const handleApplied = (postId, role) => {
+    setPost((prev) =>
+      prev && String(prev._id) === String(postId)
+        ? {
+            ...prev,
+            applicationsCount: (prev.applicationsCount || 0) + 1,
+            appliedByMe: true,
+          }
+        : prev
+    );
+  };
+  const handleSelectApplicant = async (applicant) => {
+    if (
+      !confirm(
+        `Вы уверены, что хотите назначить ${applicant.user.name} ${applicant.user.surname} как ${applicant.appliedRole}?`
+      )
+    ) {
+      return;
+    }
+    setAssignLoading(true);
+    try {
+      await assignCandidates(post._id, [
+        { userId: applicant.user._id, role: applicant.appliedRole },
+      ]);
+
+      // refetch post to ensure we have populated applications/assignedTo/calendar etc.
+      const refreshed = await getPostById(id);
+      setPost(refreshed);
+
+      alert(
+        'Кандидат назначен — событие создано в календаре и отправлены уведомления.'
+      );
+    } catch (err) {
+      console.error(err);
+      alert(err?.response?.data?.message || 'Не удалось назначить кандидата');
+    } finally {
+      setAssignLoading(false);
+    }
+  };
+
   if (loading) return <div className={styles.center}>Loading post…</div>;
 
   if (error)
@@ -54,6 +99,11 @@ export default function IdPostPage() {
 
   if (!post) return <div className={styles.center}>Post not found</div>;
   const grouped = groupRoles(post.roleSlots);
+
+  const isAuthor =
+    currentUser &&
+    String(currentUser._id) === String(post.author?._id || post.author);
+
   return (
     <section>
       <Container>
@@ -149,7 +199,57 @@ export default function IdPostPage() {
             <div className={styles.stat}>
               Interested: {post.interestedUsers?.length || 0}
             </div>
+            {/* Apply button */}
+            <div style={{ marginLeft: 12 }}>
+              <ApplyToPost
+                post={post}
+                currentUser={currentUser}
+                initialApplied={!!post.appliedByMe}
+                onApplied={handleApplied}
+              />
+            </div>
           </div>
+
+          {isAuthor &&
+            Array.isArray(post.applications) &&
+            post.applications.length > 0 && (
+              <div style={{ marginTop: 20 }}>
+                <h3>Applications ({post.applications.length})</h3>
+                <ul>
+                  {post.applications.map((a) => (
+                    <li key={a._id || a.id} style={{ marginBottom: 10 }}>
+                      {a.user ? (
+                        <>
+                          <Link href={`/talents/${a.user._id}`}>
+                            {a.user.name} {a.user.surname}
+                          </Link>{' '}
+                          — <strong>{a.appliedRole}</strong>
+                          {a.message ? (
+                            <div style={{ marginTop: 4 }}>{a.message}</div>
+                          ) : null}
+                          <div style={{ fontSize: 12, color: '#666' }}>
+                            {new Date(a.createdAt).toLocaleString()}
+                          </div>
+                          {post.status === 'open' && (
+                            <div style={{ marginTop: 6 }}>
+                              <button
+                                onClick={() => handleSelectApplicant(a)}
+                                disabled={assignLoading}
+                              >
+                                {assignLoading ? 'Отправка…' : 'Выбрать'}
+                              </button>
+                            </div>
+                          )}
+                        </>
+                      ) : (
+                        <span>Информация о кандидате недоступна</span>
+                      )}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+
           <Comments postId={post._id} />
         </div>
       </Container>
