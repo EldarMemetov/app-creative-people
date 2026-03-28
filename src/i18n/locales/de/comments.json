@@ -1,0 +1,38 @@
+{
+  "title": "Kommentare",
+  "loginNotice": "Melden Sie sich an, um einen Kommentar zu hinterlassen",
+  "empty": "Keine Kommentare",
+  "errors": {
+    "loadFailed": "Kommentare konnten nicht geladen werden",
+    "addFailed": "Kommentar konnte nicht hinzugefügt werden",
+    "updateFailed": "Kommentar konnte nicht aktualisiert werden",
+    "deleteFailed": "Kommentar konnte nicht gelöscht werden",
+    "fetchFailed": "Kommentar konnte nicht abgerufen werden",
+    "emptyText": "Kommentar darf nicht leer sein",
+    "maxLength": "Maximal 500 Zeichen",
+    "requiredText": "Text eingeben"
+  },
+  "actions": {
+    "like": "Gefällt mir",
+    "unlike": "Gefällt mir nicht mehr",
+    "reply": "Antworten",
+    "edit": "Bearbeiten",
+    "delete": "Löschen",
+    "cancel": "Abbrechen",
+    "save": "Speichern",
+    "replyLabel": "Antworten",
+    "submit": "Senden"
+  },
+  "replyPreview": {
+    "deleted": "Kommentar gelöscht",
+    "unavailable": "Antwort auf Kommentar"
+  },
+  "aria": {
+    "goToParentComment": "Zum übergeordneten Kommentar gehen"
+  },
+  "userFallback": "Benutzer",
+  "form": {
+    "placeholder": "Kommentar schreiben...",
+    "emojiButtonLabel": "Emoji einfügen"
+  }
+}

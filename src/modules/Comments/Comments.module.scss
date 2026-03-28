@@ -1,0 +1,59 @@
+.comments {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  background: #030525;
+  padding: 20px;
+  border-radius: 16px;
+  color: #e6ebff;
+
+  .title {
+    font-size: 20px;
+    font-weight: 700;
+    margin-bottom: 12px;
+  }
+
+  .loginNotice {
+    padding: 12px;
+    border-radius: 12px;
+    background: rgba(50, 50, 80, 0.4);
+    color: #a8b0ff;
+    text-align: center;
+    font-size: 14px;
+  }
+
+  .list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+
+    .empty {
+      padding: 12px;
+      border-radius: 12px;
+      background: rgba(40, 40, 70, 0.3);
+      color: #a8b0ff;
+      text-align: center;
+      font-size: 14px;
+    }
+  }
+}
+
+/* Форма комментария */
+.commentForm {
+  background: rgba(20, 20, 50, 0.5);
+  padding: 16px;
+  border-radius: 12px;
+  border: 1px solid rgba(120, 140, 255, 0.2);
+  backdrop-filter: blur(8px);
+  box-shadow:
+    0 0 0 1px rgba(120, 140, 255, 0.08),
+    0 4px 15px rgba(0, 0, 0, 0.4);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.highlight {
+  background: rgba(255, 245, 190, 0.85);
+  transition: background 0.35s ease;
+  border-radius: 8px;
+}

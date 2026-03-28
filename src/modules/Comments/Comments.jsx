@@ -1,4 +1,5 @@
 'use client';
+
 import React, { useEffect, useState, useCallback, useMemo } from 'react';
 import { useSocket } from '@/hooks/useSocket';
 import { useAuth } from '@/services/store/useAuth';
@@ -6,9 +7,10 @@ import { getComments, addComment as apiAdd } from '@/services/api/comments/api';
 import CommentForm from './CommentForm/CommentForm';
 import CommentItem from './CommentsItem/CommentsItem';
 import s from './Comments.module.scss';
-import Loader from '@/shared/Loader/Loader';
+import { useTranslation } from 'react-i18next';
 
 export default function Comments({ postId }) {
+  const { t } = useTranslation(['comments']);
   const { socket, joinPost, leavePost } = useSocket();
   const { user } = useAuth();
 
@@ -47,11 +49,11 @@ export default function Comments({ postId }) {
 
     const onNew = ({ postId: pid, comment }) => {
       if (String(pid) !== String(postId)) return;
-      setComments((prev) => {
-        if (prev.some((c) => String(c._id) === String(comment._id)))
-          return prev;
-        return [comment, ...prev];
-      });
+      setComments((prev) =>
+        prev.some((c) => String(c._id) === String(comment._id))
+          ? prev
+          : [comment, ...prev]
+      );
     };
 
     const onUpdated = ({ postId: pid, comment }) => {
@@ -70,22 +72,17 @@ export default function Comments({ postId }) {
 
     const onLike = (payload = {}) => {
       const { commentId, liked, likesCount, byUserId, postId: pid } = payload;
-
       if (pid && String(pid) !== String(postId)) return;
-
       setComments((prev) =>
         prev.map((c) => {
           if (String(c._id) !== String(commentId)) return c;
-
           const isActorCurrentUser = Boolean(
             user && String(user._id) === String(byUserId)
           );
-
           return {
             ...c,
             likesCount:
               typeof likesCount === 'number' ? likesCount : (c.likesCount ?? 0),
-
             liked: isActorCurrentUser ? Boolean(liked) : Boolean(c.liked),
           };
         })
@@ -112,11 +109,11 @@ export default function Comments({ postId }) {
     try {
       const res = await apiAdd(postId, text, opts);
       const created = res?.data ?? res;
-      setComments((prev) => {
-        if (prev.some((c) => String(c._id) === String(created._id)))
-          return prev;
-        return [created, ...prev];
-      });
+      setComments((prev) =>
+        prev.some((c) => String(c._id) === String(created._id))
+          ? prev
+          : [created, ...prev]
+      );
     } catch (e) {
       console.error('add comment failed', e);
       throw e;
@@ -133,66 +130,46 @@ export default function Comments({ postId }) {
     setComments((prev) => prev.filter((c) => String(c._id) !== String(id)));
   };
 
-  const tree = useMemo(() => {
-    const map = new Map();
-    comments.forEach((c) => map.set(String(c._id), { ...c, children: [] }));
-    const roots = [];
-
-    for (const [, c] of map) {
-      if (c.parentComment) {
-        const parent = map.get(String(c.parentComment));
-        if (parent) {
-          parent.children.push(c);
-        } else {
-          roots.push(c);
-        }
-      } else {
-        roots.push(c);
-      }
-    }
-
-    roots.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
-
-    const sortChildrenRec = (nodes) => {
-      nodes.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
-      nodes.forEach((n) => sortChildrenRec(n.children));
-    };
-    sortChildrenRec(roots);
-
-    return roots;
+  const sortedComments = useMemo(() => {
+    return [...comments].sort(
+      (a, b) => new Date(a.createdAt) - new Date(b.createdAt)
+    );
   }, [comments]);
 
-  if (loading) return <Loader />;
+  const commentsMap = useMemo(() => {
+    const map = {};
+    for (const c of comments) {
+      if (c && c._id) map[String(c._id)] = c;
+    }
+    return map;
+  }, [comments]);
 
   return (
     <div className={s.comments}>
-      <h3>Комментарии ({comments.length})</h3>
+      <h3 className={s.title}>
+        {t('title')}: {comments.length}
+      </h3>
 
       {user ? (
         <CommentForm onSubmit={(text) => handleAdd(text)} />
       ) : (
-        <div className={s.loginNotice}>Войдите, чтобы оставить комментарий</div>
+        <div className={s.loginNotice}>{t('loginNotice')}</div>
       )}
 
       <div className={s.list}>
-        {tree.length === 0 ? (
-          <div className={s.empty}>Нет комментариев</div>
-        ) : (
-          tree.map((c) => (
+        {loading && <div>{t('loading')}</div>}
+        {!loading && sortedComments.length === 0 && (
+          <div className={s.empty}>{t('empty')}</div>
+        )}
+        {!loading &&
+          sortedComments.map((c, index) => (
             <CommentItem
-              key={c._id}
+              key={`${c._id}-${index}`}
               comment={c}
               postId={postId}
-              onUpdateLocal={(u) =>
-                setComments((prev) =>
-                  prev.map((x) => (String(x._id) === String(u._id) ? u : x))
-                )
-              }
-              onRemoveLocal={(id) =>
-                setComments((prev) =>
-                  prev.filter((x) => String(x._id) !== String(id))
-                )
-              }
+              commentsMap={commentsMap}
+              onUpdateLocal={onUpdateLocal}
+              onRemoveLocal={onRemoveLocal}
               onAddLocal={(created) =>
                 setComments((prev) =>
                   prev.some((x) => String(x._id) === String(created._id))
@@ -201,8 +178,7 @@ export default function Comments({ postId }) {
                 )
               }
             />
-          ))
-        )}
+          ))}
       </div>
     </div>
   );

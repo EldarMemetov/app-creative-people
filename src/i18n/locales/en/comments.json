@@ -1,0 +1,38 @@
+{
+  "title": "Comments",
+  "loginNotice": "Log in to leave a comment",
+  "empty": "No comments",
+  "errors": {
+    "loadFailed": "Failed to load comments",
+    "addFailed": "Failed to add comment",
+    "updateFailed": "Failed to update comment",
+    "deleteFailed": "Failed to delete comment",
+    "fetchFailed": "Failed to fetch comment",
+    "emptyText": "Comment cannot be empty",
+    "maxLength": "Maximum 500 characters",
+    "requiredText": "Enter text"
+  },
+  "actions": {
+    "like": "Like",
+    "unlike": "Unlike",
+    "reply": "Reply",
+    "edit": "Edit",
+    "delete": "Delete",
+    "cancel": "Cancel",
+    "save": "Save",
+    "replyLabel": "Reply",
+    "submit": "Submit"
+  },
+  "replyPreview": {
+    "deleted": "Comment deleted",
+    "unavailable": "Reply to comment"
+  },
+  "aria": {
+    "goToParentComment": "Go to parent comment"
+  },
+  "userFallback": "User",
+  "form": {
+    "placeholder": "Write a comment...",
+    "emojiButtonLabel": "Insert emoji"
+  }
+}

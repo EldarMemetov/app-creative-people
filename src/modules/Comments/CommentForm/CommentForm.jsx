@@ -5,16 +5,19 @@ import * as Yup from 'yup';
 import FormInput from '@/shared/FormInput/FormInput';
 import s from './CommentForm.module.scss';
 import EmojiButton from '@/shared/components/EmojiButton/EmojiButton';
+import { useTranslation } from 'react-i18next';
 
-const CommentSchema = Yup.object().shape({
-  text: Yup.string().min(1).max(500).required('Введите текст'),
-});
+export default function CommentForm({ initial = '', onSubmit, submitLabel }) {
+  const { t } = useTranslation(['comments']);
 
-export default function CommentForm({
-  initial = '',
-  onSubmit,
-  submitLabel = 'Отправить',
-}) {
+  const CommentSchema = Yup.object().shape({
+    text: Yup.string()
+      .trim()
+      .min(1, t('errors.emptyText'))
+      .max(500, t('errors.maxLength'))
+      .required(t('errors.requiredText')),
+  });
+
   return (
     <Formik
       initialValues={{ text: initial }}
@@ -35,12 +38,15 @@ export default function CommentForm({
           <FormInput
             name="text"
             as="textarea"
-            placeholder="Написать комментарий..."
+            placeholder={t('form.placeholder')}
           />
           <div className={s.formActions}>
-            <EmojiButton fieldName="text" />
+            <EmojiButton
+              fieldName="text"
+              aria-label={t('form.emojiButtonLabel')}
+            />
             <button type="submit" className={s.btn} disabled={isSubmitting}>
-              {submitLabel}
+              {submitLabel || t('actions.submit')}
             </button>
           </div>
         </Form>

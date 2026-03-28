@@ -3,54 +3,108 @@
   flex-direction: column;
   margin-bottom: 16px;
 }
-
+.input,
+.textarea {
+  outline: none;
+}
 .label {
   font-weight: 600;
   margin-bottom: 6px;
+  color: #cfd3ff;
+  font-size: 14px;
+}
+
+.inputInner {
+  position: relative;
 }
 
 .input {
   width: 100%;
-  padding: 12px 14px;
-  border-radius: 8px;
-  background: #f6f6f6;
-  border: 1px solid #dcdcdc;
-  font-size: 16px;
+  padding: 12px 40px 12px 14px;
+  border-radius: 10px;
+  background: rgba(15, 15, 40, 0.6);
+  border: 1px solid rgba(120, 140, 255, 0.25);
+  font-size: 15px;
+  color: #e6e9ff;
   outline: none;
-  transition: border 0.2s ease;
+
+  backdrop-filter: blur(8px);
+
+  transition:
+    border 0.2s ease,
+    box-shadow 0.2s ease,
+    background 0.2s ease;
+
+  &::placeholder {
+    color: rgba(200, 205, 255, 0.4);
+  }
 
   &:focus {
-    border-color: #000;
+    border-color: #788cff;
+    box-shadow: 0 0 0 2px rgba(120, 140, 255, 0.25);
+    background: rgba(20, 20, 50, 0.7);
   }
-}
-
-.error {
-  color: red;
-  font-size: 14px;
-  margin-top: 4px;
 }
 
 .textarea {
   width: 100%;
   min-height: 120px;
-  padding: 10px;
+  padding: 12px 14px;
   resize: vertical;
+  border-radius: 10px;
+
+  background: rgba(15, 15, 40, 0.6);
+  border: 1px solid rgba(120, 140, 255, 0.25);
+  color: #e6e9ff;
+
+  backdrop-filter: blur(8px);
+
+  transition:
+    border 0.2s ease,
+    box-shadow 0.2s ease;
+
+  &::placeholder {
+    color: rgba(200, 205, 255, 0.4);
+  }
+
+  &:focus {
+    border-color: #788cff;
+    box-shadow: 0 0 0 2px rgba(120, 140, 255, 0.25);
+  }
 }
-.inputInner {
-  position: relative;
+
+.error {
+  color: #ff6b8a;
+  font-size: 13px;
+  margin-top: 4px;
 }
 
 .eyeButton {
   position: absolute;
-  right: 10px;
+  right: 12px;
   top: 50%;
   transform: translateY(-50%);
-  background: none;
+  background: transparent;
   border: none;
   cursor: pointer;
-  padding: 0;
+  padding: 4px;
+  border-radius: 6px;
+
+  transition: background 0.15s ease;
+
+  &:hover {
+    background: rgba(120, 140, 255, 0.15);
+  }
 }
+
 .icon {
-  stroke: #000;
-  width: 16px;
+  stroke: #a8b0ff;
+  width: 18px;
+  height: 18px;
+
+  transition: stroke 0.2s ease;
+}
+
+.eyeButton:hover .icon {
+  stroke: #ffffff;
 }
