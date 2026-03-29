@@ -3,10 +3,9 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { getPostById } from '@/services/api/post/api';
-import CreatePostForm from '@/modules/PostForm/CreatePostForm/CreatePostForm'; // поправь путь если у тебя другой
+import CreatePostForm from '@/modules/PostForm/CreatePostForm/CreatePostForm';
 import Loader from '@/shared/Loader/Loader';
-import s from './EditPostPage.module.scss'; // опционально: стили
-
+import s from './EditPostPage.module.scss';
 export default function EditPostPage() {
   const params = useParams();
   const router = useRouter();
