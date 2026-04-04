@@ -17,12 +17,10 @@ import roles from '@/utils/roles';
 import Image from 'next/image';
 
 const MAX_PHOTO_COUNT = 3;
-const MAX_VIDEO_COUNT = 1;
 const MAX_PHOTO_BYTES = 5 * 1024 * 1024;
-const MAX_VIDEO_BYTES = 30 * 1024 * 1024;
 
 const getBerlinTodayISO = () =>
-  new Date().toLocaleDateString('en-CA', { timeZone: 'Europe/Berlin' }); // 'YYYY-MM-DD'
+  new Date().toLocaleDateString('en-CA', { timeZone: 'Europe/Berlin' });
 
 export default function CreatePostForm({ initial = null }) {
   const router = useRouter();
@@ -43,49 +41,29 @@ export default function CreatePostForm({ initial = null }) {
   };
 
   const initialValues = {
-    title: '',
-    description: '',
-    country: '',
-    city: '',
-    date: '',
-    type: 'tfp',
-    price: 0,
-    roleSlots: [],
-    roleSlotsText: '',
-    maxAssigned: 5,
-    ...(initial
-      ? {
-          title: initial.title ?? '',
-          description: initial.description ?? '',
-          country: initial.country ?? '',
-          city: initial.city ?? '',
-          date: formatDateForInput(initial.date),
-          type: initial.type ?? 'tfp',
-          price: initial.price ?? 0,
-          roleSlots: initial.roleSlots ?? [],
-          roleSlotsText: initial.roleSlots
-            ? JSON.stringify(initial.roleSlots, null, 2)
-            : '',
-          maxAssigned: initial.maxAssigned ?? 5,
-        }
-      : {}),
+    title: initial?.title ?? '',
+    description: initial?.description ?? '',
+    country: initial?.country ?? '',
+    city: initial?.city ?? '',
+    date: initial ? formatDateForInput(initial.date) : '',
+    type: initial?.type ?? 'tfp',
+    price: initial?.price ?? 0,
+    roleSlots: initial?.roleSlots ?? [],
+    maxAssigned: initial?.maxAssigned ?? 5,
   };
 
   const countExisting = () => {
-    let photos = 0,
-      videos = 0;
-    existingMedia.forEach((m) => (m.type === 'photo' ? photos++ : videos++));
-    return { photos, videos };
+    let photos = 0;
+    existingMedia.forEach((m) => (m.type === 'photo' ? photos++ : null));
+    return { photos };
   };
 
   const countNewFiles = (filesArr) => {
-    let photos = 0,
-      videos = 0;
+    let photos = 0;
     filesArr.forEach((f) => {
       if (f.type.startsWith('image')) photos++;
-      else if (f.type.startsWith('video')) videos++;
     });
-    return { photos, videos };
+    return { photos };
   };
 
   const handleFilesChange = (e) => {
@@ -101,30 +79,16 @@ export default function CreatePostForm({ initial = null }) {
       );
       return;
     }
-    if (existing.videos + newCounts.videos > MAX_VIDEO_COUNT) {
-      alert(
-        `Можно загрузить максимум ${MAX_VIDEO_COUNT} видео (включая уже загруженные).`
-      );
-      return;
-    }
 
     for (const f of list) {
-      if (f.type.startsWith('image')) {
-        if (f.size > MAX_PHOTO_BYTES) {
-          alert(
-            `${f.name} превышает максимальный размер фото ${MAX_PHOTO_BYTES / (1024 * 1024)}MB`
-          );
-          return;
-        }
-      } else if (f.type.startsWith('video')) {
-        if (f.size > MAX_VIDEO_BYTES) {
-          alert(
-            `${f.name} превышает максимальный размер видео ${MAX_VIDEO_BYTES / (1024 * 1024)}MB`
-          );
-          return;
-        }
-      } else {
-        alert('Только изображения и видео разрешены');
+      if (!f.type.startsWith('image')) {
+        alert('Можно загружать только изображения');
+        return;
+      }
+      if (f.size > MAX_PHOTO_BYTES) {
+        alert(
+          `${f.name} превышает максимальный размер фото ${MAX_PHOTO_BYTES / (1024 * 1024)}MB`
+        );
         return;
       }
     }
@@ -133,9 +97,8 @@ export default function CreatePostForm({ initial = null }) {
     e.target.value = '';
   };
 
-  const removeNewFile = (index) => {
+  const removeNewFile = (index) =>
     setNewFiles((prev) => prev.filter((_, i) => i !== index));
-  };
 
   const removeExistingMedia = async (mediaId) => {
     if (!isEdit) return;
@@ -155,7 +118,6 @@ export default function CreatePostForm({ initial = null }) {
     if (!value) return false;
     const parsed = new Date(value);
     if (Number.isNaN(parsed.getTime())) return false;
-    // сравниваем строковые YYYY-MM-DD — это надёжнее для "дата без времени"
     const parsedStr = parsed.toISOString().slice(0, 10);
     const berlinTodayStr = getBerlinTodayISO();
     return parsedStr < berlinTodayStr;
@@ -168,21 +130,8 @@ export default function CreatePostForm({ initial = null }) {
     setSubmitting(true);
     setFormikSubmitting(true);
 
-    // парсим роли один раз и используем дальше
-    let roleSlots = values.roleSlots || [];
-    if (values.roleSlotsText && values.roleSlotsText.trim()) {
-      try {
-        const parsed = JSON.parse(values.roleSlotsText);
-        if (Array.isArray(parsed)) roleSlots = parsed;
-      } catch (e) {
-        setErrors({ roleSlotsText: 'Невалидный JSON для ролей' });
-        setSubmitting(false);
-        setFormikSubmitting(false);
-        return;
-      }
-    }
+    const roleSlots = values.roleSlots || [];
 
-    // быстрые проверки на фронте (бек тоже должен проверять)
     if (values.date && isDateInPastBerlin(values.date)) {
       setErrors({ date: 'Дата не может быть в прошлом' });
       setSubmitting(false);
@@ -213,7 +162,6 @@ export default function CreatePostForm({ initial = null }) {
       let resultPost = null;
       if (isEdit) {
         resultPost = await updatePost(initial._id, payload);
-
         if (newFiles.length > 0) {
           await uploadPostMedia(initial._id, newFiles);
         }
@@ -225,7 +173,8 @@ export default function CreatePostForm({ initial = null }) {
         }
       }
 
-      router.push(`/posts/${resultPost._id}`);
+      const savedPost = resultPost.data || resultPost;
+      router.push(`/posts/${savedPost._id}`);
     } catch (err) {
       console.error('submit error', err);
       alert('Ошибка при сохранении поста');
@@ -245,7 +194,7 @@ export default function CreatePostForm({ initial = null }) {
         validationSchema={postFormSchema}
         onSubmit={onSubmit}
       >
-        {({ values, setFieldValue, errors, touched }) => (
+        {({ values, setFieldValue, errors }) => (
           <Form className={styles.form}>
             <FormInput
               label="Заголовок"
@@ -260,8 +209,6 @@ export default function CreatePostForm({ initial = null }) {
             />
             <FormInput label="Страна" name="country" />
             <FormInput label="Город" name="city" />
-
-            {/* Если FormInput поддерживает min — отлично. Если нет, замени на нативный input (см. комментарий ниже) */}
             <FormInput
               label="Дата"
               name="date"
@@ -289,7 +236,6 @@ export default function CreatePostForm({ initial = null }) {
 
             <div className={styles.roleSection}>
               <label>Роли</label>
-
               <div className={styles.quickButtons}>
                 <span>Быстрые роли:</span>
                 {roles.map((r) => (
@@ -297,9 +243,7 @@ export default function CreatePostForm({ initial = null }) {
                     key={r}
                     type="button"
                     onClick={() => {
-                      const parsed = values.roleSlots
-                        ? [...values.roleSlots]
-                        : [];
+                      const parsed = [...(values.roleSlots || [])];
                       parsed.push({ role: r, required: 1 });
                       setFieldValue('roleSlots', parsed);
                     }}
@@ -310,7 +254,6 @@ export default function CreatePostForm({ initial = null }) {
                 ))}
               </div>
 
-              {/* Показываем выбранные роли (если есть) */}
               {Array.isArray(values.roleSlots) &&
               values.roleSlots.length > 0 ? (
                 <div className={styles.selectedRoles}>
@@ -337,21 +280,16 @@ export default function CreatePostForm({ initial = null }) {
                 <div className={styles.noRoles}>Роли не выбраны</div>
               )}
 
-              {errors && (errors.roleSlots || errors.roleSlotsText) && (
-                <div className={styles.error}>
-                  {errors.roleSlots || errors.roleSlotsText}
-                </div>
+              {errors.roleSlots && (
+                <div className={styles.error}>{errors.roleSlots}</div>
               )}
             </div>
 
             <div className={styles.filesRow}>
-              <label>
-                Файлы (фото/видео): фото макс {MAX_PHOTO_COUNT}, видео макс{' '}
-                {MAX_VIDEO_COUNT}
-              </label>
+              <label>Файлы (фото): макс {MAX_PHOTO_COUNT}</label>
               <input
                 type="file"
-                accept="image/*,video/*"
+                accept="image/*"
                 multiple
                 onChange={handleFilesChange}
               />
@@ -360,26 +298,19 @@ export default function CreatePostForm({ initial = null }) {
               )}
             </div>
 
-            {/* previews: existing */}
             {existingMedia.length > 0 && (
               <div className={styles.mediaList}>
                 <h4>Загруженные медиа</h4>
                 <div className={styles.mediaGrid}>
                   {existingMedia.map((m) => (
                     <div key={m._id} className={styles.mediaCard}>
-                      {m.type === 'photo' ? (
-                        <Image
-                          width={100}
-                          height={100}
-                          src={m.url}
-                          alt="media"
-                          className={styles.mediaThumb}
-                        />
-                      ) : (
-                        <video className={styles.mediaThumb} controls>
-                          <source src={m.url} />
-                        </video>
-                      )}
+                      <Image
+                        width={100}
+                        height={100}
+                        src={m.url}
+                        alt="media"
+                        className={styles.mediaThumb}
+                      />
                       <button
                         type="button"
                         className={styles.removeBtn}
@@ -401,19 +332,13 @@ export default function CreatePostForm({ initial = null }) {
                     const url = URL.createObjectURL(f);
                     return (
                       <div key={i} className={styles.mediaCard}>
-                        {f.type.startsWith('image') ? (
-                          <Image
-                            width={100}
-                            height={100}
-                            src={url}
-                            alt={f.name}
-                            className={styles.mediaThumb}
-                          />
-                        ) : (
-                          <video className={styles.mediaThumb} controls>
-                            <source src={url} />
-                          </video>
-                        )}
+                        <Image
+                          width={100}
+                          height={100}
+                          src={url}
+                          alt={f.name}
+                          className={styles.mediaThumb}
+                        />
                         <div className={styles.mediaInfo}>
                           <div>{f.name}</div>
                           <div>{(f.size / (1024 * 1024)).toFixed(2)} MB</div>

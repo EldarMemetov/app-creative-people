@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { useParams } from 'next/navigation';
 import Link from 'next/link';
 import Image from 'next/image';
@@ -14,6 +14,7 @@ import Comments from '@/modules/Comments/Comments';
 import ApplyToPost from '@/modules/ApplyToPost/ApplyToPost';
 import { groupRoles } from '@/utils/groupRoles';
 import { assignCandidates } from '@/services/api/postRole/api';
+
 export default function IdPostPage() {
   const { id } = useParams();
   const [post, setPost] = useState(null);
@@ -21,6 +22,7 @@ export default function IdPostPage() {
   const [error, setError] = useState(null);
   const currentUser = useAuth((s) => s.user);
   const [assignLoading, setAssignLoading] = useState(false);
+
   useEffect(() => {
     if (!id) {
       setError('Post id is missing');
@@ -30,7 +32,7 @@ export default function IdPostPage() {
 
     const load = async () => {
       try {
-        const postData = await getPostById(id); // только пост
+        const postData = await getPostById(id);
         setPost(postData);
       } catch (err) {
         setError(err?.message || 'Failed to load post');
@@ -46,8 +48,7 @@ export default function IdPostPage() {
     setPost((prev) => (prev ? { ...prev, isFavorited: false } : prev));
   };
 
-  // callback when user applied (update local state)
-  const handleApplied = (postId, role) => {
+  const handleApplied = (postId) => {
     setPost((prev) =>
       prev && String(prev._id) === String(postId)
         ? {
@@ -58,33 +59,60 @@ export default function IdPostPage() {
         : prev
     );
   };
+
   const handleSelectApplicant = async (applicant) => {
+    const applicantName = applicant?.user
+      ? `${applicant.user.name || ''} ${applicant.user.surname || ''}`.trim()
+      : 'кандидата';
+
     if (
       !confirm(
-        `Вы уверены, что хотите назначить ${applicant.user.name} ${applicant.user.surname} как ${applicant.appliedRole}?`
+        `Вы уверены, что хотите назначить ${applicantName} как ${applicant.appliedRole}?`
       )
     ) {
       return;
     }
+
     setAssignLoading(true);
     try {
       await assignCandidates(post._id, [
         { userId: applicant.user._id, role: applicant.appliedRole },
       ]);
 
-      // refetch post to ensure we have populated applications/assignedTo/calendar etc.
       const refreshed = await getPostById(id);
       setPost(refreshed);
 
-      alert(
-        'Кандидат назначен — событие создано в календаре и отправлены уведомления.'
-      );
+      alert('Кандидат назначен.');
     } catch (err) {
       console.error(err);
       alert(err?.response?.data?.message || 'Не удалось назначить кандидата');
     } finally {
       setAssignLoading(false);
     }
+  };
+
+  const roleMap = useMemo(() => {
+    const map = new Map();
+
+    (post?.roleSlots || []).forEach((slot) => {
+      const required = Number(slot.required) || 1;
+      const assignedCount = Array.isArray(slot.assigned)
+        ? slot.assigned.length
+        : 0;
+
+      map.set(String(slot.role), {
+        required,
+        assignedCount,
+        available: Math.max(0, required - assignedCount),
+      });
+    });
+
+    return map;
+  }, [post]);
+
+  const isRoleFilled = (role) => {
+    const info = roleMap.get(String(role));
+    return !info || info.available <= 0;
   };
 
   if (loading) return <div className={styles.center}>Loading post…</div>;
@@ -98,6 +126,7 @@ export default function IdPostPage() {
     );
 
   if (!post) return <div className={styles.center}>Post not found</div>;
+
   const grouped = groupRoles(post.roleSlots);
 
   const isAuthor =
@@ -199,7 +228,7 @@ export default function IdPostPage() {
             <div className={styles.stat}>
               Interested: {post.interestedUsers?.length || 0}
             </div>
-            {/* Apply button */}
+
             <div style={{ marginLeft: 12 }}>
               <ApplyToPost
                 post={post}
@@ -216,36 +245,60 @@ export default function IdPostPage() {
               <div style={{ marginTop: 20 }}>
                 <h3>Applications ({post.applications.length})</h3>
                 <ul>
-                  {post.applications.map((a) => (
-                    <li key={a._id || a.id} style={{ marginBottom: 10 }}>
-                      {a.user ? (
-                        <>
-                          <Link href={`/talents/${a.user._id}`}>
-                            {a.user.name} {a.user.surname}
-                          </Link>{' '}
-                          — <strong>{a.appliedRole}</strong>
-                          {a.message ? (
-                            <div style={{ marginTop: 4 }}>{a.message}</div>
-                          ) : null}
-                          <div style={{ fontSize: 12, color: '#666' }}>
-                            {new Date(a.createdAt).toLocaleString()}
-                          </div>
-                          {post.status === 'open' && (
-                            <div style={{ marginTop: 6 }}>
-                              <button
-                                onClick={() => handleSelectApplicant(a)}
-                                disabled={assignLoading}
-                              >
-                                {assignLoading ? 'Отправка…' : 'Выбрать'}
-                              </button>
+                  {post.applications.map((a) => {
+                    const isApplied = a.status === 'applied';
+                    const isSelected = a.status === 'selected';
+                    const isRejected = a.status === 'rejected';
+                    const roleFilled = isRoleFilled(a.appliedRole);
+
+                    return (
+                      <li key={a._id || a.id} style={{ marginBottom: 10 }}>
+                        {a.user ? (
+                          <>
+                            <Link href={`/talents/${a.user._id}`}>
+                              {a.user.name} {a.user.surname}
+                            </Link>{' '}
+                            — <strong>{a.appliedRole}</strong>
+                            {a.message ? (
+                              <div style={{ marginTop: 4 }}>{a.message}</div>
+                            ) : null}
+                            <div style={{ fontSize: 12, color: '#666' }}>
+                              {new Date(a.createdAt).toLocaleString()}
                             </div>
-                          )}
-                        </>
-                      ) : (
-                        <span>Информация о кандидате недоступна</span>
-                      )}
-                    </li>
-                  ))}
+                            {isApplied &&
+                              !roleFilled &&
+                              post.status === 'open' && (
+                                <div style={{ marginTop: 6 }}>
+                                  <button
+                                    onClick={() => handleSelectApplicant(a)}
+                                    disabled={assignLoading}
+                                  >
+                                    {assignLoading ? 'Отправка…' : 'Выбрать'}
+                                  </button>
+                                </div>
+                              )}
+                            {isSelected && (
+                              <div style={{ marginTop: 6, color: 'green' }}>
+                                Уже назначен
+                              </div>
+                            )}
+                            {isRejected && (
+                              <div style={{ marginTop: 6, color: 'crimson' }}>
+                                Отклонён
+                              </div>
+                            )}
+                            {!isSelected && roleFilled && (
+                              <div style={{ marginTop: 6, color: '#888' }}>
+                                Роль уже заполнена
+                              </div>
+                            )}
+                          </>
+                        ) : (
+                          <span>Информация о кандидате недоступна</span>
+                        )}
+                      </li>
+                    );
+                  })}
                 </ul>
               </div>
             )}
