@@ -14,6 +14,7 @@ export const ROUTES = {
   POLICY: 'privacy-policy',
   NOTIFICATION: 'notification',
   CREATE: '/posts/create',
+  APPLICATIONS: 'my-applications',
 };
 
 export const LINKDATA = {
@@ -32,6 +33,7 @@ export const LINKDATA = {
   COMMUNITY: 'community',
   BLOG: 'blog',
   POLICY: 'privacy-policy',
+  APPLICATIONS: 'my-applications',
   TYPE_LIGHT_BORDER: 'light-border',
 };
 

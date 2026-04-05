@@ -109,6 +109,12 @@ export default function InfoDetails() {
               type={LINKDATA.NOTIFICATION}
               linkText="Сповіщання"
             />
+            <LinkButton
+              className={s.editButton}
+              path="my-applications"
+              type={LINKDATA.APPLICATIONS}
+              linkText="Мои заявки"
+            />
             <div className={s.details}>
               <p className={s.pWithStrong}>
                 <strong className={s.label}>Ім’я:</strong>

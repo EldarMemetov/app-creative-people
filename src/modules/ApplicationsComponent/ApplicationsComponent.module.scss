@@ -1,0 +1,152 @@
+.page {
+  padding: 24px;
+}
+
+.center {
+  padding: 32px;
+  text-align: center;
+}
+
+.header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 20px;
+}
+
+.title {
+  margin: 0;
+  font-size: 28px;
+  font-weight: 700;
+}
+
+.subtitle {
+  margin: 8px 0 0;
+  opacity: 0.75;
+}
+
+.reloadButton,
+.withdrawButton {
+  border: 0;
+  border-radius: 12px;
+  padding: 10px 14px;
+  cursor: pointer;
+}
+
+.list {
+  display: grid;
+  gap: 14px;
+}
+
+.card {
+  border-radius: 18px;
+  padding: 18px;
+  background: #111827;
+  color: #fff;
+}
+
+.cardTop {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.cardMain {
+  flex: 1;
+}
+
+.row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.postLink {
+  color: #fff;
+  font-size: 18px;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.postLink:hover {
+  text-decoration: underline;
+}
+
+.badge {
+  border-radius: 999px;
+  padding: 6px 10px;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.pending {
+  background: #f59e0b;
+  color: #111827;
+}
+
+.accepted {
+  background: #22c55e;
+  color: #111827;
+}
+
+.rejected {
+  background: #ef4444;
+  color: #fff;
+}
+
+.withdrawn {
+  background: #6b7280;
+  color: #fff;
+}
+
+.meta {
+  display: flex;
+  gap: 14px;
+  flex-wrap: wrap;
+  margin-top: 10px;
+  font-size: 14px;
+  opacity: 0.85;
+}
+
+.authorLine {
+  margin-top: 10px;
+}
+
+.profileLink {
+  color: #93c5fd;
+  text-decoration: none;
+}
+
+.profileLink:hover {
+  text-decoration: underline;
+}
+
+.message {
+  margin-top: 12px;
+  padding: 12px;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.actions {
+  display: flex;
+  align-items: flex-start;
+}
+
+.empty,
+.error {
+  padding: 16px;
+  border-radius: 14px;
+}
+
+.empty {
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.error {
+  margin-bottom: 16px;
+  background: #fee2e2;
+  color: #991b1b;
+}

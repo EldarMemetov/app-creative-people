@@ -13,7 +13,11 @@ import PostFavoriteButton from '@/shared/components/PostFavoriteButton/PostFavor
 import Comments from '@/modules/Comments/Comments';
 import ApplyToPost from '@/modules/ApplyToPost/ApplyToPost';
 import { groupRoles } from '@/utils/groupRoles';
-import { assignCandidates } from '@/services/api/postRole/api';
+import {
+  assignCandidates,
+  rejectApplication,
+  unassignCandidate,
+} from '@/services/api/postRole/api';
 
 export default function IdPostPage() {
   const { id } = useParams();
@@ -58,6 +62,44 @@ export default function IdPostPage() {
           }
         : prev
     );
+  };
+
+  const handleRejectApplicant = async (applicant) => {
+    const applicationId = applicant.id || applicant._id;
+
+    const applicantName = applicant?.user
+      ? `${applicant.user.name || ''} ${applicant.user.surname || ''}`.trim()
+      : 'кандидата';
+
+    if (!confirm(`Отклонить заявку ${applicantName}?`)) return;
+
+    try {
+      await rejectApplication(post._id, applicationId);
+      const refreshed = await getPostById(id);
+      setPost(refreshed);
+    } catch (err) {
+      console.error(err);
+      alert(err?.response?.data?.message || 'Не удалось отклонить заявку');
+    }
+  };
+
+  const handleUnassignApplicant = async (applicant) => {
+    const applicationId = applicant.id || applicant._id;
+
+    const applicantName = applicant?.user
+      ? `${applicant.user.name || ''} ${applicant.user.surname || ''}`.trim()
+      : 'кандидата';
+
+    if (!confirm(`Снять ${applicantName} с поста?`)) return;
+
+    try {
+      await unassignCandidate(post._id, applicationId);
+      const refreshed = await getPostById(id);
+      setPost(refreshed);
+    } catch (err) {
+      console.error(err);
+      alert(err?.response?.data?.message || 'Не удалось снять кандидата');
+    }
   };
 
   const handleSelectApplicant = async (applicant) => {
@@ -265,18 +307,11 @@ export default function IdPostPage() {
                             <div style={{ fontSize: 12, color: '#666' }}>
                               {new Date(a.createdAt).toLocaleString()}
                             </div>
-                            {isApplied &&
-                              !roleFilled &&
-                              post.status === 'open' && (
-                                <div style={{ marginTop: 6 }}>
-                                  <button
-                                    onClick={() => handleSelectApplicant(a)}
-                                    disabled={assignLoading}
-                                  >
-                                    {assignLoading ? 'Отправка…' : 'Выбрать'}
-                                  </button>
-                                </div>
-                              )}
+                            {isApplied && (
+                              <div style={{ marginTop: 6, color: '#b7791f' }}>
+                                Ожидает ответа
+                              </div>
+                            )}
                             {isSelected && (
                               <div style={{ marginTop: 6, color: 'green' }}>
                                 Уже назначен
@@ -287,7 +322,39 @@ export default function IdPostPage() {
                                 Отклонён
                               </div>
                             )}
-                            {!isSelected && roleFilled && (
+                            <div
+                              style={{ marginTop: 8, display: 'flex', gap: 8 }}
+                            >
+                              {isApplied && (
+                                <button
+                                  type="button"
+                                  onClick={() => handleRejectApplicant(a)}
+                                >
+                                  Отклонить
+                                </button>
+                              )}
+
+                              {isSelected && (
+                                <button
+                                  type="button"
+                                  onClick={() => handleUnassignApplicant(a)}
+                                >
+                                  Снять
+                                </button>
+                              )}
+
+                              {isApplied &&
+                                !roleFilled &&
+                                post.status === 'open' && (
+                                  <button
+                                    onClick={() => handleSelectApplicant(a)}
+                                    disabled={assignLoading}
+                                  >
+                                    {assignLoading ? 'Отправка…' : 'Выбрать'}
+                                  </button>
+                                )}
+                            </div>
+                            {isApplied && roleFilled && (
                               <div style={{ marginTop: 6, color: '#888' }}>
                                 Роль уже заполнена
                               </div>
