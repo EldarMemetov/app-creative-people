@@ -357,6 +357,26 @@ export default function Calendar({
             ? event.participants
             : [];
 
+          // Статус поста
+          const postStatus =
+            event.status === 'canceled' ? 'canceled' : event.post?.status;
+
+          const statusLabels = {
+            open: 'Открыт',
+            in_progress: 'Команда собрана',
+            shooting_done: 'Съёмка завершена',
+            expired: 'Истёк',
+            canceled: 'Отменён',
+          };
+
+          const statusColors = {
+            open: '#2196f3',
+            in_progress: '#ff9800',
+            shooting_done: '#4caf50',
+            expired: '#9e9e9e',
+            canceled: '#f44336',
+          };
+
           return (
             <article
               key={
@@ -372,7 +392,21 @@ export default function Calendar({
               <div className={styles.eventDot} />
 
               <div className={styles.eventContent}>
-                <h4>{event.title}</h4>
+                <div className={styles.eventHeader}>
+                  <h4>{event.title}</h4>
+
+                  {/* Статус */}
+                  {isPostEvent && postStatus && (
+                    <span
+                      className={styles.eventStatusBadge}
+                      style={{
+                        backgroundColor: statusColors[postStatus] || '#999',
+                      }}
+                    >
+                      {statusLabels[postStatus] || postStatus}
+                    </span>
+                  )}
+                </div>
 
                 {event.description && <p>{event.description}</p>}
 

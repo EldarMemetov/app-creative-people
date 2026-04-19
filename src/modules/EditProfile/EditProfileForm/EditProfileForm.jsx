@@ -7,6 +7,40 @@ import { updateProfile } from '@/services/api/profileEdit/media';
 import RoleSelector from '@/modules/RegisterPage/RoleSelector/RoleSelector';
 import DirectionsSelector from '../DirectionsSelector/DirectionsSelector';
 import s from './EditProfileForm.module.scss';
+
+const SOCIAL_FIELDS = [
+  {
+    name: 'telegram',
+    label: 'Telegram',
+    placeholder: 'https://t.me/username',
+  },
+  {
+    name: 'whatsapp',
+    label: 'WhatsApp',
+    placeholder: 'https://wa.me/49123456789',
+  },
+  {
+    name: 'instagram',
+    label: 'Instagram',
+    placeholder: 'https://instagram.com/username',
+  },
+  {
+    name: 'facebook',
+    label: 'Facebook',
+    placeholder: 'https://facebook.com/username',
+  },
+  {
+    name: 'linkedin',
+    label: 'LinkedIn',
+    placeholder: 'https://linkedin.com/in/username',
+  },
+  {
+    name: 'website',
+    label: 'Сайт',
+    placeholder: 'https://yoursite.com',
+  },
+];
+
 export default function EditProfileForm({
   user,
   ProfileSchema,
@@ -23,6 +57,14 @@ export default function EditProfileForm({
     experience: user.experience || '',
     roles: user.roles || [],
     directions: user.directions || [],
+    socialLinks: {
+      telegram: user.socialLinks?.telegram || '',
+      whatsapp: user.socialLinks?.whatsapp || '',
+      instagram: user.socialLinks?.instagram || '',
+      facebook: user.socialLinks?.facebook || '',
+      linkedin: user.socialLinks?.linkedin || '',
+      website: user.socialLinks?.website || '',
+    },
   };
 
   return (
@@ -37,18 +79,29 @@ export default function EditProfileForm({
           await refreshUser();
           toast.success(t('saved'));
         } catch (err) {
-          const serverError = err.response?.data;
-          if (serverError?.details) {
-            const rolesError = serverError.details.find((d) =>
-              d.path.includes('roles')
-            );
-            if (rolesError) {
-              if (rolesError.type === 'array.min') {
+          const details = err.response?.data?.details;
+
+          if (Array.isArray(details) && details.length > 0) {
+            // Пробрасываем серверные ошибки в соответствующие поля формы
+            details.forEach((d) => {
+              const fieldPath = Array.isArray(d.path)
+                ? d.path.join('.')
+                : d.path;
+              if (!fieldPath) return;
+
+              // Локализация частых случаев по roles
+              if (fieldPath === 'roles' && d.type === 'array.min') {
                 actions.setFieldError('roles', t('roles.choose_at_least_one'));
-              } else if (rolesError.type === 'array.max') {
+              } else if (fieldPath === 'roles' && d.type === 'array.max') {
                 actions.setFieldError('roles', t('roles.max_three'));
+              } else {
+                actions.setFieldError(
+                  fieldPath,
+                  d.message || t('invalid_value')
+                );
               }
-            }
+            });
+            toast.error(t('check_fields'));
           } else {
             toast.error(t('update_error'));
           }
@@ -86,7 +139,6 @@ export default function EditProfileForm({
             name="city"
             placeholder={t('city_placeholder')}
           />
-
           <FormInput
             label={t('about')}
             name="aboutMe"
@@ -112,12 +164,28 @@ export default function EditProfileForm({
 
           <DirectionsSelector
             values={values.directions}
-            onChange={(newDirections) =>
-              setFieldValue('directions', newDirections)
-            }
+            onChange={(newDirections) => {
+              setFieldValue('directions', newDirections);
+              setFieldTouched('directions', true);
+            }}
             label={t('directions')}
             error={touched.directions && errors.directions}
           />
+
+          {/* Соцсети */}
+          <div className={s.socialSection}>
+            <h3 className={s.socialTitle}>Соціальні мережі</h3>
+            <div className={s.socialGrid}>
+              {SOCIAL_FIELDS.map(({ name, label, placeholder }) => (
+                <FormInput
+                  key={name}
+                  label={label}
+                  name={`socialLinks.${name}`}
+                  placeholder={placeholder}
+                />
+              ))}
+            </div>
+          </div>
 
           <button type="submit" disabled={isSubmitting || uploadingPhoto}>
             {isSubmitting ? t('saving') : t('save')}

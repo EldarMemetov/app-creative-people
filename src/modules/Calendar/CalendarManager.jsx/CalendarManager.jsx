@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useState } from 'react';
 import { Formik, Form } from 'formik';
+import Link from 'next/link';
 
 import Calendar from '../Calendar';
 import FormInput from '@/shared/FormInput/FormInput';
@@ -27,6 +28,23 @@ function toSafeDateTime(dateString) {
   if (!dateString) return null;
   return `${dateString}T12:00:00`;
 }
+
+// Статусы постов
+const postStatusLabels = {
+  open: 'Открыт',
+  in_progress: 'Команда собрана',
+  shooting_done: 'Съёмка завершена',
+  expired: 'Истёк',
+  canceled: 'Отменён',
+};
+
+const postStatusColors = {
+  open: '#2196f3',
+  in_progress: '#ff9800',
+  shooting_done: '#4caf50',
+  expired: '#9e9e9e',
+  canceled: '#f44336',
+};
 
 export default function CalendarManager() {
   const [events, setEvents] = useState([]);
@@ -67,7 +85,9 @@ export default function CalendarManager() {
 
   const openEdit = (event) => {
     const isPostEvent = event.type === 'post' || Boolean(event.post);
-    if (isPostEvent) return;
+    const isCanceled = event.status === 'canceled';
+
+    if (isPostEvent || isCanceled) return;
 
     setMode('edit');
     setSelectedEvent(event);
@@ -118,6 +138,13 @@ export default function CalendarManager() {
       : formatDateForInput(selectedDate),
   };
 
+  // Получить статус поста
+  const getPostStatus = (event) => {
+    if (event.status === 'canceled') return 'canceled';
+    if (event.post?.status) return event.post.status;
+    return null;
+  };
+
   return (
     <div className={styles.wrapper}>
       <Calendar
@@ -152,11 +179,31 @@ export default function CalendarManager() {
           <div className={styles.list}>
             {selectedEvents.map((event) => {
               const isPostEvent = event.type === 'post' || Boolean(event.post);
+              const isCanceled = event.status === 'canceled';
+              const postStatus = getPostStatus(event);
+              const statusLabel = postStatus
+                ? postStatusLabels[postStatus]
+                : null;
+              const statusColor = postStatus
+                ? postStatusColors[postStatus]
+                : null;
 
               return (
                 <div key={event._id} className={styles.card}>
                   <div className={styles.cardMain}>
-                    <h4 className={styles.cardTitle}>{event.title}</h4>
+                    <div className={styles.cardHeader}>
+                      <h4 className={styles.cardTitle}>{event.title}</h4>
+
+                      {/* Статус поста */}
+                      {isPostEvent && statusLabel && (
+                        <span
+                          className={styles.statusBadge}
+                          style={{ backgroundColor: statusColor }}
+                        >
+                          {statusLabel}
+                        </span>
+                      )}
+                    </div>
 
                     {event.description && (
                       <p className={styles.cardDescription}>
@@ -164,16 +211,52 @@ export default function CalendarManager() {
                       </p>
                     )}
 
-                    {isPostEvent && (
+                    {/* Ссылка на пост */}
+                    {isPostEvent && event.post && (
+                      <div className={styles.postLink}>
+                        <Link href={`/posts/${event.post._id || event.post}`}>
+                          Перейти к посту →
+                        </Link>
+                      </div>
+                    )}
+
+                    {/* Участники */}
+                    {event.participants && event.participants.length > 0 && (
+                      <div className={styles.participants}>
+                        <span className={styles.participantsLabel}>
+                          Участники:
+                        </span>
+                        <div className={styles.participantsList}>
+                          {event.participants.map((p) => (
+                            <Link
+                              key={p._id || p}
+                              href={`/talents/${p._id || p}`}
+                              className={styles.participantChip}
+                            >
+                              {p.name
+                                ? `${p.name} ${p.surname || ''}`
+                                : 'Участник'}
+                            </Link>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+
+                    {isPostEvent && !isCanceled && (
                       <p className={styles.cardHint}>
-                        Это событие пришло из поста и редактируется только в
-                        самом посте.
+                        Событие из поста — редактируется в самом посте.
+                      </p>
+                    )}
+
+                    {isCanceled && (
+                      <p className={styles.cardHintCanceled}>
+                        ❌ Событие отменено
                       </p>
                     )}
                   </div>
 
                   <div className={styles.cardActions}>
-                    {!isPostEvent && (
+                    {!isPostEvent && !isCanceled && (
                       <>
                         <button
                           type="button"

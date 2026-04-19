@@ -1,0 +1,21 @@
+.stars {
+  display: inline-flex;
+  gap: 4px;
+}
+
+.star {
+  cursor: pointer;
+  transition: color 0.2s;
+
+  &.empty {
+    color: #ddd;
+  }
+
+  &.filled {
+    color: #fbbf24;
+  }
+
+  &.readonly {
+    cursor: default;
+  }
+}

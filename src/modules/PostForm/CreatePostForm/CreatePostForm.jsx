@@ -46,8 +46,10 @@ export default function CreatePostForm({ initial = null }) {
     country: initial?.country ?? '',
     city: initial?.city ?? '',
     date: initial ? formatDateForInput(initial.date) : '',
+    hasNoDate: initial?.hasNoDate ?? false,
     type: initial?.type ?? 'tfp',
     price: initial?.price ?? 0,
+    percent: initial?.percent ?? 0,
     roleSlots: initial?.roleSlots ?? [],
     maxAssigned: initial?.maxAssigned ?? 5,
   };
@@ -132,7 +134,7 @@ export default function CreatePostForm({ initial = null }) {
 
     const roleSlots = values.roleSlots || [];
 
-    if (values.date && isDateInPastBerlin(values.date)) {
+    if (!values.hasNoDate && values.date && isDateInPastBerlin(values.date)) {
       setErrors({ date: 'Дата не может быть в прошлом' });
       setSubmitting(false);
       setFormikSubmitting(false);
@@ -152,9 +154,14 @@ export default function CreatePostForm({ initial = null }) {
         description: values.description,
         country: values.country,
         city: values.city,
-        date: values.date ? new Date(values.date).toISOString() : undefined,
+        hasNoDate: values.hasNoDate,
+        date:
+          values.hasNoDate || !values.date
+            ? undefined
+            : new Date(values.date).toISOString(),
         type: values.type,
-        price: values.price,
+        price: values.type === 'paid' ? Number(values.price) : 0,
+        percent: values.type === 'percent' ? Number(values.percent) : 0,
         maxAssigned: values.maxAssigned,
         roleSlots,
       };
@@ -209,31 +216,77 @@ export default function CreatePostForm({ initial = null }) {
             />
             <FormInput label="Страна" name="country" />
             <FormInput label="Город" name="city" />
-            <FormInput
-              label="Дата"
-              name="date"
-              type="date"
-              min={getBerlinTodayISO()}
-            />
 
+            {/* Дата + чекбокс "без даты" */}
+            <div className={styles.dateRow}>
+              <label className={styles.checkboxLabel}>
+                <input
+                  type="checkbox"
+                  checked={values.hasNoDate}
+                  onChange={(e) => {
+                    setFieldValue('hasNoDate', e.target.checked);
+                    if (e.target.checked) setFieldValue('date', '');
+                  }}
+                />
+                Дата не определена
+              </label>
+
+              {!values.hasNoDate && (
+                <FormInput
+                  label="Дата"
+                  name="date"
+                  type="date"
+                  min={getBerlinTodayISO()}
+                />
+              )}
+            </div>
+
+            {/* Тип оплаты */}
             <div className={styles.row}>
               <div>
-                <label>Тип</label>
+                <label>Тип оплаты</label>
                 <select
                   name="type"
                   value={values.type}
-                  onChange={(e) => setFieldValue('type', e.target.value)}
+                  onChange={(e) => {
+                    setFieldValue('type', e.target.value);
+                    // сбрасываем числовые поля при смене типа
+                    setFieldValue('price', 0);
+                    setFieldValue('percent', 0);
+                  }}
                 >
-                  <option value="tfp">TFP</option>
-                  <option value="paid">Paid</option>
-                  <option value="collaboration">Collaboration</option>
+                  <option value="tfp">TFP (Time for Portfolio)</option>
+                  <option value="paid">Paid (фиксированная сумма)</option>
+                  <option value="percent">Percent (процент от дохода)</option>
+                  <option value="negotiable">Negotiable (договорная)</option>
                 </select>
               </div>
-              <div>
-                <FormInput label="Цена" name="price" type="number" />
-              </div>
+
+              {values.type === 'paid' && (
+                <div>
+                  <FormInput
+                    label="Цена (€)"
+                    name="price"
+                    type="number"
+                    min={1}
+                  />
+                </div>
+              )}
+
+              {values.type === 'percent' && (
+                <div>
+                  <FormInput
+                    label="Процент (%)"
+                    name="percent"
+                    type="number"
+                    min={1}
+                    max={100}
+                  />
+                </div>
+              )}
             </div>
 
+            {/* Роли */}
             <div className={styles.roleSection}>
               <label>Роли</label>
               <div className={styles.quickButtons}>
@@ -259,9 +312,21 @@ export default function CreatePostForm({ initial = null }) {
                 <div className={styles.selectedRoles}>
                   {values.roleSlots.map((rs, idx) => (
                     <div key={idx} className={styles.selectedRole}>
-                      <span>
-                        {rs.role} ×{rs.required}
-                      </span>
+                      <span>{rs.role}</span>
+                      <input
+                        type="number"
+                        min={1}
+                        value={rs.required}
+                        onChange={(e) => {
+                          const newSlots = [...values.roleSlots];
+                          newSlots[idx] = {
+                            ...newSlots[idx],
+                            required: Math.max(1, Number(e.target.value)),
+                          };
+                          setFieldValue('roleSlots', newSlots);
+                        }}
+                        style={{ width: 50 }}
+                      />
                       <button
                         type="button"
                         className={styles.removeRoleBtn}
@@ -285,6 +350,7 @@ export default function CreatePostForm({ initial = null }) {
               )}
             </div>
 
+            {/* Файлы */}
             <div className={styles.filesRow}>
               <label>Файлы (фото): макс {MAX_PHOTO_COUNT}</label>
               <input

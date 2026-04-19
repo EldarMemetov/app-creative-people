@@ -1,228 +1,184 @@
-/* IdPostPage.module.scss */
+.confirmSection {
+  margin: 20px 0;
+  padding: 20px;
+  background: #e8f5e9;
+  border-radius: 8px;
+  border: 1px solid #a5d6a7;
 
-/* Внешний контейнер поста */
-.post {
-  max-width: 980px;
-  margin: 24px auto;
-  padding: 28px;
-  background: #ffffff;
-  border-radius: 12px;
-  box-shadow: 0 6px 30px rgba(16, 24, 40, 0.06);
-  display: block;
-  color: #111827;
-  font-family:
-    Inter,
-    ui-sans-serif,
-    system-ui,
-    -apple-system,
-    'Segoe UI',
-    Roboto,
-    'Helvetica Neue',
-    Arial;
+  p {
+    margin-bottom: 12px;
+  }
 }
 
-/* Линк "назад" */
-.back {
-  display: inline-block;
-  margin-bottom: 12px;
-  font-size: 14px;
-  color: #2563eb;
-  font-weight: 500;
-  text-decoration: none;
-}
-
-/* Заголовок */
-.title {
-  margin: 6px 0 14px 0;
-  font-size: 28px;
-  line-height: 1.12;
-  font-weight: 700;
-  color: #0f172a;
-}
-
-/* Метаданные */
-.meta {
-  display: block;
-  font-size: 13px;
-  color: #6b7280;
-  margin-bottom: 18px;
-}
-
-/* Центр для лоадера / ошибок */
-.center {
-  min-height: 240px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: #6b7280;
-  font-size: 15px;
-}
-
-/* Секция медиа — сетка */
-.media {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: 12px;
-  margin-bottom: 20px;
-}
-
-/* элемент медиа (универсальный wrapper) */
-.mediaItem {
-  width: 100%;
-  height: 100%;
-  overflow: hidden;
-  border-radius: 10px;
-  background: #f8fafc;
-  display: block;
-}
-
-/* изображение/видео внутри item — используем utility класс для размеров */
-.mediaImg {
-  display: block;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  border-radius: 10px;
-}
-
-/* Описание */
-.description {
+.confirmButton {
+  padding: 12px 24px;
+  background: #4caf50;
+  color: white;
+  border: none;
+  border-radius: 6px;
   font-size: 16px;
-  line-height: 1.7;
-  color: #111827;
+  cursor: pointer;
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+
+  &:hover:not(:disabled) {
+    background: #43a047;
+  }
+}
+
+.reviewsSection {
+  margin-top: 30px;
+  padding: 20px;
+  background: #f5f5f5;
+  border-radius: 8px;
+
+  h2 {
+    margin-bottom: 20px;
+    color: #4caf50;
+  }
+}
+
+.teamSection {
   margin-bottom: 20px;
-  white-space: pre-wrap;
+
+  h3 {
+    margin-bottom: 12px;
+  }
 }
 
-/* Детали (grid) */
-.details {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 12px;
-  padding: 14px;
-  border-radius: 10px;
-  background: #f9fafb;
-  margin-bottom: 18px;
-}
-
-.detailItem {
-  font-size: 14px;
-  color: #374151;
-}
-
-/* Автор */
-.author {
-  margin-bottom: 18px;
-  font-size: 14px;
-  color: #374151;
-}
-
-/* Статистика (чипы) */
-.stats {
+.teamList {
   display: flex;
-  gap: 10px;
   flex-wrap: wrap;
-  margin-bottom: 22px;
+  gap: 12px;
 }
 
-.stat {
-  background: #f3f4f6;
-  padding: 6px 12px;
-  border-radius: 999px;
-  font-weight: 600;
-  font-size: 13px;
-  color: #111827;
+.teamMember {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  background: white;
+  border-radius: 20px;
+  text-decoration: none;
+  color: inherit;
+
+  img {
+    border-radius: 50%;
+    object-fit: cover;
+  }
+
+  &:hover {
+    background: #e8e8e8;
+  }
 }
 
-/* Комментарии */
-.comments {
-  margin-top: 22px;
-  display: block;
-}
-
-.commentsTitle {
-  font-size: 18px;
-  margin-bottom: 12px;
-  font-weight: 700;
-  color: #0f172a;
-}
-
-.comment {
-  background: #fbfdff;
-  border-radius: 10px;
-  padding: 12px 14px;
-  margin-bottom: 12px;
-  display: block;
-  box-shadow: 0 1px 0 rgba(15, 23, 42, 0.02);
-}
-
-.commentAuthor {
-  display: block;
-  font-weight: 600;
-  color: #0f172a;
-  margin-bottom: 6px;
-  font-size: 14px;
-}
-
-.commentText {
-  display: block;
-  font-size: 14px;
-  color: #374151;
-  margin-bottom: 6px;
-  white-space: pre-wrap;
-}
-
-.commentDate {
-  display: block;
+.memberRole {
   font-size: 12px;
-  color: #6b7280;
+  color: #666;
+  background: #eee;
+  padding: 2px 8px;
+  border-radius: 10px;
 }
 
-/* Маленькая утилита: разделитель */
-.row {
-  display: flex;
-  gap: 12px;
-  align-items: center;
-}
+.resultsSection {
+  margin-bottom: 20px;
 
-/* Небольшие отклики для мобильных */
-@media (max-width: 640px) {
-  .post {
-    padding: 18px;
-    margin: 12px;
-    border-radius: 8px;
-  }
-
-  .title {
-    font-size: 22px;
-  }
-
-  .media {
-    grid-template-columns: 1fr;
+  h3 {
+    margin-bottom: 12px;
   }
 }
-.roleBadges {
+
+.resultsPhotos {
   display: flex;
   flex-wrap: wrap;
-  gap: 8px;
-  margin-top: 6px;
+  gap: 10px;
+  margin-bottom: 12px;
 }
-.roleBadge {
-  display: inline-flex;
+
+.resultPhoto {
+  border-radius: 8px;
+  object-fit: cover;
+}
+
+.resultsVideos {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.videoLink {
+  display: inline-block;
+  padding: 8px 16px;
+  background: #ff5722;
+  color: white;
+  border-radius: 4px;
+  text-decoration: none;
+
+  &:hover {
+    background: #e64a19;
+  }
+}
+
+.reviewsList {
+  margin-bottom: 20px;
+
+  h3 {
+    margin-bottom: 12px;
+  }
+}
+
+.reviewCard {
+  padding: 16px;
+  background: white;
+  border-radius: 8px;
+  margin-bottom: 12px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.reviewHeader {
+  display: flex;
+  justify-content: space-between;
   align-items: center;
-  gap: 8px;
-  background: #f3f5f7;
-  border-radius: 999px;
-  padding: 6px 10px;
-  font-size: 0.9rem;
-  color: #111;
-  box-shadow: 0 1px 0 rgba(0, 0, 0, 0.03);
+  margin-bottom: 8px;
+
+  a {
+    font-weight: 500;
+    color: #1976d2;
+  }
 }
-.roleName {
-  font-weight: 600;
-  text-transform: capitalize;
+
+.reviewText {
+  margin-bottom: 8px;
+  line-height: 1.5;
 }
-.roleCount {
-  color: #333;
-  opacity: 0.8;
+
+.reviewDate {
+  font-size: 12px;
+  color: #999;
+}
+
+.myReviewNote {
+  padding: 12px;
+  background: #e3f2fd;
+  border-radius: 6px;
+  color: #1976d2;
+}
+
+.status_open {
+  color: #2196f3;
+}
+.status_in_progress {
+  color: #ff9800;
+}
+.status_shooting_done {
+  color: #4caf50;
+}
+.status_expired {
+  color: #9e9e9e;
+}
+.status_canceled {
+  color: #f44336;
 }

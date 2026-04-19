@@ -1,0 +1,245 @@
+.wrapper {
+  margin-top: 30px;
+}
+
+.tabs {
+  display: flex;
+  gap: 0;
+  border-bottom: 2px solid #e0e0e0;
+  margin-bottom: 20px;
+}
+
+.tab {
+  padding: 12px 24px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  color: #666;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -2px;
+  transition: all 0.2s;
+
+  &:hover {
+    color: #333;
+  }
+
+  &.active {
+    color: #4caf50;
+    border-bottom-color: #4caf50;
+  }
+}
+
+.content {
+  min-height: 200px;
+}
+
+.loading {
+  text-align: center;
+  padding: 40px;
+  color: #666;
+}
+
+.empty {
+  text-align: center;
+  padding: 40px;
+  color: #999;
+}
+
+// Projects
+.projectsList {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.projectCard {
+  padding: 16px;
+  background: #f9f9f9;
+  border-radius: 8px;
+  border: 1px solid #eee;
+}
+
+.projectHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.projectTitle {
+  font-size: 16px;
+  font-weight: 600;
+  color: #333;
+  text-decoration: none;
+
+  &:hover {
+    color: #4caf50;
+  }
+}
+
+.avgRating {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 14px;
+  color: #666;
+}
+
+.projectMeta {
+  display: flex;
+  gap: 16px;
+  font-size: 13px;
+  color: #888;
+  margin-bottom: 12px;
+}
+
+.team {
+  margin-bottom: 12px;
+}
+
+.teamLabel {
+  font-size: 13px;
+  color: #666;
+  margin-bottom: 6px;
+  display: block;
+}
+
+.teamMembers {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.teamMember {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  background: white;
+  border-radius: 16px;
+  font-size: 13px;
+  text-decoration: none;
+  color: inherit;
+  border: 1px solid #e0e0e0;
+
+  img {
+    border-radius: 50%;
+    object-fit: cover;
+  }
+
+  &:hover {
+    background: #f0f0f0;
+  }
+}
+
+.memberRole {
+  font-size: 11px;
+  color: #888;
+  background: #eee;
+  padding: 2px 6px;
+  border-radius: 8px;
+}
+
+.results {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 10px;
+}
+
+.resultsPhotos {
+  display: flex;
+  gap: 4px;
+  align-items: center;
+}
+
+.resultThumb {
+  border-radius: 4px;
+  object-fit: cover;
+}
+
+.morePhotos {
+  font-size: 12px;
+  color: #666;
+  background: #e0e0e0;
+  padding: 4px 8px;
+  border-radius: 4px;
+}
+
+.videoCount {
+  font-size: 13px;
+  color: #666;
+}
+
+.reviewsPreview {
+  font-size: 13px;
+  color: #4caf50;
+}
+
+// Reviews
+.reviewsList {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.reviewCard {
+  padding: 16px;
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+}
+
+.reviewHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.reviewAuthor {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  text-decoration: none;
+  color: #333;
+  font-weight: 500;
+
+  img {
+    border-radius: 50%;
+    object-fit: cover;
+  }
+
+  &:hover {
+    color: #4caf50;
+  }
+}
+
+.reviewText {
+  font-size: 14px;
+  line-height: 1.5;
+  color: #444;
+  margin-bottom: 12px;
+}
+
+.reviewFooter {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 12px;
+}
+
+.reviewProject {
+  color: #1976d2;
+  text-decoration: none;
+
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
+.reviewDate {
+  color: #999;
+}

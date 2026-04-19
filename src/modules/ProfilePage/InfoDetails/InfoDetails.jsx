@@ -11,8 +11,11 @@ import Container from '@/shared/container/Container';
 import { getLikeStatus } from '@/services/api/users/api';
 import { useEffect, useState } from 'react';
 import NotificationsIndicator from '@/modules/NotificationPage/NotificationsIndicator/NotificationsIndicator';
+import CompletedProjects from '@/modules/CompletedProjects/CompletedProjects';
 import PortfolioList from '../PortfolioList/PortfolioList';
 import { useAuth } from '@/services/store/useAuth';
+import SocialLinks from '@/shared/SocialLinks/SocialLinks';
+
 export default function InfoDetails() {
   const { user: guardUser, loading } = useAuthGuard();
   const { usersStatus, usersStatusInitialized, likesMap, connected } =
@@ -115,6 +118,7 @@ export default function InfoDetails() {
               type={LINKDATA.APPLICATIONS}
               linkText="Мои заявки"
             />
+            <CompletedProjects userId={user._id} />
             <div className={s.details}>
               <p className={s.pWithStrong}>
                 <strong className={s.label}>Ім’я:</strong>
@@ -232,6 +236,8 @@ export default function InfoDetails() {
                   <span className={s.value}>не вказано</span>
                 )}
               </div>
+
+              <SocialLinks socialLinks={user.socialLinks} />
 
               <PortfolioList items={user.portfolio} />
             </div>

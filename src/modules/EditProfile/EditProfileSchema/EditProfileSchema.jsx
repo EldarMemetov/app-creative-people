@@ -1,5 +1,10 @@
 import * as Yup from 'yup';
 
+const urlOrEmpty = Yup.string()
+  .transform((val) => (val === '' ? undefined : val))
+  .url('Введіть коректний URL (https://...)')
+  .notRequired();
+
 export const EditProfileSchema = (t) =>
   Yup.object().shape({
     name: Yup.string().min(2).max(50).required(t('required')),
@@ -14,4 +19,12 @@ export const EditProfileSchema = (t) =>
     roles: Yup.array()
       .min(1, t('choose_at_least_one', { ns: 'roles' }))
       .max(3, t('max_three', { ns: 'roles' })),
+    socialLinks: Yup.object().shape({
+      telegram: urlOrEmpty,
+      whatsapp: urlOrEmpty,
+      instagram: urlOrEmpty,
+      facebook: urlOrEmpty,
+      linkedin: urlOrEmpty,
+      website: urlOrEmpty,
+    }),
   });

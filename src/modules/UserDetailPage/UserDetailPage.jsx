@@ -13,6 +13,8 @@ import { LINKDATA, ROUTES } from '@/shared/constants';
 import LikeButton from '@/shared/components/LikeButton/LikeButton';
 import { useAuth } from '@/services/store/useAuth';
 import PortfolioList from '../ProfilePage/PortfolioList/PortfolioList';
+import CompletedProjects from '../CompletedProjects/CompletedProjects';
+import SocialLinks from '@/shared/SocialLinks/SocialLinks';
 
 export default function UserDetailPage() {
   const { id } = useParams();
@@ -178,9 +180,11 @@ export default function UserDetailPage() {
               <strong>Заблокований:</strong> {user.isBlocked ? 'Так' : 'Ні'}
             </p>
 
+            <SocialLinks socialLinks={user.socialLinks} />
+
             <PortfolioList items={user.portfolio} />
           </div>
-
+          <CompletedProjects userId={user._id} />
           <LinkButton path={ROUTES.TALENTS} type={LINKDATA.HOME}>
             Повернутись до профілей
           </LinkButton>

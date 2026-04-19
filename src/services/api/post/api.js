@@ -4,7 +4,6 @@ import { handleError } from '@/utils/errorHandler';
 export const getAllPosts = async (params = {}) => {
   try {
     const res = await api.get('/posts', { params });
-
     return res.data.data;
   } catch (err) {
     throw handleError(err);
@@ -20,6 +19,7 @@ export const getPostById = async (id) => {
     throw handleError(err);
   }
 };
+
 export const likePost = async (postId) => {
   try {
     const { data } = await api.patch(`/posts/${postId}/like`);
@@ -163,4 +163,15 @@ export async function deletePostMedia(postId, mediaId) {
 export const getMyPosts = async ({ page = 1, limit = 20 } = {}) => {
   const { data } = await api.get('/posts/mine', { params: { page, limit } });
   return data;
+};
+
+export const extendPostDate = async (postId, newDate) => {
+  if (!postId) throw new Error('postId is required');
+  if (!newDate) throw new Error('newDate is required');
+  try {
+    const res = await api.patch(`/posts/${postId}/extend`, { newDate });
+    return res.data.data;
+  } catch (err) {
+    throw handleError(err);
+  }
 };
