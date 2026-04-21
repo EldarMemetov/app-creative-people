@@ -9,9 +9,9 @@ import CommentItem from './CommentsItem/CommentsItem';
 import s from './Comments.module.scss';
 import { useTranslation } from 'react-i18next';
 
-export default function Comments({ postId }) {
+export default function Comments({ targetType = 'post', targetId }) {
   const { t } = useTranslation(['comments']);
-  const { socket, joinPost, leavePost } = useSocket();
+  const { socket, joinRoom, leaveRoom, joinPost, leavePost } = useSocket();
   const { user } = useAuth();
 
   const [comments, setComments] = useState([]);
@@ -19,11 +19,13 @@ export default function Comments({ postId }) {
   const [page] = useState(1);
   const [limit] = useState(100);
 
+  const roomName = `${targetType}:${targetId}`;
+
   const load = useCallback(async () => {
     setLoading(true);
     try {
-      const res = await getComments(postId, { page, limit });
-      const items = res?.data ?? res?.data?.data ?? res?.data ?? [];
+      const res = await getComments(targetType, targetId, { page, limit });
+      const items = res?.data ?? [];
       setComments(Array.isArray(items) ? items : []);
     } catch (err) {
       console.error('Failed to load comments', err);
@@ -31,24 +33,43 @@ export default function Comments({ postId }) {
     } finally {
       setLoading(false);
     }
-  }, [postId, page, limit]);
+  }, [targetType, targetId, page, limit]);
 
   useEffect(() => {
-    if (!postId) return;
+    if (!targetId) return;
     load();
-  }, [postId, load]);
+  }, [targetId, load]);
 
   useEffect(() => {
-    if (!socket || !postId) return;
+    if (!socket || !targetId) return;
 
+    // Универсальный join (если в useSocket нет joinRoom — fallback на joinPost для постов)
     try {
-      joinPost(postId);
+      if (typeof joinRoom === 'function') joinRoom(roomName);
+      else if (targetType === 'post' && joinPost) joinPost(targetId);
     } catch (e) {
-      console.warn('joinPost failed', e);
+      console.warn('join room failed', e);
     }
 
-    const onNew = ({ postId: pid, comment }) => {
-      if (String(pid) !== String(postId)) return;
+    const match = (payload) => {
+      // Поддержка и старого формата (postId), и нового (targetType/targetId)
+      if (payload?.targetId && payload?.targetType) {
+        return (
+          String(payload.targetId) === String(targetId) &&
+          payload.targetType === targetType
+        );
+      }
+      if (payload?.postId) {
+        return (
+          targetType === 'post' && String(payload.postId) === String(targetId)
+        );
+      }
+      return false;
+    };
+
+    const onNew = (payload) => {
+      if (!match(payload)) return;
+      const { comment } = payload;
       setComments((prev) =>
         prev.some((c) => String(c._id) === String(comment._id))
           ? prev
@@ -56,23 +77,25 @@ export default function Comments({ postId }) {
       );
     };
 
-    const onUpdated = ({ postId: pid, comment }) => {
-      if (String(pid) !== String(postId)) return;
+    const onUpdated = (payload) => {
+      if (!match(payload)) return;
+      const { comment } = payload;
       setComments((prev) =>
         prev.map((c) => (String(c._id) === String(comment._id) ? comment : c))
       );
     };
 
-    const onDeleted = ({ postId: pid, commentId }) => {
-      if (String(pid) !== String(postId)) return;
+    const onDeleted = (payload) => {
+      if (!match(payload)) return;
+      const { commentId } = payload;
       setComments((prev) =>
         prev.filter((c) => String(c._id) !== String(commentId))
       );
     };
 
     const onLike = (payload = {}) => {
-      const { commentId, liked, likesCount, byUserId, postId: pid } = payload;
-      if (pid && String(pid) !== String(postId)) return;
+      // комент:like не всегда несёт targetType/targetId — фильтруем по commentId из локального списка
+      const { commentId, liked, likesCount, byUserId } = payload;
       setComments((prev) =>
         prev.map((c) => {
           if (String(c._id) !== String(commentId)) return c;
@@ -100,14 +123,25 @@ export default function Comments({ postId }) {
         socket.off('comment:updated', onUpdated);
         socket.off('comment:deleted', onDeleted);
         socket.off('comment:like', onLike);
-        leavePost(postId);
+        if (typeof leaveRoom === 'function') leaveRoom(roomName);
+        else if (targetType === 'post' && leavePost) leavePost(targetId);
       } catch (e) {}
     };
-  }, [socket, postId, joinPost, leavePost, user]);
+  }, [
+    socket,
+    targetType,
+    targetId,
+    roomName,
+    joinRoom,
+    leaveRoom,
+    joinPost,
+    leavePost,
+    user,
+  ]);
 
   const handleAdd = async (text, opts = {}) => {
     try {
-      const res = await apiAdd(postId, text, opts);
+      const res = await apiAdd(targetType, targetId, text, opts);
       const created = res?.data ?? res;
       setComments((prev) =>
         prev.some((c) => String(c._id) === String(created._id))
@@ -130,17 +164,17 @@ export default function Comments({ postId }) {
     setComments((prev) => prev.filter((c) => String(c._id) !== String(id)));
   };
 
-  const sortedComments = useMemo(() => {
-    return [...comments].sort(
-      (a, b) => new Date(a.createdAt) - new Date(b.createdAt)
-    );
-  }, [comments]);
+  const sortedComments = useMemo(
+    () =>
+      [...comments].sort(
+        (a, b) => new Date(a.createdAt) - new Date(b.createdAt)
+      ),
+    [comments]
+  );
 
   const commentsMap = useMemo(() => {
     const map = {};
-    for (const c of comments) {
-      if (c && c._id) map[String(c._id)] = c;
-    }
+    for (const c of comments) if (c && c._id) map[String(c._id)] = c;
     return map;
   }, [comments]);
 
@@ -166,7 +200,8 @@ export default function Comments({ postId }) {
             <CommentItem
               key={`${c._id}-${index}`}
               comment={c}
-              postId={postId}
+              targetType={targetType}
+              targetId={targetId}
               commentsMap={commentsMap}
               onUpdateLocal={onUpdateLocal}
               onRemoveLocal={onRemoveLocal}

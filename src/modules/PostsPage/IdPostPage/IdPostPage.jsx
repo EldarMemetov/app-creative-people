@@ -610,7 +610,7 @@ export default function IdPostPage() {
               </div>
             )}
 
-          <Comments postId={post._id} />
+          <Comments targetType="post" targetId={post._id} />
         </div>
       </Container>
     </section>

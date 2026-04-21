@@ -16,7 +16,8 @@ import { useTranslation } from 'react-i18next';
 import { deleteCommentAsModerator } from '@/services/api/moderator/moderatorApi';
 export default function CommentItem({
   comment,
-  postId,
+  targetType,
+  targetId,
   commentsMap = {},
   onUpdateLocal,
   onRemoveLocal,
@@ -70,7 +71,7 @@ export default function CommentItem({
   const handleEdit = async (text) => {
     setBusy(true);
     try {
-      const res = await apiUpdate(postId, comment._id, text);
+      const res = await apiUpdate(targetType, targetId, comment._id, text);
       const updated = res?.data ?? res;
       onUpdateLocal(updated);
       setEditing(false);
@@ -85,14 +86,12 @@ export default function CommentItem({
   const handleDelete = async () => {
     if (busy) return;
     setBusy(true);
-
     try {
       if (isAuthor) {
-        await apiDelete(postId, comment._id);
+        await apiDelete(targetType, targetId, comment._id);
       } else if (isModeratorOrAdmin) {
         await deleteCommentAsModerator(comment._id);
       } else {
-        console.warn('Not authorized to delete this comment');
         return;
       }
       onRemoveLocal(comment._id);
@@ -110,7 +109,7 @@ export default function CommentItem({
     const newCount = Math.max(likesCount + (newLiked ? 1 : -1), 0);
     onUpdateLocal?.({ ...comment, liked: newLiked, likesCount: newCount });
     try {
-      const res = await toggleCommentLike(postId, comment._id);
+      const res = await toggleCommentLike(targetType, targetId, comment._id);
       const data = res?.data ?? res;
       onUpdateLocal?.({
         ...comment,
@@ -128,7 +127,7 @@ export default function CommentItem({
   const handleReplySubmit = async (text) => {
     setBusy(true);
     try {
-      const resp = await apiAddComment(postId, text, {
+      const resp = await apiAddComment(targetType, targetId, text, {
         parentComment: comment._id,
         replyTo: authorId,
       });
@@ -146,13 +145,12 @@ export default function CommentItem({
   const fetchCommentById = async (id) => {
     try {
       if (typeof apiGetComment === 'function') {
-        const resp = await apiGetComment(postId, id);
+        const resp = await apiGetComment(targetType, targetId, id);
         return resp?.data ?? resp;
       }
       return null;
     } catch (err) {
-      const status =
-        err?.status ?? err?.response?.status ?? err?.statusCode ?? null;
+      const status = err?.status ?? err?.response?.status ?? null;
       if (status === 404) return null;
       console.error('getComment failed', err);
       return null;
