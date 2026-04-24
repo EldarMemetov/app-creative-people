@@ -34,7 +34,7 @@ const links = [
   { href: '/talents', key: 'talents' },
   { href: '/posts', key: 'posts' },
   { href: '/blog', key: 'blog' },
-  { href: '/community', key: 'community' },
+  { href: '/forum', key: 'community' },
   { href: '/profile', key: 'profile' },
 ];
 
