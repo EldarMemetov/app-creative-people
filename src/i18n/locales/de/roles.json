@@ -3,12 +3,14 @@
   "model": "Model",
   "photographer": "Fotograf",
   "videographer": "Videograf",
-  "makeupArtist": "Make-up Künstler",
+  "makeupArtist": "Maskenbildner",
   "stylist": "Stylist",
-  "hairStylist": "Friseur / Hair Stylist",
+  "hairStylist": "Friseur / Hair-Stylist",
   "producer": "Produzent",
   "director": "Regisseur",
   "brand": "Marke / Unternehmen",
-  "choose_at_least_one": "Wählen Sie mindestens eine Rolle",
-  "max_three": "Sie können bis zu 3 Rollen auswählen"
+  "retoucher": "Retuscheur",
+  "aiCreator": "KI-Creator",
+  "choose_at_least_one": "Bitte mindestens eine Rolle auswählen",
+  "max_three": "Es können maximal 3 Rollen ausgewählt werden"
 }

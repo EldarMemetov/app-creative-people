@@ -1,0 +1,461 @@
+.section {
+  position: relative;
+  color: #f5f6ff;
+  padding: 100px 0 120px;
+
+  @include media(tablet) {
+    padding: 140px 0 160px;
+  }
+
+  @include media(desktop) {
+    padding: 180px 0 200px;
+  }
+}
+
+// ---------- Header ----------
+.header {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 18px;
+  max-width: 760px;
+  margin: 0 auto 64px;
+
+  @include media(tablet) {
+    gap: 22px;
+    margin: 0 auto 90px;
+  }
+
+  @include media(desktop) {
+    margin: 0 auto 120px;
+  }
+}
+
+.eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 16px 8px 12px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: #c5cdff;
+  background: rgba(122, 91, 255, 0.1);
+  border: 1px solid rgba(122, 91, 255, 0.28);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+
+  opacity: 0;
+  transform: translateY(12px);
+  animation: fadeUp 1s cubic-bezier(0.16, 1, 0.3, 1) 0.1s forwards;
+}
+
+.dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #a6b4ff;
+  box-shadow: 0 0 12px rgba(166, 180, 255, 0.9);
+  animation: pulse 1.8s ease-in-out infinite;
+}
+
+.title {
+  margin: 0;
+  font-weight: 600;
+  font-size: 38px;
+  line-height: 1.06;
+  letter-spacing: -0.02em;
+  color: #f6f7ff;
+
+  opacity: 0;
+  transform: translateY(20px);
+  animation: fadeUp 1.2s cubic-bezier(0.16, 1, 0.3, 1) 0.25s forwards;
+
+  @include media(tablet) {
+    font-size: 60px;
+  }
+
+  @include media(desktop) {
+    font-size: 80px;
+  }
+}
+
+.accent {
+  font-style: italic;
+  font-weight: 500;
+}
+
+.subtitle {
+  margin: 0 auto;
+  max-width: 620px;
+  font-size: 15px;
+  line-height: 1.7;
+  color: rgba(222, 226, 250, 0.72);
+
+  opacity: 0;
+  transform: translateY(16px);
+  animation: fadeUp 1.2s cubic-bezier(0.16, 1, 0.3, 1) 0.5s forwards;
+
+  @include media(tablet) {
+    font-size: 17px;
+  }
+
+  @include media(desktop) {
+    font-size: 18px;
+  }
+}
+
+// ---------- Timeline ----------
+.timeline {
+  position: relative;
+}
+
+// лінія, що прокреслюється між кроками
+.track {
+  position: absolute;
+  z-index: 0;
+  pointer-events: none;
+
+  // mobile: вертикальна лінія зліва
+  top: 28px;
+  bottom: 28px;
+  left: 22px;
+  width: 2px;
+  background: rgba(255, 255, 255, 0.06);
+  border-radius: 2px;
+  overflow: hidden;
+
+  @include media(desktop) {
+    // desktop: горизонтальна лінія по центру
+    top: 28px;
+    left: 8%;
+    right: 8%;
+    bottom: auto;
+    width: auto;
+    height: 2px;
+  }
+}
+
+.trackFill {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    180deg,
+    rgba(166, 180, 255, 0.9) 0%,
+    rgba(122, 91, 255, 0.7) 50%,
+    rgba(74, 107, 255, 0) 100%
+  );
+  transform-origin: top center;
+  transform: scaleY(0);
+  animation: trackDrawV 2.2s cubic-bezier(0.77, 0, 0.175, 1) 0.4s forwards;
+
+  @include media(desktop) {
+    background: linear-gradient(
+      90deg,
+      rgba(166, 180, 255, 0.9) 0%,
+      rgba(122, 91, 255, 0.7) 50%,
+      rgba(74, 107, 255, 0) 100%
+    );
+    transform-origin: left center;
+    transform: scaleX(0);
+    animation: trackDrawH 2.2s cubic-bezier(0.77, 0, 0.175, 1) 0.4s forwards;
+  }
+}
+
+// ---------- List ----------
+.list {
+  position: relative;
+  z-index: 1;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 32px;
+
+  @include media(desktop) {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 32px;
+  }
+}
+
+// ---------- Step ----------
+.step {
+  position: relative;
+  display: grid;
+  grid-template-columns: 56px 1fr;
+  align-items: start;
+  gap: 20px;
+
+  opacity: 0;
+  transform: translateY(28px);
+  animation: fadeUp 1.2s cubic-bezier(0.16, 1, 0.3, 1) var(--delay, 0.2s)
+    forwards;
+
+  @include media(desktop) {
+    grid-template-columns: 1fr;
+    gap: 28px;
+  }
+}
+
+// ---------- Node (точка на лінії) ----------
+.node {
+  position: relative;
+  width: 44px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  @include media(desktop) {
+    margin: 0 auto;
+  }
+}
+
+.nodeRing {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  border: 1px solid rgba(166, 180, 255, 0.45);
+  background: rgba(3, 5, 37, 0.7);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  box-shadow:
+    0 0 0 6px rgba(122, 91, 255, 0.06),
+    0 0 30px rgba(122, 91, 255, 0.35);
+
+  &::before {
+    content: '';
+    position: absolute;
+    inset: -4px;
+    border-radius: 50%;
+    border: 1px solid rgba(166, 180, 255, 0.25);
+    animation: ringPulse 2.6s ease-out infinite;
+  }
+}
+
+.nodeCore {
+  position: relative;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #a6b4ff 0%, #7a5bff 100%);
+  box-shadow: 0 0 14px rgba(166, 180, 255, 0.9);
+}
+
+// ---------- Card ----------
+.card {
+  position: relative;
+  padding: 24px 22px 26px;
+  border-radius: 20px;
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.045) 0%,
+    rgba(255, 255, 255, 0.02) 100%
+  );
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  box-shadow:
+    0 30px 60px -30px rgba(0, 0, 0, 0.85),
+    inset 0 1px 0 rgba(255, 255, 255, 0.05);
+  overflow: hidden;
+  transition:
+    transform 0.6s cubic-bezier(0.16, 1, 0.3, 1),
+    border-color 0.6s ease,
+    box-shadow 0.6s ease;
+
+  @include media(desktop) {
+    padding: 32px 30px 34px;
+  }
+
+  &:hover {
+    transform: translateY(-6px);
+    border-color: rgba(166, 180, 255, 0.28);
+    box-shadow:
+      0 40px 70px -25px rgba(74, 107, 255, 0.45),
+      inset 0 1px 0 rgba(255, 255, 255, 0.1);
+
+    .scan {
+      transform: translateX(180%);
+    }
+
+    .cardBorder {
+      opacity: 1;
+    }
+
+    .index {
+      color: #ffffff;
+      text-shadow: 0 0 30px rgba(166, 180, 255, 0.6);
+    }
+  }
+}
+
+// градієнтний бордер при ховері
+.cardBorder {
+  position: absolute;
+  inset: 0;
+  border-radius: 20px;
+  padding: 1px;
+  background: linear-gradient(
+    135deg,
+    rgba(122, 91, 255, 0.7) 0%,
+    rgba(74, 107, 255, 0) 35%,
+    rgba(122, 91, 255, 0) 65%,
+    rgba(166, 180, 255, 0.6) 100%
+  );
+  -webkit-mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  opacity: 0;
+  transition: opacity 0.6s ease;
+  pointer-events: none;
+}
+
+// промінь, що пробігає по картці на ховері
+.scan {
+  position: absolute;
+  top: 0;
+  left: -60%;
+  width: 60%;
+  height: 100%;
+  background: linear-gradient(
+    100deg,
+    rgba(255, 255, 255, 0) 0%,
+    rgba(166, 180, 255, 0.12) 50%,
+    rgba(255, 255, 255, 0) 100%
+  );
+  transform: translateX(0);
+  transition: transform 1.4s cubic-bezier(0.16, 1, 0.3, 1);
+  pointer-events: none;
+}
+
+// ---------- Index (велика цифра) ----------
+.index {
+  position: relative;
+  display: block;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-weight: 500;
+  font-size: 56px;
+  line-height: 1;
+  letter-spacing: -0.04em;
+  color: rgba(199, 207, 255, 0.55);
+  margin-bottom: 18px;
+  background: linear-gradient(
+    180deg,
+    #ffffff 0%,
+    #c5cdff 40%,
+    rgba(122, 91, 255, 0.5) 100%
+  );
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  transition:
+    color 0.5s ease,
+    text-shadow 0.5s ease;
+
+  @include media(desktop) {
+    font-size: 80px;
+    margin-bottom: 26px;
+  }
+}
+
+// ---------- Body ----------
+.body {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.cardTitle {
+  margin: 0;
+  font-weight: 600;
+  font-size: 20px;
+  line-height: 1.25;
+  letter-spacing: -0.01em;
+  color: #f0f2ff;
+
+  @include media(desktop) {
+    font-size: 24px;
+  }
+}
+
+.cardText {
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.65;
+  color: rgba(222, 226, 250, 0.7);
+
+  @include media(desktop) {
+    font-size: 15px;
+  }
+}
+
+// ---------- Keyframes ----------
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes trackDrawV {
+  from {
+    transform: scaleY(0);
+  }
+  to {
+    transform: scaleY(1);
+  }
+}
+
+@keyframes trackDrawH {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+
+@keyframes ringPulse {
+  0% {
+    transform: scale(1);
+    opacity: 0.7;
+  }
+  100% {
+    transform: scale(1.7);
+    opacity: 0;
+  }
+}
+
+@keyframes shine {
+  0%,
+  100% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+}
+
+@keyframes pulse {
+  0%,
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.5;
+    transform: scale(0.8);
+  }
+}

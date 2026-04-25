@@ -1,12 +1,7 @@
 .hero {
   position: relative;
-  width: 100%;
   overflow: hidden;
-  background-color: #030525;
   color: #f5f6ff;
-  display: flex;
-  align-items: center;
-  isolation: isolate;
 }
 
 .bgImage {
@@ -84,7 +79,6 @@
   display: flex;
   flex-direction: column;
   justify-content: center;
-  max-width: 880px;
   padding: 120px 0 80px;
   gap: 24px;
 

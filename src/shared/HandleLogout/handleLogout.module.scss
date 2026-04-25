@@ -1,0 +1,22 @@
+.handleLogout {
+  align-items: center;
+  justify-content: center;
+  padding: 16px 32px;
+  border-radius: 14px;
+  font-size: 15px;
+  font-weight: 600;
+  text-decoration: none;
+  color: #ffffff;
+  background: linear-gradient(135deg, #b52020 0%, #7a5bff 100%);
+  box-shadow:
+    0 12px 40px -10px rgba(74, 107, 255, 0.7),
+    inset 0 1px 0 rgba(255, 255, 255, 0.25);
+  transition:
+    transform 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+    box-shadow 0.5s ease,
+    filter 0.5s ease;
+  margin-bottom: 50px;
+  margin-left: auto;
+  display: flex;
+  cursor: pointer;
+}

@@ -8,6 +8,7 @@ const roles = [
   'producer',
   'director',
   'brand',
-  'ai-specialist',
+  'retoucher',
+  'aiCreator',
 ];
 export default roles;

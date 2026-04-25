@@ -1,0 +1,485 @@
+.section {
+  position: relative;
+  overflow: hidden;
+  color: #f5f6ff;
+  padding: 100px 0 120px;
+  isolation: isolate;
+}
+
+// ---------- Background ----------
+.bg {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.glowBlue {
+  position: absolute;
+  top: -15%;
+  left: -10%;
+  width: 55vw;
+  height: 55vw;
+  background: radial-gradient(
+    circle,
+    rgba(63, 102, 255, 0.22) 0%,
+    rgba(63, 102, 255, 0) 65%
+  );
+  filter: blur(50px);
+  animation: floatSlow 20s ease-in-out infinite alternate;
+}
+
+.glowViolet {
+  position: absolute;
+  bottom: -20%;
+  right: -10%;
+  width: 60vw;
+  height: 60vw;
+  background: radial-gradient(
+    circle,
+    rgba(138, 86, 255, 0.2) 0%,
+    rgba(138, 86, 255, 0) 65%
+  );
+  filter: blur(60px);
+  animation: floatSlow 26s ease-in-out 3s infinite alternate-reverse;
+}
+
+.scanlines {
+  position: absolute;
+  inset: 0;
+  background-image: repeating-linear-gradient(
+    0deg,
+    rgba(255, 255, 255, 0.025) 0px,
+    rgba(255, 255, 255, 0.025) 1px,
+    transparent 1px,
+    transparent 3px
+  );
+  mix-blend-mode: overlay;
+  opacity: 0.6;
+}
+
+.vignette {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    ellipse at center,
+    transparent 50%,
+    rgba(3, 5, 37, 0.85) 100%
+  );
+}
+
+// ---------- Header ----------
+.header {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 18px;
+  margin: 0 auto 56px;
+
+  @include media(tablet) {
+    gap: 22px;
+    margin: 0 auto 80px;
+  }
+
+  @include media(desktop) {
+    margin: 0 auto 110px;
+  }
+}
+
+.eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 16px 8px 12px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: #c5cdff;
+  background: rgba(122, 91, 255, 0.1);
+  border: 1px solid rgba(122, 91, 255, 0.28);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+
+  opacity: 0;
+  transform: translateY(12px);
+  animation: fadeUp 1s cubic-bezier(0.16, 1, 0.3, 1) 0.1s forwards;
+}
+
+.dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #a6b4ff;
+  box-shadow: 0 0 12px rgba(166, 180, 255, 0.9);
+  animation: pulse 1.8s ease-in-out infinite;
+}
+
+.title {
+  margin: 0;
+  font-weight: 600;
+  font-size: 38px;
+  line-height: 1.06;
+  letter-spacing: -0.02em;
+  color: #f6f7ff;
+
+  opacity: 0;
+  transform: translateY(20px);
+  animation: fadeUp 1.2s cubic-bezier(0.16, 1, 0.3, 1) 0.25s forwards;
+
+  @include media(tablet) {
+    font-size: 60px;
+  }
+
+  @include media(desktop) {
+    font-size: 80px;
+  }
+}
+
+.accent {
+  font-style: italic;
+  font-weight: 500;
+}
+
+.subtitle {
+  margin: 0 auto;
+
+  font-size: 15px;
+  line-height: 1.7;
+  color: rgba(222, 226, 250, 0.72);
+
+  opacity: 0;
+  transform: translateY(16px);
+  animation: fadeUp 1.2s cubic-bezier(0.16, 1, 0.3, 1) 0.5s forwards;
+
+  @include media(tablet) {
+    font-size: 17px;
+  }
+
+  @include media(desktop) {
+    font-size: 18px;
+  }
+}
+
+// ---------- Grid ----------
+.list {
+  position: relative;
+  z-index: 2;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 18px;
+
+  @include media(tablet) {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 22px;
+  }
+
+  @include media(desktop) {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 28px;
+  }
+}
+
+// ---------- Card ----------
+.card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  cursor: pointer;
+
+  opacity: 0;
+  transform: translateY(40px) scale(0.97);
+  animation: cardIn 1.4s cubic-bezier(0.16, 1, 0.3, 1) var(--delay, 0.1s)
+    forwards;
+
+  &:hover {
+    .image {
+      transform: scale(1.08);
+      filter: grayscale(0) brightness(0.85) contrast(1.05);
+    }
+
+    .imageOverlay {
+      opacity: 0.4;
+    }
+
+    .shutter {
+      transform: translateY(-101%);
+    }
+
+    .frameBorder {
+      opacity: 1;
+    }
+
+    .tag {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .line {
+      transform: scaleX(1);
+    }
+
+    .cardTitle {
+      color: #ffffff;
+    }
+  }
+}
+
+// ---------- Frame (image area) ----------
+.frame {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 4 / 5;
+  overflow: hidden;
+  border-radius: 18px;
+  background: #0a0d36;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  box-shadow:
+    0 30px 60px -30px rgba(0, 0, 0, 0.9),
+    inset 0 1px 0 rgba(255, 255, 255, 0.05);
+
+  @include media(desktop) {
+    aspect-ratio: 3 / 4;
+  }
+}
+
+.image {
+  position: absolute;
+  inset: 0;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  filter: grayscale(0.6) brightness(0.7) contrast(1.05);
+  transform: scale(1.02);
+  transition:
+    transform 1.4s cubic-bezier(0.16, 1, 0.3, 1),
+    filter 1s ease;
+}
+
+.imageOverlay {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(
+      180deg,
+      rgba(3, 5, 37, 0.1) 0%,
+      rgba(3, 5, 37, 0.65) 60%,
+      rgba(3, 5, 37, 0.95) 100%
+    ),
+    radial-gradient(
+      80% 60% at 50% 100%,
+      rgba(122, 91, 255, 0.35) 0%,
+      rgba(122, 91, 255, 0) 70%
+    );
+  opacity: 0.7;
+  transition: opacity 0.8s ease;
+  pointer-events: none;
+}
+
+// «шторка»: чорний прямокутник, який повзе вгору при появі/ховері
+.shutter {
+  position: absolute;
+  inset: 0;
+  background: #030525;
+  transform: translateY(0);
+  transition: transform 1.2s cubic-bezier(0.77, 0, 0.175, 1);
+  animation: shutterReveal 1.6s cubic-bezier(0.77, 0, 0.175, 1)
+    calc(var(--delay, 0.1s) + 0.2s) forwards;
+  pointer-events: none;
+}
+
+.frameBorder {
+  position: absolute;
+  inset: 0;
+  border-radius: 18px;
+  padding: 1px;
+  background: linear-gradient(
+    135deg,
+    rgba(122, 91, 255, 0.7) 0%,
+    rgba(74, 107, 255, 0) 35%,
+    rgba(122, 91, 255, 0) 65%,
+    rgba(166, 180, 255, 0.6) 100%
+  );
+  -webkit-mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  opacity: 0;
+  transition: opacity 0.6s ease;
+  pointer-events: none;
+}
+
+// ---------- Tag (REC) ----------
+.tag {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 12px 6px 10px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  color: #ffe4e4;
+  background: rgba(255, 55, 95, 0.18);
+  border: 1px solid rgba(255, 55, 95, 0.4);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  opacity: 0;
+  transform: translateY(-6px);
+  transition:
+    opacity 0.5s ease,
+    transform 0.5s ease;
+}
+
+.tagDot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #ff3a5f;
+  box-shadow: 0 0 10px rgba(255, 58, 95, 0.9);
+  animation: pulse 1.4s ease-in-out infinite;
+}
+
+// ---------- Index (01, 02 …) ----------
+.index {
+  position: absolute;
+  bottom: 14px;
+  left: 16px;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: 0.15em;
+  color: rgba(246, 247, 255, 0.72);
+  padding: 6px 10px;
+  border-radius: 8px;
+  background: rgba(3, 5, 37, 0.55);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+// ---------- Body ----------
+.body {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 0 4px;
+}
+
+.cardTitle {
+  margin: 0;
+  font-weight: 600;
+  font-size: 20px;
+  line-height: 1.2;
+  letter-spacing: -0.01em;
+  color: #e7eaff;
+  transition: color 0.4s ease;
+
+  @include media(desktop) {
+    font-size: 22px;
+  }
+}
+
+.cardText {
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.65;
+  color: rgba(222, 226, 250, 0.65);
+
+  @include media(desktop) {
+    font-size: 15px;
+  }
+}
+
+.line {
+  display: block;
+  width: 100%;
+  height: 1px;
+  margin-top: 4px;
+  background: linear-gradient(
+    90deg,
+    rgba(166, 180, 255, 0.7) 0%,
+    rgba(122, 91, 255, 0.4) 50%,
+    rgba(122, 91, 255, 0) 100%
+  );
+  transform: scaleX(0.15);
+  transform-origin: left center;
+  transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+// ---------- Keyframes ----------
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes cardIn {
+  from {
+    opacity: 0;
+    transform: translateY(40px) scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+// «шторка», що відкриває кадр зверху вниз
+@keyframes shutterReveal {
+  0% {
+    transform: translateY(0);
+  }
+  100% {
+    transform: translateY(-101%);
+  }
+}
+
+@keyframes floatSlow {
+  0% {
+    transform: translate(0, 0);
+  }
+  100% {
+    transform: translate(4%, 3%);
+  }
+}
+
+@keyframes shine {
+  0%,
+  100% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+}
+
+@keyframes pulse {
+  0%,
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.5;
+    transform: scale(0.8);
+  }
+}

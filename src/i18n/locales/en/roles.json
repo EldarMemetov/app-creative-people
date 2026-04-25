@@ -9,6 +9,8 @@
   "producer": "Producer",
   "director": "Director",
   "brand": "Brand / Business",
-  "choose_at_least_one": "Choose at least one role",
+  "retoucher": "Retoucher",
+  "aiCreator": "AI Creator",
+  "choose_at_least_one": "Please select at least one role",
   "max_three": "You can select up to 3 roles"
 }
