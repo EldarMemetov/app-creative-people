@@ -54,13 +54,6 @@ const cards = [
 export default function WhoIsItForSection() {
   return (
     <section className={s.section}>
-      <div className={s.bg}>
-        <div className={s.glowBlue} />
-        <div className={s.glowViolet} />
-        <div className={s.scanlines} />
-        <div className={s.vignette} />
-      </div>
-
       <Container>
         <header className={s.header}>
           <span className={s.eyebrow}>

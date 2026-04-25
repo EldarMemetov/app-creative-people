@@ -2,55 +2,15 @@
   position: relative;
   overflow: hidden;
   color: #f5f6ff;
-  padding: 100px 0 120px;
-  isolation: isolate;
-}
+  padding-bottom: 100px;
 
-// ---------- Background ----------
-.bg {
-  position: absolute;
-  inset: 0;
-  z-index: 0;
-  pointer-events: none;
-}
+  @include media(tablet) {
+    padding-bottom: 140px;
+  }
 
-.glowBlue {
-  position: absolute;
-  top: -15%;
-  left: -10%;
-  width: 55vw;
-  height: 55vw;
-  background: radial-gradient(
-    circle,
-    rgba(63, 102, 255, 0.22) 0%,
-    rgba(63, 102, 255, 0) 65%
-  );
-  filter: blur(50px);
-  animation: floatSlow 20s ease-in-out infinite alternate;
-}
-
-.scanlines {
-  position: absolute;
-  inset: 0;
-  background-image: repeating-linear-gradient(
-    0deg,
-    rgba(255, 255, 255, 0.025) 0px,
-    rgba(255, 255, 255, 0.025) 1px,
-    transparent 1px,
-    transparent 3px
-  );
-  mix-blend-mode: overlay;
-  opacity: 0.6;
-}
-
-.vignette {
-  position: absolute;
-  inset: 0;
-  background: radial-gradient(
-    ellipse at center,
-    transparent 50%,
-    rgba(3, 5, 37, 0.85) 100%
-  );
+  @include media(desktop) {
+    padding-bottom: 180px;
+  }
 }
 
 // ---------- Header ----------
