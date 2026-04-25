@@ -1,21 +1,15 @@
 .footer {
-  background: #0a0b41;
+  background: radial-gradient(
+    ellipse at 20% 50%,
+    #0d0a2e 0%,
+    #030525 40%,
+    #020f12 100%
+  );
   position: relative;
   z-index: 1;
   padding-top: 60px;
   padding-bottom: 37px;
-  // &::before {
-  //   content: '';
-  //   position: absolute;
-  //   top: -40px;
-  //   left: 0;
-  //   width: 100%;
-  //   height: 80px;
-  //   background-color: #0a0b41;
-  //   border-top-left-radius: 100% 100%;
-  //   border-top-right-radius: 100% 100%;
-  //   z-index: -1;
-  // }
+
   @include media(tablet) {
     padding-top: 60px;
     padding-bottom: 42px;

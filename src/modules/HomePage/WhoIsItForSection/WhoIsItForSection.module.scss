@@ -29,21 +29,6 @@
   animation: floatSlow 20s ease-in-out infinite alternate;
 }
 
-.glowViolet {
-  position: absolute;
-  bottom: -20%;
-  right: -10%;
-  width: 60vw;
-  height: 60vw;
-  background: radial-gradient(
-    circle,
-    rgba(138, 86, 255, 0.2) 0%,
-    rgba(138, 86, 255, 0) 65%
-  );
-  filter: blur(60px);
-  animation: floatSlow 26s ease-in-out 3s infinite alternate-reverse;
-}
-
 .scanlines {
   position: absolute;
   inset: 0;

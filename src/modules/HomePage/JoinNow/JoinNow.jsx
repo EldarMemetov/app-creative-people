@@ -58,10 +58,7 @@ export default function JoinNow() {
               Приєднатися зараз
             </span>
 
-            <h2 className={s.title}>
-              Місце, де народжуються{' '}
-              <span className={s.accent}>колаборації</span>
-            </h2>
+            <h2 className={s.title}>Місце, де народжуються колаборації</h2>
 
             <p className={s.subtitle}>
               Об’єднуйся з творчими людьми, знаходь проєкти і будуй репутацію у
