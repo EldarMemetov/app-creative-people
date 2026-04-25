@@ -4,11 +4,13 @@ import WhoIsItForSection from '@/modules/HomePage/WhoIsItForSection/WhoIsItForSe
 import HowItWorks from '@/modules/HomePage/HowItWorks/HowItWorks';
 import WhyUs from '@/modules/HomePage/WhyUs/WhyUs';
 import JoinNow from '@/modules/HomePage/JoinNow/JoinNow';
+import RenderOurStory from '@/modules/HomePage/RenderOurStory/RenderOurStory';
 
 export default function Home() {
   return (
     <div className={s.container}>
       <HeroSection />
+      <RenderOurStory />
       <WhoIsItForSection />
       <HowItWorks />
       <WhyUs />
