@@ -1,0 +1,231 @@
+.vision {
+  position: relative;
+  color: #f5f6ff;
+  overflow: hidden;
+  padding-bottom: 100px;
+
+  @include media(tablet) {
+    padding-bottom: 140px;
+  }
+
+  @include media(desktop) {
+    padding-bottom: 180px;
+  }
+}
+
+.inner {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  max-width: 1080px;
+  margin: 0 auto;
+}
+
+.eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 36px;
+  padding: 8px 18px;
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.34em;
+  text-transform: uppercase;
+  color: rgba(220, 226, 250, 0.78);
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 999px;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+
+  @include media(tablet) {
+    font-size: 12px;
+    margin-bottom: 48px;
+  }
+}
+
+.eyebrowDot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #a6b4ff, #8aa0ff);
+  box-shadow: 0 0 14px rgba(166, 180, 255, 0.75);
+}
+
+.title {
+  margin: 0 0 64px;
+  max-width: 18ch;
+  font-weight: 600;
+  font-size: 36px;
+  line-height: 1.08;
+  letter-spacing: -0.025em;
+  color: #f6f7ff;
+
+  em {
+    font-style: italic;
+    font-weight: 500;
+    background: linear-gradient(
+      100deg,
+      #a6b4ff 0%,
+      #c9b2ff 35%,
+      #ffffff 60%,
+      #8aa0ff 100%
+    );
+    background-size: 200% 100%;
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    animation: shine 9s ease-in-out infinite;
+    filter: drop-shadow(0 0 28px rgba(166, 180, 255, 0.25));
+  }
+
+  @include media(tablet) {
+    font-size: 60px;
+    margin-bottom: 96px;
+  }
+  @include media(desktop) {
+    font-size: 84px;
+    line-height: 1.04;
+    margin-bottom: 120px;
+  }
+}
+
+.body {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 28px;
+  max-width: 980px;
+  margin-bottom: 88px;
+  text-align: left;
+
+  @include media(tablet) {
+    margin-bottom: 120px;
+    gap: 36px;
+  }
+  @include media(desktop) {
+    grid-template-columns: 1fr 1fr;
+    gap: 64px;
+    margin-bottom: 160px;
+  }
+}
+
+.paragraph {
+  margin: 0;
+  font-size: 16px;
+  line-height: 1.78;
+  color: rgba(222, 226, 250, 0.7);
+
+  &::first-letter {
+    font-style: italic;
+    font-weight: 500;
+    font-size: 1.3em;
+    color: rgba(198, 211, 255, 0.95);
+    margin-right: 2px;
+  }
+
+  @include media(tablet) {
+    font-size: 17px;
+  }
+  @include media(desktop) {
+    font-size: 18px;
+    line-height: 1.75;
+  }
+}
+
+.spotlight {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  margin: 0;
+  max-width: 18ch;
+  text-align: center;
+
+  &::before {
+    content: '';
+    position: absolute;
+    inset: -40% -20%;
+    background: radial-gradient(
+      ellipse at center,
+      rgba(122, 91, 255, 0.22) 0%,
+      rgba(74, 107, 255, 0.1) 40%,
+      transparent 70%
+    );
+    filter: blur(50px);
+    z-index: -1;
+    pointer-events: none;
+  }
+
+  @include media(tablet) {
+    gap: 14px;
+    max-width: 22ch;
+  }
+  @include media(desktop) {
+    gap: 20px;
+    max-width: 26ch;
+  }
+}
+
+.spotlightLead {
+  font-weight: 300;
+  font-size: 24px;
+  line-height: 1.2;
+  letter-spacing: 0.005em;
+  color: rgba(222, 226, 250, 0.78);
+
+  @include media(tablet) {
+    font-size: 36px;
+  }
+  @include media(desktop) {
+    font-size: 44px;
+  }
+}
+
+.spotlightHero {
+  font-style: italic;
+  font-weight: 500;
+  font-size: 44px;
+  line-height: 1;
+  letter-spacing: -0.035em;
+
+  -webkit-background-clip: text;
+  background-clip: text;
+
+  @include media(tablet) {
+    font-size: 76px;
+  }
+  @include media(desktop) {
+    font-size: 112px;
+    letter-spacing: -0.045em;
+  }
+}
+
+.spotlightOutro {
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 1.5;
+  color: rgba(222, 226, 250, 0.6);
+  max-width: 32ch;
+  margin-top: 4px;
+
+  @include media(tablet) {
+    font-size: 18px;
+  }
+  @include media(desktop) {
+    font-size: 20px;
+    margin-top: 12px;
+  }
+}
+
+@keyframes shine {
+  0%,
+  100% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+}

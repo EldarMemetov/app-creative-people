@@ -91,7 +91,6 @@ export default function InfoDetails() {
           <h1 className={s.title}>Мій профіль</h1>
         </header>
 
-        {/* HERO: avatar + identity + stats */}
         <div className={s.hero}>
           <div className={s.heroBorder} />
 
@@ -150,21 +149,10 @@ export default function InfoDetails() {
                 {likesCount === null ? '…' : likesCount}
               </span>
             </div>
-            <div className={s.stat}>
-              <span className={s.statLabel}>Рейтинг</span>
-              <span className={s.statValue}>
-                {user.rating !== undefined && user.rating !== null
-                  ? user.rating
-                  : '—'}
-              </span>
-            </div>
+
             <div className={s.stat}>
               <span className={s.statLabel}>Досвід</span>
               <span className={s.statValue}>{user.experience || '—'}</span>
-            </div>
-            <div className={s.stat}>
-              <span className={s.statLabel}>Доступ</span>
-              <span className={s.statValue}>{user.accessRole || '—'}</span>
             </div>
           </div>
         </div>
@@ -221,16 +209,6 @@ export default function InfoDetails() {
               <span className={s.label}>Країна</span>
               <span className={s.value}>{user.country || 'не вказано'}</span>
             </div>
-
-            <div className={s.detail}>
-              <span className={s.label}>Електронна пошта</span>
-              <span className={s.value}>{user.email || 'не вказано'}</span>
-            </div>
-
-            <div className={s.detail}>
-              <span className={s.label}>Рівень доступу</span>
-              <span className={s.value}>{user.accessRole || 'не вказано'}</span>
-            </div>
           </div>
         </div>
 
@@ -257,23 +235,6 @@ export default function InfoDetails() {
         </div>
 
         {/* STATUS FLAGS */}
-        <div className={s.flags}>
-          <div
-            className={`${s.flag} ${user.isBlocked ? s.flagDanger : s.flagOk}`}
-          >
-            <span className={s.flagLabel}>Заблокований</span>
-            <span className={s.flagValue}>{user.isBlocked ? 'Так' : 'Ні'}</span>
-          </div>
-
-          <div
-            className={`${s.flag} ${user.needsReview ? s.flagWarn : s.flagOk}`}
-          >
-            <span className={s.flagLabel}>Потребує перевірки</span>
-            <span className={s.flagValue}>
-              {user.needsReview ? 'Так' : 'Ні'}
-            </span>
-          </div>
-        </div>
 
         {/* SOCIAL */}
         <div className={s.card}>
