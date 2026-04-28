@@ -19,6 +19,7 @@ import CompletedProjects from '@/modules/CompletedProjects/CompletedProjects';
 import PortfolioList from '../PortfolioList/PortfolioList';
 
 import s from './InfoDetails.module.scss';
+import HandleLogout from '@/shared/HandleLogout/HandleLogout';
 
 export default function InfoDetails() {
   const { user: guardUser, loading } = useAuthGuard();
@@ -90,7 +91,7 @@ export default function InfoDetails() {
           </span>
           <h1 className={s.title}>Мій профіль</h1>
         </header>
-
+        <HandleLogout />
         <div className={s.hero}>
           <div className={s.heroBorder} />
 
@@ -157,7 +158,6 @@ export default function InfoDetails() {
           </div>
         </div>
 
-        {/* ACTION BUTTONS */}
         <nav className={s.actions} aria-label="Дії профілю">
           <NotificationsIndicator>
             <LinkButton
@@ -181,11 +181,15 @@ export default function InfoDetails() {
             type={LINKDATA.APPLICATIONS}
             linkText="Мої заявки"
           />
-
-          <CompletedProjects userId={user._id} />
+          <LinkButton
+            className={s.actionButton}
+            path="profile/edit"
+            type={LINKDATA.TYPE_LIGHT_BORDER}
+            linkText="Редагувати свій профіль"
+          />
         </nav>
+        <CompletedProjects userId={user._id} />
 
-        {/* MAIN INFO CARD */}
         <div className={s.card}>
           <h3 className={s.sectionTitle}>Основна інформація</h3>
 
@@ -212,13 +216,11 @@ export default function InfoDetails() {
           </div>
         </div>
 
-        {/* ABOUT */}
         <div className={s.card}>
           <h3 className={s.sectionTitle}>Про себе</h3>
           <p className={s.about}>{user.aboutMe || 'не вказано'}</p>
         </div>
 
-        {/* DIRECTIONS */}
         <div className={s.card}>
           <h3 className={s.sectionTitle}>Напрямки</h3>
           {user.directions && user.directions.length > 0 ? (
@@ -234,28 +236,14 @@ export default function InfoDetails() {
           )}
         </div>
 
-        {/* STATUS FLAGS */}
-
-        {/* SOCIAL */}
         <div className={s.card}>
           <h3 className={s.sectionTitle}>Соціальні мережі</h3>
           <SocialLinks socialLinks={user.socialLinks} />
         </div>
 
-        {/* PORTFOLIO */}
         <div className={s.card}>
           <h3 className={s.sectionTitle}>Портфоліо</h3>
           <PortfolioList items={user.portfolio} />
-        </div>
-
-        {/* EDIT */}
-        <div className={s.editWrap}>
-          <LinkButton
-            className={s.editButton}
-            path="profile/edit"
-            type={LINKDATA.TYPE_LIGHT_BORDER}
-            linkText="Редагувати свій профіль"
-          />
         </div>
       </div>
     </section>

@@ -1,3 +1,6 @@
+'use client';
+
+import { useRef } from 'react';
 import Container from '@/shared/container/Container';
 import s from './WhoIsItForSection.module.scss';
 
@@ -30,7 +33,7 @@ const cards = [
   },
   {
     title: 'Візажисти / Стилісти / Перукарі',
-    description: 'Створюй образи, працюй із командами та просувай своє ім’я.',
+    description: "Створюй образи, працюй із командами та просувай своє ім'я.",
     image: '/image/card.png',
   },
   {
@@ -46,20 +49,32 @@ const cards = [
   {
     title: 'AI-креатори',
     description:
-      'Створюй фото і відео за допомогою штучного інтелекту, ділись роботами та знаходь колег.',
+      'Створюй фото і відео за допомогою ШІ, ділись роботами та знаходь колег.',
     image: '/image/card.png',
   },
 ];
 
 export default function WhoIsItForSection() {
+  const trackRef = useRef(null);
+
+  const scrollBy = (dir) => {
+    const el = trackRef.current;
+    if (!el) return;
+    const card = el.querySelector('li');
+    const step = card ? card.getBoundingClientRect().width + 18 : 320;
+    el.scrollBy({ left: dir * step, behavior: 'smooth' });
+  };
+
   return (
     <section className={s.section}>
       <Container>
         <header className={s.header}>
-          <span className={s.eyebrow}>
-            <span className={s.dot} />
-            Для кого платформа
-          </span>
+          <div className={s.headerTop}>
+            <span className={s.eyebrow}>
+              <span className={s.dot} />
+              Для кого платформа
+            </span>
+          </div>
 
           <h2 className={s.title}>
             Простір, де творці
@@ -72,8 +87,10 @@ export default function WhoIsItForSection() {
             свою команду — тут є місце для тебе. Обери свою роль.
           </p>
         </header>
+      </Container>
 
-        <ul className={s.list}>
+      <div className={s.sliderWrap}>
+        <ul ref={trackRef} className={s.list}>
           {cards.map((card, i) => (
             <li
               key={card.title}
@@ -88,11 +105,9 @@ export default function WhoIsItForSection() {
                 <div className={s.imageOverlay} />
                 <div className={s.shutter} />
                 <div className={s.frameBorder} />
-
                 <span className={s.index}>
                   {String(i + 1).padStart(2, '0')}
                 </span>
-
                 <span className={s.tag}>
                   <span className={s.tagDot} />
                   REC
@@ -107,7 +122,51 @@ export default function WhoIsItForSection() {
             </li>
           ))}
         </ul>
-      </Container>
+      </div>
+      <div className={s.controls}>
+        <button
+          type="button"
+          className={s.arrow}
+          aria-label="Попередня"
+          onClick={() => scrollBy(-1)}
+        >
+          <svg
+            viewBox="0 0 24 24"
+            width="18"
+            height="18"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="1.6"
+          >
+            <path
+              d="M15 5l-7 7 7 7"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
+          </svg>
+        </button>
+        <button
+          type="button"
+          className={s.arrow}
+          aria-label="Наступна"
+          onClick={() => scrollBy(1)}
+        >
+          <svg
+            viewBox="0 0 24 24"
+            width="18"
+            height="18"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="1.6"
+          >
+            <path
+              d="M9 5l7 7-7 7"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
+          </svg>
+        </button>
+      </div>
     </section>
   );
 }
