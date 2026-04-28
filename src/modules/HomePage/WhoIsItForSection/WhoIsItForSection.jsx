@@ -1,6 +1,6 @@
 'use client';
 
-import { useRef } from 'react';
+import { useRef, useCallback } from 'react';
 import Container from '@/shared/container/Container';
 import s from './WhoIsItForSection.module.scss';
 
@@ -56,14 +56,44 @@ const cards = [
 
 export default function WhoIsItForSection() {
   const trackRef = useRef(null);
+  const currentIndexRef = useRef(0);
+  const isScrollingRef = useRef(false);
 
-  const scrollBy = (dir) => {
+  const getCardWidth = useCallback(() => {
+    const el = trackRef.current;
+    if (!el) return 256;
+    const card = el.querySelector('li');
+    if (!card) return 256;
+    const gap = parseFloat(getComputedStyle(el).gap) || 16;
+    return card.getBoundingClientRect().width + gap;
+  }, []);
+
+  const scrollToIndex = useCallback(
+    (index) => {
+      const el = trackRef.current;
+      if (!el || isScrollingRef.current) return;
+
+      const clamped = Math.max(0, Math.min(index, cards.length - 1));
+      currentIndexRef.current = clamped;
+
+      const cardW = getCardWidth();
+      isScrollingRef.current = true;
+
+      el.scrollTo({ left: clamped * cardW, behavior: 'smooth' });
+
+      setTimeout(() => {
+        isScrollingRef.current = false;
+      }, 500);
+    },
+    [getCardWidth]
+  );
+
+  const handleScroll = useCallback(() => {
     const el = trackRef.current;
     if (!el) return;
-    const card = el.querySelector('li');
-    const step = card ? card.getBoundingClientRect().width + 18 : 320;
-    el.scrollBy({ left: dir * step, behavior: 'smooth' });
-  };
+    const cardW = getCardWidth();
+    currentIndexRef.current = Math.round(el.scrollLeft / cardW);
+  }, [getCardWidth]);
 
   return (
     <section className={s.section}>
@@ -90,7 +120,7 @@ export default function WhoIsItForSection() {
       </Container>
 
       <div className={s.sliderWrap}>
-        <ul ref={trackRef} className={s.list}>
+        <ul ref={trackRef} className={s.list} onScroll={handleScroll}>
           {cards.map((card, i) => (
             <li
               key={card.title}
@@ -123,12 +153,13 @@ export default function WhoIsItForSection() {
           ))}
         </ul>
       </div>
+
       <div className={s.controls}>
         <button
           type="button"
           className={s.arrow}
           aria-label="Попередня"
-          onClick={() => scrollBy(-1)}
+          onClick={() => scrollToIndex(currentIndexRef.current - 1)}
         >
           <svg
             viewBox="0 0 24 24"
@@ -149,7 +180,7 @@ export default function WhoIsItForSection() {
           type="button"
           className={s.arrow}
           aria-label="Наступна"
-          onClick={() => scrollBy(1)}
+          onClick={() => scrollToIndex(currentIndexRef.current + 1)}
         >
           <svg
             viewBox="0 0 24 24"

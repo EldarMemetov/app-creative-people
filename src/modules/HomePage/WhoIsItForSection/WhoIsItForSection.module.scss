@@ -196,8 +196,6 @@
   gap: 14px;
   overflow-x: auto;
   overflow-y: hidden;
-  scroll-snap-type: x mandatory;
-  scroll-padding: 16px;
   scrollbar-width: none;
   -ms-overflow-style: none;
   -webkit-overflow-scrolling: touch;
@@ -227,7 +225,6 @@
   gap: 14px;
   flex: 0 0 auto;
   width: 240px;
-  scroll-snap-align: start;
   cursor: pointer;
 
   opacity: 0;
