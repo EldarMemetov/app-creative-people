@@ -1,0 +1,263 @@
+.card {
+  position: relative;
+  display: block;
+  padding: 20px 22px;
+  border-radius: 18px;
+  text-decoration: none;
+  color: inherit;
+  background: linear-gradient(
+    160deg,
+    rgba(28, 22, 58, 0.7) 0%,
+    rgba(12, 10, 32, 0.9) 100%
+  );
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  overflow: hidden;
+  isolation: isolate;
+  transition:
+    transform 0.5s cubic-bezier(0.19, 1, 0.22, 1),
+    box-shadow 0.5s ease,
+    border-color 0.4s ease;
+
+  @include media(tablet) {
+    padding: 24px 26px;
+  }
+
+  @include media(desktop) {
+    padding: 26px 30px;
+  }
+
+  // левая «полоса-акцент» — как корешок книги
+  &::before {
+    content: '';
+    position: absolute;
+    top: 14%;
+    bottom: 14%;
+    left: 0;
+    width: 3px;
+    border-radius: 0 4px 4px 0;
+    background: linear-gradient(180deg, #7e57ff 0%, #ff57b2 100%);
+    opacity: 0;
+    transform: scaleY(0.4);
+    transform-origin: center;
+    transition:
+      opacity 0.4s ease,
+      transform 0.5s cubic-bezier(0.19, 1, 0.22, 1);
+  }
+
+  // диагональный световой блик при ховере
+  &::after {
+    content: '';
+    position: absolute;
+    top: -150%;
+    left: -75%;
+    width: 50%;
+    height: 400%;
+    background: linear-gradient(
+      115deg,
+      transparent 0%,
+      rgba(255, 255, 255, 0.05) 40%,
+      rgba(255, 255, 255, 0.14) 50%,
+      rgba(255, 255, 255, 0.05) 60%,
+      transparent 100%
+    );
+    transform: translateX(-120%) rotate(8deg);
+    transition: transform 1s cubic-bezier(0.22, 1, 0.36, 1);
+    pointer-events: none;
+  }
+
+  &:hover {
+    transform: translateY(-3px);
+    border-color: rgba(255, 255, 255, 0.12);
+    box-shadow:
+      0 20px 50px -25px rgba(0, 0, 0, 0.85),
+      0 30px 60px -30px rgba(126, 87, 255, 0.3);
+
+    &::before {
+      opacity: 1;
+      transform: scaleY(1);
+    }
+
+    &::after {
+      transform: translateX(380%) rotate(8deg);
+    }
+
+    .cardTitle {
+      color: #ffffff;
+    }
+  }
+}
+
+/* ====== HEAD ====== */
+.cardHead {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+.cardTitle {
+  flex: 1 1 100%;
+  margin: 4px 0 0;
+  font-size: 17px;
+  font-weight: 600;
+  line-height: 1.35;
+  letter-spacing: -0.01em;
+  color: #e8eaff;
+  transition: color 0.3s ease;
+
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+
+  @include media(tablet) {
+    font-size: 19px;
+  }
+
+  @include media(desktop) {
+    font-size: 21px;
+  }
+}
+
+/* ====== BADGES (закреп / закрыта) ====== */
+.badgePin,
+.badgeClose {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  white-space: nowrap;
+}
+
+.badgePin {
+  color: #ffb86b;
+  background: rgba(255, 184, 107, 0.12);
+  border: 1px solid rgba(255, 184, 107, 0.3);
+}
+
+.badgeClose {
+  color: rgba(232, 234, 255, 0.7);
+  background: rgba(232, 234, 255, 0.06);
+  border: 1px solid rgba(232, 234, 255, 0.18);
+}
+
+/* ====== BODY (превью текста) ====== */
+.cardBody {
+  margin: 0 0 14px;
+  font-size: 14px;
+  line-height: 1.55;
+  color: rgba(232, 234, 255, 0.65);
+
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+
+  @include media(tablet) {
+    font-size: 15px;
+    -webkit-line-clamp: 3;
+  }
+}
+
+/* ====== META ====== */
+.cardMeta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px 12px;
+  font-size: 13px;
+  color: rgba(232, 234, 255, 0.55);
+
+  @include media(tablet) {
+    font-size: 14px;
+  }
+}
+
+.metaAuthor {
+  color: #b9a8ff;
+  font-weight: 500;
+}
+
+.metaDate {
+  color: rgba(232, 234, 255, 0.5);
+}
+
+.metaDot {
+  color: rgba(232, 234, 255, 0.25);
+}
+
+.metaStat {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 3px 9px;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.04);
+  color: rgba(232, 234, 255, 0.7);
+  font-size: 12px;
+  font-weight: 500;
+  transition:
+    background 0.3s ease,
+    color 0.3s ease;
+
+  // первый стат немного отступ слева — чтобы отделить от автора/даты
+  &:first-of-type {
+    margin-left: auto;
+  }
+
+  @include media(tablet) {
+    font-size: 13px;
+    padding: 4px 10px;
+  }
+}
+
+.icon {
+  flex-shrink: 0;
+  stroke-width: 2;
+}
+
+/* hover на карточке — статы оживают */
+.card:hover {
+  .metaStat {
+    background: rgba(255, 255, 255, 0.06);
+    color: rgba(232, 234, 255, 0.85);
+  }
+}
+
+/* ====== TAGS ====== */
+.tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 14px;
+  padding-top: 14px;
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.tag {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 10px;
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: 500;
+  color: #b9a8ff;
+  background: rgba(126, 87, 255, 0.08);
+  border: 1px solid rgba(126, 87, 255, 0.2);
+  transition:
+    background 0.3s ease,
+    border-color 0.3s ease,
+    color 0.3s ease;
+
+  &:hover {
+    background: rgba(126, 87, 255, 0.15);
+    border-color: rgba(126, 87, 255, 0.4);
+    color: #ffffff;
+  }
+}

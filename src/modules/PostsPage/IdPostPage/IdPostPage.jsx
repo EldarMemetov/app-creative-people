@@ -45,7 +45,6 @@ export default function IdPostPage() {
   const [confirmLoading, setConfirmLoading] = useState(false);
   const [projectDetails, setProjectDetails] = useState(null);
 
-  // Extend date state
   const [extendDate, setExtendDate] = useState('');
   const [extendLoading, setExtendLoading] = useState(false);
   const [showExtendPicker, setShowExtendPicker] = useState(false);
@@ -293,7 +292,6 @@ export default function IdPostPage() {
               </span>
             </div>
 
-            {/* Дата съёмки или "не определена" */}
             <div className={styles.detailItem}>
               <strong>Дата съёмки:</strong>{' '}
               {post.hasNoDate || !post.date
@@ -301,7 +299,6 @@ export default function IdPostPage() {
                 : new Date(post.date).toLocaleDateString()}
             </div>
 
-            {/* Оплата */}
             <div className={styles.detailItem}>
               <strong>Оплата:</strong> {paymentLabel(post)}
             </div>
@@ -346,7 +343,7 @@ export default function IdPostPage() {
             <div className={styles.stat}>
               Interested: {post.interestedUsers?.length || 0}
             </div>
-            <div style={{ marginLeft: 12 }}>
+            <div className={styles.applyWrap}>
               <ApplyToPost
                 post={post}
                 currentUser={currentUser}
@@ -370,7 +367,7 @@ export default function IdPostPage() {
             </div>
           )}
 
-          {/* ⏳ Блок продления даты — только для автора при status === 'expired' */}
+          {/* Блок продления даты */}
           {isAuthor && post.status === 'expired' && (
             <div className={styles.expiredSection}>
               <p className={styles.expiredText}>
@@ -526,9 +523,11 @@ export default function IdPostPage() {
             Array.isArray(post.applications) &&
             post.applications.length > 0 &&
             post.status === 'open' && (
-              <div style={{ marginTop: 20 }}>
-                <h3>Заявки ({post.applications.length})</h3>
-                <ul>
+              <div className={styles.applicationsSection}>
+                <h3 className={styles.applicationsTitle}>
+                  Заявки ({post.applications.length})
+                </h3>
+                <ul className={styles.applicationsList}>
                   {post.applications.map((a) => {
                     const isApplied = a.status === 'applied';
                     const isSelected = a.status === 'selected';
@@ -536,40 +535,50 @@ export default function IdPostPage() {
                     const roleFilled = isRoleFilled(a.appliedRole);
 
                     return (
-                      <li key={a._id || a.id} style={{ marginBottom: 10 }}>
+                      <li
+                        key={a._id || a.id}
+                        className={styles.applicationItem}
+                      >
                         {a.user ? (
                           <>
-                            <Link href={`/talents/${a.user._id}`}>
+                            <Link
+                              href={`/talents/${a.user._id}`}
+                              className={styles.applicantName}
+                            >
                               {a.user.name} {a.user.surname}
                             </Link>{' '}
-                            — <strong>{a.appliedRole}</strong>
+                            —{' '}
+                            <strong className={styles.applicantRole}>
+                              {a.appliedRole}
+                            </strong>
                             {a.message && (
-                              <div style={{ marginTop: 4 }}>{a.message}</div>
+                              <div className={styles.applicantMessage}>
+                                {a.message}
+                              </div>
                             )}
-                            <div style={{ fontSize: 12, color: '#666' }}>
+                            <div className={styles.applicantDate}>
                               {new Date(a.createdAt).toLocaleString()}
                             </div>
                             {isApplied && (
-                              <div style={{ marginTop: 6, color: '#b7791f' }}>
+                              <div className={styles.statusApplied}>
                                 Ожидает ответа
                               </div>
                             )}
                             {isSelected && (
-                              <div style={{ marginTop: 6, color: 'green' }}>
+                              <div className={styles.statusSelected}>
                                 Уже назначен
                               </div>
                             )}
                             {isRejected && (
-                              <div style={{ marginTop: 6, color: 'crimson' }}>
+                              <div className={styles.statusRejected}>
                                 Отклонён
                               </div>
                             )}
-                            <div
-                              style={{ marginTop: 8, display: 'flex', gap: 8 }}
-                            >
+                            <div className={styles.applicantActions}>
                               {isApplied && (
                                 <button
                                   type="button"
+                                  className={styles.btnReject}
                                   onClick={() => handleRejectApplicant(a)}
                                 >
                                   Отклонить
@@ -578,6 +587,7 @@ export default function IdPostPage() {
                               {isSelected && (
                                 <button
                                   type="button"
+                                  className={styles.btnUnassign}
                                   onClick={() => handleUnassignApplicant(a)}
                                 >
                                   Снять
@@ -587,6 +597,7 @@ export default function IdPostPage() {
                                 !roleFilled &&
                                 post.status === 'open' && (
                                   <button
+                                    className={styles.btnSelect}
                                     onClick={() => handleSelectApplicant(a)}
                                     disabled={assignLoading}
                                   >
@@ -595,13 +606,15 @@ export default function IdPostPage() {
                                 )}
                             </div>
                             {isApplied && roleFilled && (
-                              <div style={{ marginTop: 6, color: '#888' }}>
+                              <div className={styles.statusRoleFilled}>
                                 Роль уже заполнена
                               </div>
                             )}
                           </>
                         ) : (
-                          <span>Информация о кандидате недоступна</span>
+                          <span className={styles.applicantUnavailable}>
+                            Информация о кандидате недоступна
+                          </span>
                         )}
                       </li>
                     );

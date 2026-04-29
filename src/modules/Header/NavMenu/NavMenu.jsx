@@ -33,7 +33,6 @@ const links = [
   { href: '/about-us', key: 'about' },
   { href: '/talents', key: 'talents' },
   { href: '/posts', key: 'posts' },
-  { href: '/blog', key: 'blog' },
   { href: '/forum', key: 'community' },
   { href: '/profile', key: 'profile' },
 ];

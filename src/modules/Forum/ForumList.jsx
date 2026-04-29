@@ -29,7 +29,6 @@ export default function ForumList() {
 
   const limit = 20;
 
-  // Debounce поиска
   useEffect(() => {
     const t = setTimeout(() => setQDebounced(q.trim()), 400);
     return () => clearTimeout(t);
@@ -59,13 +58,11 @@ export default function ForumList() {
     load();
   }, [load]);
 
-  // Real-time обновления списка
   useEffect(() => {
     if (!socket) return;
 
     const onNew = ({ topic }) => {
       if (!topic) return;
-      // Показываем только если мы на первой странице и без фильтров/поиска
       if (page !== 1 || qDebounced) return;
       setTopics((prev) =>
         prev.some((t) => String(t._id) === String(topic._id))
@@ -112,42 +109,69 @@ export default function ForumList() {
   return (
     <div className={s.forum}>
       <div className={s.header}>
-        <h1 className={s.title}>Форум</h1>
+        <div>
+          <h1 className={s.title}>Форум</h1>
+          <p className={s.subtitle}>
+            Делись идеями, ищи единомышленников и обсуждай проекты
+          </p>
+        </div>
         {user && (
           <Link href="/forum/new" className={s.newBtn}>
-            + Новая тема
+            <span className={s.newBtnIcon}>+</span>
+            <span>Новая тема</span>
           </Link>
         )}
       </div>
 
       <div className={s.toolbar}>
-        <input
-          className={s.search}
-          type="text"
-          placeholder="Поиск по темам…"
-          value={q}
-          onChange={(e) => {
-            setQ(e.target.value);
-            setPage(1);
-          }}
-        />
-        <select
-          className={s.select}
-          value={sort}
-          onChange={(e) => {
-            setSort(e.target.value);
-            setPage(1);
-          }}
-        >
-          {SORTS.map((o) => (
-            <option key={o.value} value={o.value}>
-              {o.label}
-            </option>
-          ))}
-        </select>
+        <div className={s.searchWrap}>
+          <svg
+            className={s.searchIcon}
+            width="18"
+            height="18"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          >
+            <circle cx="11" cy="11" r="8" />
+            <path d="m21 21-4.3-4.3" />
+          </svg>
+          <input
+            className={s.search}
+            type="text"
+            placeholder="Поиск по темам…"
+            value={q}
+            onChange={(e) => {
+              setQ(e.target.value);
+              setPage(1);
+            }}
+          />
+        </div>
+
+        <div className={s.selectWrap}>
+          <select
+            className={s.select}
+            value={sort}
+            onChange={(e) => {
+              setSort(e.target.value);
+              setPage(1);
+            }}
+          >
+            {SORTS.map((o) => (
+              <option key={o.value} value={o.value}>
+                {o.label}
+              </option>
+            ))}
+          </select>
+        </div>
       </div>
 
-      <p className={s.meta}>Всего тем: {total}</p>
+      <p className={s.meta}>
+        Всего тем: <span className={s.totalCount}>{total}</span>
+      </p>
 
       {loading && <div className={s.info}>Загрузка…</div>}
       {!loading && topics.length === 0 && (
@@ -155,8 +179,12 @@ export default function ForumList() {
       )}
 
       <ul className={s.list}>
-        {topics.map((t) => (
-          <li key={t._id}>
+        {topics.map((t, i) => (
+          <li
+            key={t._id}
+            className={s.item}
+            style={{ animationDelay: `${Math.min(i * 40, 400)}ms` }}
+          >
             <TopicCard topic={t} />
           </li>
         ))}

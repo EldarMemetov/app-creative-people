@@ -12,7 +12,108 @@ import {
 } from '@/services/api/forum/api';
 import Comments from '@/modules/Comments/Comments';
 import TopicForm from '../TopicForm/TopicForm';
-import s from '../Forum.module.scss';
+import s from './TopicView.module.scss';
+
+const PinIcon = () => (
+  <svg
+    className={s.icon}
+    width="14"
+    height="14"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+  >
+    <line x1="12" y1="17" x2="12" y2="22" />
+    <path d="M5 17h14v-1.76a2 2 0 0 0-1.11-1.79l-1.78-.9A2 2 0 0 1 15 10.76V6h1a2 2 0 0 0 0-4H8a2 2 0 0 0 0 4h1v4.76a2 2 0 0 1-1.11 1.79l-1.78.9A2 2 0 0 0 5 15.24Z" />
+  </svg>
+);
+
+const LockIcon = () => (
+  <svg
+    className={s.icon}
+    width="14"
+    height="14"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+  >
+    <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
+    <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+  </svg>
+);
+
+const EyeIcon = () => (
+  <svg
+    className={s.icon}
+    width="15"
+    height="15"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+  >
+    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+    <circle cx="12" cy="12" r="3" />
+  </svg>
+);
+
+const HeartIcon = ({ filled }) => (
+  <svg
+    className={s.icon}
+    width="16"
+    height="16"
+    viewBox="0 0 24 24"
+    fill={filled ? 'currentColor' : 'none'}
+    stroke="currentColor"
+    strokeWidth="2"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+  >
+    <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
+  </svg>
+);
+
+const TrashIcon = () => (
+  <svg
+    className={s.icon}
+    width="15"
+    height="15"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+  >
+    <polyline points="3 6 5 6 21 6" />
+    <path d="M19 6l-2 14a2 2 0 0 1-2 2H9a2 2 0 0 1-2-2L5 6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
+  </svg>
+);
+
+const EditIcon = () => (
+  <svg
+    className={s.icon}
+    width="15"
+    height="15"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+  >
+    <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
+    <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" />
+  </svg>
+);
 
 export default function TopicView() {
   const { id } = useParams();
@@ -111,17 +212,30 @@ export default function TopicView() {
       </Link>
 
       <div className={s.topicHead}>
-        {topic.pinned && <span className={s.badgePin}>📌 Закреп</span>}
-        {topic.closed && <span className={s.badgeClose}>🔒 Закрыта</span>}
+        {topic.pinned && (
+          <span className={s.badgePin}>
+            <PinIcon /> Закреп
+          </span>
+        )}
+        {topic.closed && (
+          <span className={s.badgeClose}>
+            <LockIcon /> Закрыта
+          </span>
+        )}
         <h1 className={s.topicTitle}>{topic.title}</h1>
       </div>
 
       <div className={s.topicMeta}>
-        <Link href={`/talents/${author._id}`}>{authorName}</Link>
-        <span>·</span>
-        <span>{new Date(topic.createdAt).toLocaleString()}</span>
-        <span>·</span>
-        <span>👁 {topic.viewsCount ?? 0}</span>
+        <Link href={`/talents/${author._id}`} className={s.metaAuthor}>
+          {authorName}
+        </Link>
+        <span className={s.metaDot}>·</span>
+        <span className={s.metaDate}>
+          {new Date(topic.createdAt).toLocaleString()}
+        </span>
+        <span className={s.metaStat}>
+          <EyeIcon /> {topic.viewsCount ?? 0}
+        </span>
       </div>
 
       {!editing ? (
@@ -139,11 +253,12 @@ export default function TopicView() {
 
           <div className={s.topicActions}>
             <button
-              className={s.actionBtn}
+              className={`${s.actionBtnLike} ${topic.liked ? s.liked : ''}`}
               onClick={handleLike}
               disabled={!user || busy}
             >
-              {topic.liked ? '❤️' : '🤍'} {topic.likesCount ?? 0}
+              <HeartIcon filled={topic.liked} />
+              <span>{topic.likesCount ?? 0}</span>
             </button>
 
             {isAuthor && !topic.closed && (
@@ -152,30 +267,30 @@ export default function TopicView() {
                 onClick={() => setEditing(true)}
                 disabled={busy}
               >
-                Редактировать
+                <EditIcon /> Редактировать
               </button>
             )}
 
             {(isAuthor || isMod) && (
               <button
-                className={s.actionBtn}
+                className={s.actionBtnDanger}
                 onClick={handleDelete}
                 disabled={busy}
               >
-                Удалить
+                <TrashIcon /> Удалить
               </button>
             )}
 
             {isMod && (
               <>
                 <button
-                  className={s.actionBtn}
+                  className={s.actionBtnGhost}
                   onClick={() => handleModerate({ pinned: !topic.pinned })}
                 >
                   {topic.pinned ? 'Открепить' : 'Закрепить'}
                 </button>
                 <button
-                  className={s.actionBtn}
+                  className={s.actionBtnGhost}
                   onClick={() => handleModerate({ closed: !topic.closed })}
                 >
                   {topic.closed ? 'Открыть' : 'Закрыть'}
@@ -185,24 +300,27 @@ export default function TopicView() {
           </div>
         </>
       ) : (
-        <>
+        <div className={s.editWrap}>
           <TopicForm
             initial={topic}
             onSubmit={handleEdit}
             submitLabel="Сохранить"
           />
-          <button className={s.actionBtn} onClick={() => setEditing(false)}>
+          <button className={s.editCancel} onClick={() => setEditing(false)}>
             Отмена
           </button>
-        </>
+        </div>
       )}
 
-      {/* Комментарии — тот же универсальный компонент */}
-      {topic.closed ? (
+      {topic.closed && (
         <div className={s.closedNotice}>
-          Тема закрыта. Новые комментарии недоступны, но можно читать старые.
+          <LockIcon />
+          <span>
+            Тема закрыта. Новые комментарии недоступны, но можно читать старые.
+          </span>
         </div>
-      ) : null}
+      )}
+
       <Comments targetType="forumTopic" targetId={topic._id} />
     </div>
   );

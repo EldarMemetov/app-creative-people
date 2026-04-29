@@ -1,0 +1,402 @@
+.topic {
+  position: relative;
+  padding: 32px 0 80px;
+  color: #e8eaff;
+
+  @include media(tablet) {
+    padding: 48px 0 100px;
+  }
+
+  @include media(desktop) {
+    padding: 64px 0 140px;
+    max-width: 880px;
+    margin: 0 auto;
+  }
+}
+
+/* ====== INFO (loading / error / not found) ====== */
+.info {
+  min-height: 50vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  padding: 60px 24px;
+  font-size: 16px;
+  color: rgba(232, 234, 255, 0.65);
+  text-align: center;
+
+  a {
+    color: #b9a8ff;
+    text-decoration: none;
+    transition: color 0.3s ease;
+
+    &:hover {
+      color: #ff8fcf;
+    }
+  }
+}
+
+/* ====== BACK LINK ====== */
+.back {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 14px;
+  color: rgba(232, 234, 255, 0.55);
+  text-decoration: none;
+  margin-bottom: 24px;
+  transition:
+    color 0.3s ease,
+    transform 0.4s cubic-bezier(0.19, 1, 0.22, 1);
+
+  &:hover {
+    color: #b9a8ff;
+    transform: translateX(-4px);
+  }
+}
+
+/* ====== HEAD ====== */
+.topicHead {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 14px;
+}
+
+.topicTitle {
+  flex: 1 1 100%;
+  margin: 6px 0 0;
+  font-size: 30px;
+  font-weight: 700;
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+  background: linear-gradient(135deg, #ffffff 0%, #b9a8ff 65%, #ff8fcf 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+
+  @include media(tablet) {
+    font-size: 40px;
+  }
+
+  @include media(desktop) {
+    font-size: 48px;
+  }
+}
+
+/* ====== BADGES ====== */
+.badgePin,
+.badgeClose {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  white-space: nowrap;
+}
+
+.badgePin {
+  color: #ffb86b;
+  background: rgba(255, 184, 107, 0.12);
+  border: 1px solid rgba(255, 184, 107, 0.3);
+}
+
+.badgeClose {
+  color: rgba(232, 234, 255, 0.7);
+  background: rgba(232, 234, 255, 0.06);
+  border: 1px solid rgba(232, 234, 255, 0.2);
+}
+
+/* ====== META ====== */
+.topicMeta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px 12px;
+  margin-bottom: 28px;
+  font-size: 14px;
+  color: rgba(232, 234, 255, 0.55);
+
+  @include media(tablet) {
+    margin-bottom: 36px;
+    font-size: 15px;
+  }
+}
+
+.metaAuthor {
+  color: #b9a8ff;
+  font-weight: 500;
+  text-decoration: none;
+  transition: color 0.3s ease;
+
+  &:hover {
+    color: #ff8fcf;
+  }
+}
+
+.metaDate {
+  color: rgba(232, 234, 255, 0.5);
+}
+
+.metaDot {
+  color: rgba(232, 234, 255, 0.25);
+}
+
+.metaStat {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 3px 10px;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.04);
+  color: rgba(232, 234, 255, 0.7);
+  font-size: 13px;
+  font-weight: 500;
+  margin-left: auto;
+}
+
+.icon {
+  flex-shrink: 0;
+  stroke-width: 2;
+}
+
+/* ====== BODY ====== */
+.topicBody {
+  margin: 0 0 28px;
+  padding: 24px 26px;
+  border-radius: 18px;
+  background: linear-gradient(
+    160deg,
+    rgba(28, 22, 58, 0.65) 0%,
+    rgba(12, 10, 32, 0.85) 100%
+  );
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  font-size: 16px;
+  line-height: 1.7;
+  color: rgba(232, 234, 255, 0.88);
+  white-space: pre-wrap;
+  word-break: break-word;
+
+  @include media(tablet) {
+    padding: 30px 32px;
+    font-size: 17px;
+    margin-bottom: 32px;
+  }
+
+  @include media(desktop) {
+    padding: 36px 40px;
+    font-size: 18px;
+    line-height: 1.75;
+  }
+}
+
+/* ====== TAGS ====== */
+.tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 28px;
+}
+
+.tag {
+  display: inline-flex;
+  align-items: center;
+  padding: 5px 12px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 500;
+  color: #b9a8ff;
+  background: rgba(126, 87, 255, 0.08);
+  border: 1px solid rgba(126, 87, 255, 0.22);
+  transition:
+    background 0.3s ease,
+    border-color 0.3s ease,
+    color 0.3s ease;
+
+  &:hover {
+    background: rgba(126, 87, 255, 0.18);
+    border-color: rgba(126, 87, 255, 0.45);
+    color: #ffffff;
+  }
+}
+
+/* ====== ACTIONS ====== */
+.topicActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  padding: 16px;
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  margin-bottom: 28px;
+
+  @include media(tablet) {
+    padding: 18px 20px;
+    gap: 12px;
+  }
+}
+
+/* базовые стили для всех action-кнопок */
+%actionBase {
+  appearance: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 18px;
+  border-radius: 12px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition:
+    transform 0.3s ease,
+    background 0.3s ease,
+    border-color 0.3s ease,
+    color 0.3s ease,
+    box-shadow 0.3s ease;
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+}
+
+/* обычная кнопка (Редактировать) */
+.actionBtn {
+  @extend %actionBase;
+  color: #e8eaff;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+
+  &:hover:not(:disabled) {
+    background: rgba(126, 87, 255, 0.15);
+    border-color: rgba(126, 87, 255, 0.35);
+    transform: translateY(-1px);
+  }
+}
+
+/* кнопка лайка */
+.actionBtnLike {
+  @extend %actionBase;
+  color: rgba(232, 234, 255, 0.75);
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+
+  &:hover:not(:disabled) {
+    color: #ff8fcf;
+    border-color: rgba(255, 87, 178, 0.4);
+    background: rgba(255, 87, 178, 0.08);
+    transform: translateY(-1px);
+  }
+
+  // активное состояние — лайкнуто
+  &.liked {
+    color: #ff57b2;
+    background: rgba(255, 87, 178, 0.12);
+    border-color: rgba(255, 87, 178, 0.45);
+    box-shadow: 0 8px 24px -10px rgba(255, 87, 178, 0.5);
+
+    .icon {
+      animation: heartPop 0.4s cubic-bezier(0.19, 1, 0.22, 1);
+    }
+  }
+}
+
+@keyframes heartPop {
+  0% {
+    transform: scale(1);
+  }
+  40% {
+    transform: scale(1.35);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+/* опасная кнопка (Удалить) */
+.actionBtnDanger {
+  @extend %actionBase;
+  color: #ff8a80;
+  background: rgba(244, 67, 54, 0.06);
+  border: 1px solid rgba(244, 67, 54, 0.25);
+
+  &:hover:not(:disabled) {
+    color: #ffffff;
+    background: rgba(244, 67, 54, 0.18);
+    border-color: rgba(244, 67, 54, 0.5);
+    transform: translateY(-1px);
+  }
+}
+
+/* призрачная кнопка (модераторские действия) */
+.actionBtnGhost {
+  @extend %actionBase;
+  color: rgba(232, 234, 255, 0.65);
+  background: transparent;
+  border: 1px dashed rgba(255, 255, 255, 0.15);
+
+  &:hover:not(:disabled) {
+    color: #ffb86b;
+    border-color: rgba(255, 184, 107, 0.45);
+    background: rgba(255, 184, 107, 0.06);
+    border-style: solid;
+  }
+}
+
+/* ====== EDIT MODE ====== */
+.editWrap {
+  padding: 24px;
+  border-radius: 18px;
+  background: linear-gradient(
+    160deg,
+    rgba(28, 22, 58, 0.65) 0%,
+    rgba(12, 10, 32, 0.85) 100%
+  );
+  border: 1px solid rgba(126, 87, 255, 0.2);
+  margin-bottom: 28px;
+
+  @include media(tablet) {
+    padding: 30px;
+  }
+}
+
+.editCancel {
+  @extend %actionBase;
+  margin-top: 14px;
+  color: rgba(232, 234, 255, 0.7);
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.08);
+    color: #ffffff;
+  }
+}
+
+/* ====== CLOSED NOTICE ====== */
+.closedNotice {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 28px 0;
+  padding: 16px 20px;
+  border-radius: 14px;
+  background: rgba(232, 234, 255, 0.04);
+  border: 1px solid rgba(232, 234, 255, 0.1);
+  color: rgba(232, 234, 255, 0.7);
+  font-size: 14px;
+  line-height: 1.5;
+
+  .icon {
+    flex-shrink: 0;
+    color: rgba(232, 234, 255, 0.6);
+  }
+}
