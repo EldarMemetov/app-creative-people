@@ -2,6 +2,7 @@
 
 import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { getAllPosts } from '@/services/api/post/api';
 import styles from './PostsPage.module.scss';
 import Container from '@/shared/container/Container';
@@ -9,27 +10,28 @@ import { LINKDATA, ROUTES } from '@/shared/constants';
 import LinkButton from '@/shared/components/LinkButton/LinkButton';
 
 const statusLabels = {
-  open: 'Открыт',
-  in_progress: 'Команда собрана',
-  shooting_done: 'Завершён',
-  expired: 'Истёк',
-  canceled: 'Отменён',
-};
-
-const statusColors = {
-  open: '#2196f3',
-  in_progress: '#ff9800',
-  shooting_done: '#4caf50',
-  expired: '#9e9e9e',
-  canceled: '#f44336',
+  open: 'Відкритий',
+  in_progress: 'Команда зібрана',
+  shooting_done: 'Завершений',
+  expired: 'Прострочений',
+  canceled: 'Скасований',
 };
 
 const paymentLabel = (post) => {
   if (post.type === 'paid') return `${post.price} €`;
   if (post.type === 'percent') return `${post.percent}%`;
-  if (post.type === 'negotiable') return 'Договорная';
+  if (post.type === 'negotiable') return 'Договірна';
   return 'TFP';
 };
+
+const formatDate = (d) =>
+  new Date(d).toLocaleDateString('uk-UA', {
+    day: '2-digit',
+    month: 'short',
+    year: 'numeric',
+  });
+
+const formatIndex = (n) => String(n + 1).padStart(2, '0');
 
 export default function PostsPage() {
   const [posts, setPosts] = useState([]);
@@ -53,7 +55,7 @@ export default function PostsPage() {
               : [];
         if (mounted) setPosts(postsArray);
       } catch (err) {
-        if (mounted) setError(err?.message || 'Failed to load posts');
+        if (mounted) setError(err?.message || 'Не вдалося завантажити пости');
       } finally {
         if (mounted) setLoading(false);
       }
@@ -65,103 +67,179 @@ export default function PostsPage() {
     };
   }, []);
 
-  if (loading)
-    return (
-      <div className={styles.centerWrap}>
-        <div className={styles.centerText}>Loading posts…</div>
-      </div>
-    );
-
-  if (error)
-    return (
-      <div className={styles.centerWrap}>
-        <div className={styles.errorBox}>
-          <div className={styles.errorMessage}>Error: {error}</div>
-        </div>
-      </div>
-    );
-
-  if (!posts || posts.length === 0)
-    return (
-      <div className={styles.centerWrap}>
-        <div className={styles.empty}>No posts found</div>
-      </div>
-    );
-
   return (
-    <section className={styles.page}>
-      <Container>
-        <div className={styles.header}>
-          <h1 className={styles.title}>Posts</h1>
-        </div>
-        <LinkButton path={ROUTES.CREATE} type={LINKDATA.CREATE}>
-          Створити пост
-        </LinkButton>
-        <ul className={styles.list}>
-          {posts.map((post) => {
-            const postHref = `/posts/${post._id}`;
-            const authorName = post.author
-              ? `${post.author.name || ''} ${post.author.surname || ''}`.trim()
-              : 'Unknown';
-            const desc = post.description || '';
-            const shortDesc =
-              desc.length > 160 ? desc.slice(0, 160) + '...' : desc;
+    <Container>
+      <section className={styles.section}>
+        <header className={styles.header}>
+          <div className={styles.headerTop}>
+            <span className={styles.headerLine} />
+            <p className={styles.eyebrow}>Feed · Community posts</p>
+          </div>
 
-            const status = post.status || 'open';
-            const statusLabel = statusLabels[status] || status;
-            const statusColor = statusColors[status] || '#999';
+          <div className={styles.headerRow}>
+            <h1 className={styles.title}>Усі пости</h1>
 
-            return (
-              <li key={post._id} className={styles.card}>
-                <Link href={postHref} className={styles.cardLink}>
-                  <div className={styles.cardBody}>
-                    <div className={styles.cardHeader}>
-                      <h2 className={styles.cardTitle}>{post.title || '—'}</h2>
-                      <span
-                        className={styles.statusBadge}
-                        style={{ backgroundColor: statusColor }}
-                      >
-                        {statusLabel}
-                      </span>
-                    </div>
+            <div className={styles.headerCta}>
+              <LinkButton path={ROUTES.CREATE} type={LINKDATA.CREATE}>
+                + Створити пост
+              </LinkButton>
+            </div>
+          </div>
 
-                    <div className={styles.cardMeta}>
-                      <span className={styles.cardMetaCity}>
-                        {post.city || '—'}
-                      </span>
-                      <span className={styles.separator}>•</span>
-                      <span className={styles.cardMetaType}>
-                        {paymentLabel(post)}
-                      </span>
-                      <span className={styles.separator}>•</span>
-                      <span className={styles.cardMetaAuthor}>
-                        {authorName || 'Unknown'}
-                      </span>
-                      {post.hasNoDate || !post.date ? (
-                        <>
-                          <span className={styles.separator}>•</span>
-                          <span className={styles.cardMetaDate}>
-                            Дата не определена
-                          </span>
-                        </>
-                      ) : (
-                        <>
-                          <span className={styles.separator}>•</span>
-                          <span className={styles.cardMetaDate}>
-                            {new Date(post.date).toLocaleDateString()}
-                          </span>
-                        </>
+          <div className={styles.meta}>
+            <p className={styles.counter}>
+              <span className={styles.counterNum}>
+                {String(posts.length).padStart(3, '0')}
+              </span>
+              <span className={styles.counterLabel}>
+                {posts.length === 1 ? 'публікація' : 'публікацій'}
+                <br />у стрічці
+              </span>
+            </p>
+            <p className={styles.subtitle}>
+              Зйомки, колаборації, кастинги та запити від креативної спільноти.
+              Знайди свій проєкт або запропонуй власний.
+            </p>
+          </div>
+        </header>
+
+        {loading ? (
+          <div className={styles.state}>
+            <span className={styles.stateDot} />
+            Завантаження постів…
+          </div>
+        ) : error ? (
+          <div className={`${styles.state} ${styles.stateError}`}>
+            Помилка: {error}
+          </div>
+        ) : !posts.length ? (
+          <div className={styles.empty}>
+            <div className={styles.emptyBadge}>00</div>
+            <h2 className={styles.emptyTitle}>Постів поки немає</h2>
+            <p className={styles.emptyText}>
+              Будь першим, хто поділиться проєктом або зйомкою — створи
+              публікацію і знайди свою команду.
+            </p>
+          </div>
+        ) : (
+          <ul className={styles.list}>
+            {posts.map((post, idx) => {
+              const postHref = `/posts/${post._id}`;
+              const authorName = post.author
+                ? `${post.author.name || ''} ${post.author.surname || ''}`.trim()
+                : 'Anonymous';
+              const desc = post.description || '';
+              const shortDesc =
+                desc.length > 180 ? desc.slice(0, 180).trim() + '…' : desc;
+
+              const status = post.status || 'open';
+              const statusLabel = statusLabels[status] || status;
+
+              const thumb =
+                (post.media || []).find((m) => m.type === 'photo') ||
+                (post.media || [])[0];
+
+              return (
+                <li
+                  key={post._id}
+                  className={styles.cardItem}
+                  style={{ animationDelay: `${Math.min(idx * 0.04, 0.5)}s` }}
+                >
+                  <Link href={postHref} className={styles.card}>
+                    <span className={styles.accentBar} aria-hidden="true" />
+
+                    <span className={styles.index}>{formatIndex(idx)}</span>
+
+                    {thumb && thumb.type === 'photo' ? (
+                      <div className={styles.thumb}>
+                        <Image
+                          src={thumb.url}
+                          alt={post.title || ''}
+                          fill
+                          sizes="(max-width: 768px) 30vw, 200px"
+                          className={styles.thumbImage}
+                        />
+                      </div>
+                    ) : thumb && thumb.type === 'video' ? (
+                      <div className={styles.thumb}>
+                        <video
+                          src={thumb.url}
+                          muted
+                          playsInline
+                          preload="metadata"
+                          className={styles.thumbVideo}
+                        />
+                        <span className={styles.thumbPlay} aria-hidden="true">
+                          ▶
+                        </span>
+                      </div>
+                    ) : (
+                      <div className={`${styles.thumb} ${styles.thumbEmpty}`}>
+                        <span>Без медіа</span>
+                      </div>
+                    )}
+
+                    <div className={styles.body}>
+                      <div className={styles.topRow}>
+                        <span
+                          className={`${styles.status} ${
+                            styles[`status_${status}`] || ''
+                          }`}
+                        >
+                          <span className={styles.statusDot} />
+                          {statusLabel}
+                        </span>
+
+                        <span className={styles.payment}>
+                          {paymentLabel(post)}
+                        </span>
+                      </div>
+
+                      <h2 className={styles.cardTitle}>
+                        {post.title || '—'}
+                        <span className={styles.cardArrow} aria-hidden="true">
+                          →
+                        </span>
+                      </h2>
+
+                      {shortDesc && (
+                        <p className={styles.cardDesc}>{shortDesc}</p>
                       )}
-                    </div>
 
-                    <p className={styles.cardDesc}>{shortDesc}</p>
-                  </div>
-                </Link>
-              </li>
-            );
-          })}
-        </ul>
-      </Container>
-    </section>
+                      <div className={styles.metaRow}>
+                        {post.city && (
+                          <span className={styles.metaItem}>
+                            <span className={styles.metaLabel}>Локація</span>
+                            <span className={styles.metaValue}>
+                              {post.city}
+                            </span>
+                          </span>
+                        )}
+
+                        <span className={styles.metaItem}>
+                          <span className={styles.metaLabel}>Дата</span>
+                          <span className={styles.metaValue}>
+                            {post.hasNoDate || !post.date
+                              ? 'не визначена'
+                              : formatDate(post.date)}
+                          </span>
+                        </span>
+
+                        <span className={styles.metaItem}>
+                          <span className={styles.metaLabel}>Автор</span>
+                          <span className={styles.metaValue}>
+                            {authorName || 'Anonymous'}
+                          </span>
+                        </span>
+                      </div>
+                    </div>
+                  </Link>
+                </li>
+              );
+            })}
+          </ul>
+        )}
+      </section>
+    </Container>
   );
 }

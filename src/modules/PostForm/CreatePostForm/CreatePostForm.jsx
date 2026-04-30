@@ -15,6 +15,7 @@ import styles from './CreatePostForm.module.scss';
 import { useRouter } from 'next/navigation';
 import roles from '@/utils/roles';
 import Image from 'next/image';
+import Container from '@/shared/container/Container';
 
 const MAX_PHOTO_COUNT = 3;
 const MAX_PHOTO_BYTES = 5 * 1024 * 1024;
@@ -192,245 +193,255 @@ export default function CreatePostForm({ initial = null }) {
   };
 
   return (
-    <div className={styles.formWrap}>
-      <h2>{isEdit ? 'Редактировать пост' : 'Создать пост'}</h2>
+    <section>
+      <Container>
+        <div className={styles.formWrap}>
+          <h2>{isEdit ? 'Редактировать пост' : 'Создать пост'}</h2>
 
-      <Formik
-        enableReinitialize={true}
-        initialValues={initialValues}
-        validationSchema={postFormSchema}
-        onSubmit={onSubmit}
-      >
-        {({ values, setFieldValue, errors }) => (
-          <Form className={styles.form}>
-            <FormInput
-              label="Заголовок"
-              name="title"
-              placeholder="Название поста"
-            />
-            <FormInput
-              as="textarea"
-              label="Описание"
-              name="description"
-              placeholder="Описание..."
-            />
-            <FormInput label="Страна" name="country" />
-            <FormInput label="Город" name="city" />
-
-            {/* Дата + чекбокс "без даты" */}
-            <div className={styles.dateRow}>
-              <label className={styles.checkboxLabel}>
-                <input
-                  type="checkbox"
-                  checked={values.hasNoDate}
-                  onChange={(e) => {
-                    setFieldValue('hasNoDate', e.target.checked);
-                    if (e.target.checked) setFieldValue('date', '');
-                  }}
-                />
-                Дата не определена
-              </label>
-
-              {!values.hasNoDate && (
+          <Formik
+            enableReinitialize={true}
+            initialValues={initialValues}
+            validationSchema={postFormSchema}
+            onSubmit={onSubmit}
+          >
+            {({ values, setFieldValue, errors }) => (
+              <Form className={styles.form}>
                 <FormInput
-                  label="Дата"
-                  name="date"
-                  type="date"
-                  min={getBerlinTodayISO()}
+                  label="Заголовок"
+                  name="title"
+                  placeholder="Название поста"
                 />
-              )}
-            </div>
+                <FormInput
+                  as="textarea"
+                  label="Описание"
+                  name="description"
+                  placeholder="Описание..."
+                />
+                <FormInput label="Страна" name="country" />
+                <FormInput label="Город" name="city" />
 
-            {/* Тип оплаты */}
-            <div className={styles.row}>
-              <div>
-                <label>Тип оплаты</label>
-                <select
-                  name="type"
-                  value={values.type}
-                  onChange={(e) => {
-                    setFieldValue('type', e.target.value);
-                    // сбрасываем числовые поля при смене типа
-                    setFieldValue('price', 0);
-                    setFieldValue('percent', 0);
-                  }}
-                >
-                  <option value="tfp">TFP (Time for Portfolio)</option>
-                  <option value="paid">Paid (фиксированная сумма)</option>
-                  <option value="percent">Percent (процент от дохода)</option>
-                  <option value="negotiable">Negotiable (договорная)</option>
-                </select>
-              </div>
+                {/* Дата + чекбокс "без даты" */}
+                <div className={styles.dateRow}>
+                  <label className={styles.checkboxLabel}>
+                    <input
+                      type="checkbox"
+                      checked={values.hasNoDate}
+                      onChange={(e) => {
+                        setFieldValue('hasNoDate', e.target.checked);
+                        if (e.target.checked) setFieldValue('date', '');
+                      }}
+                    />
+                    Дата не определена
+                  </label>
 
-              {values.type === 'paid' && (
-                <div>
-                  <FormInput
-                    label="Цена (€)"
-                    name="price"
-                    type="number"
-                    min={1}
-                  />
+                  {!values.hasNoDate && (
+                    <FormInput
+                      label="Дата"
+                      name="date"
+                      type="date"
+                      min={getBerlinTodayISO()}
+                    />
+                  )}
                 </div>
-              )}
 
-              {values.type === 'percent' && (
-                <div>
-                  <FormInput
-                    label="Процент (%)"
-                    name="percent"
-                    type="number"
-                    min={1}
-                    max={100}
-                  />
-                </div>
-              )}
-            </div>
+                {/* Тип оплаты */}
+                <div className={styles.row}>
+                  <div>
+                    <label>Тип оплаты</label>
+                    <select
+                      name="type"
+                      value={values.type}
+                      onChange={(e) => {
+                        setFieldValue('type', e.target.value);
+                        // сбрасываем числовые поля при смене типа
+                        setFieldValue('price', 0);
+                        setFieldValue('percent', 0);
+                      }}
+                    >
+                      <option value="tfp">TFP (Time for Portfolio)</option>
+                      <option value="paid">Paid (фиксированная сумма)</option>
+                      <option value="percent">
+                        Percent (процент от дохода)
+                      </option>
+                      <option value="negotiable">
+                        Negotiable (договорная)
+                      </option>
+                    </select>
+                  </div>
 
-            {/* Роли */}
-            <div className={styles.roleSection}>
-              <label>Роли</label>
-              <div className={styles.quickButtons}>
-                <span>Быстрые роли:</span>
-                {roles.map((r) => (
-                  <button
-                    key={r}
-                    type="button"
-                    onClick={() => {
-                      const parsed = [...(values.roleSlots || [])];
-                      parsed.push({ role: r, required: 1 });
-                      setFieldValue('roleSlots', parsed);
-                    }}
-                    className={styles.roleBtn}
-                  >
-                    {r}
-                  </button>
-                ))}
-              </div>
-
-              {Array.isArray(values.roleSlots) &&
-              values.roleSlots.length > 0 ? (
-                <div className={styles.selectedRoles}>
-                  {values.roleSlots.map((rs, idx) => (
-                    <div key={idx} className={styles.selectedRole}>
-                      <span>{rs.role}</span>
-                      <input
+                  {values.type === 'paid' && (
+                    <div>
+                      <FormInput
+                        label="Цена (€)"
+                        name="price"
                         type="number"
                         min={1}
-                        value={rs.required}
-                        onChange={(e) => {
-                          const newSlots = [...values.roleSlots];
-                          newSlots[idx] = {
-                            ...newSlots[idx],
-                            required: Math.max(1, Number(e.target.value)),
-                          };
-                          setFieldValue('roleSlots', newSlots);
-                        }}
-                        style={{ width: 50 }}
                       />
+                    </div>
+                  )}
+
+                  {values.type === 'percent' && (
+                    <div>
+                      <FormInput
+                        label="Процент (%)"
+                        name="percent"
+                        type="number"
+                        min={1}
+                        max={100}
+                      />
+                    </div>
+                  )}
+                </div>
+
+                {/* Роли */}
+                <div className={styles.roleSection}>
+                  <label>Роли</label>
+                  <div className={styles.quickButtons}>
+                    <span>Быстрые роли:</span>
+                    {roles.map((r) => (
                       <button
+                        key={r}
                         type="button"
-                        className={styles.removeRoleBtn}
                         onClick={() => {
-                          const newSlots = [...(values.roleSlots || [])];
-                          newSlots.splice(idx, 1);
-                          setFieldValue('roleSlots', newSlots);
+                          const parsed = [...(values.roleSlots || [])];
+                          parsed.push({ role: r, required: 1 });
+                          setFieldValue('roleSlots', parsed);
                         }}
+                        className={styles.roleBtn}
                       >
-                        Удалить
+                        {r}
                       </button>
-                    </div>
-                  ))}
-                </div>
-              ) : (
-                <div className={styles.noRoles}>Роли не выбраны</div>
-              )}
+                    ))}
+                  </div>
 
-              {errors.roleSlots && (
-                <div className={styles.error}>{errors.roleSlots}</div>
-              )}
-            </div>
-
-            {/* Файлы */}
-            <div className={styles.filesRow}>
-              <label>Файлы (фото): макс {MAX_PHOTO_COUNT}</label>
-              <input
-                type="file"
-                accept="image/*"
-                multiple
-                onChange={handleFilesChange}
-              />
-              {newFiles.length > 0 && (
-                <p>{newFiles.length} новых файлов готовы к загрузке</p>
-              )}
-            </div>
-
-            {existingMedia.length > 0 && (
-              <div className={styles.mediaList}>
-                <h4>Загруженные медиа</h4>
-                <div className={styles.mediaGrid}>
-                  {existingMedia.map((m) => (
-                    <div key={m._id} className={styles.mediaCard}>
-                      <Image
-                        width={100}
-                        height={100}
-                        src={m.url}
-                        alt="media"
-                        className={styles.mediaThumb}
-                      />
-                      <button
-                        type="button"
-                        className={styles.removeBtn}
-                        onClick={() => removeExistingMedia(m._id)}
-                      >
-                        Удалить
-                      </button>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            )}
-
-            {newFiles.length > 0 && (
-              <div className={styles.mediaList}>
-                <h4>Новые файлы (еще не загружены)</h4>
-                <div className={styles.mediaGrid}>
-                  {newFiles.map((f, i) => {
-                    const url = URL.createObjectURL(f);
-                    return (
-                      <div key={i} className={styles.mediaCard}>
-                        <Image
-                          width={100}
-                          height={100}
-                          src={url}
-                          alt={f.name}
-                          className={styles.mediaThumb}
-                        />
-                        <div className={styles.mediaInfo}>
-                          <div>{f.name}</div>
-                          <div>{(f.size / (1024 * 1024)).toFixed(2)} MB</div>
+                  {Array.isArray(values.roleSlots) &&
+                  values.roleSlots.length > 0 ? (
+                    <div className={styles.selectedRoles}>
+                      {values.roleSlots.map((rs, idx) => (
+                        <div key={idx} className={styles.selectedRole}>
+                          <span>{rs.role}</span>
+                          <input
+                            type="number"
+                            min={1}
+                            value={rs.required}
+                            onChange={(e) => {
+                              const newSlots = [...values.roleSlots];
+                              newSlots[idx] = {
+                                ...newSlots[idx],
+                                required: Math.max(1, Number(e.target.value)),
+                              };
+                              setFieldValue('roleSlots', newSlots);
+                            }}
+                            style={{ width: 50 }}
+                          />
                           <button
                             type="button"
-                            onClick={() => removeNewFile(i)}
-                            className={styles.removeBtn}
+                            className={styles.removeRoleBtn}
+                            onClick={() => {
+                              const newSlots = [...(values.roleSlots || [])];
+                              newSlots.splice(idx, 1);
+                              setFieldValue('roleSlots', newSlots);
+                            }}
                           >
                             Удалить
                           </button>
                         </div>
-                      </div>
-                    );
-                  })}
-                </div>
-              </div>
-            )}
+                      ))}
+                    </div>
+                  ) : (
+                    <div className={styles.noRoles}>Роли не выбраны</div>
+                  )}
 
-            <div className={styles.actions}>
-              <button type="submit" disabled={submitting}>
-                {isEdit ? 'Сохранить' : 'Создать пост'}
-              </button>
-            </div>
-          </Form>
-        )}
-      </Formik>
-    </div>
+                  {errors.roleSlots && (
+                    <div className={styles.error}>{errors.roleSlots}</div>
+                  )}
+                </div>
+
+                {/* Файлы */}
+                <div className={styles.filesRow}>
+                  <label>Файлы (фото): макс {MAX_PHOTO_COUNT}</label>
+                  <input
+                    type="file"
+                    accept="image/*"
+                    multiple
+                    onChange={handleFilesChange}
+                  />
+                  {newFiles.length > 0 && (
+                    <p>{newFiles.length} новых файлов готовы к загрузке</p>
+                  )}
+                </div>
+
+                {existingMedia.length > 0 && (
+                  <div className={styles.mediaList}>
+                    <h4>Загруженные медиа</h4>
+                    <div className={styles.mediaGrid}>
+                      {existingMedia.map((m) => (
+                        <div key={m._id} className={styles.mediaCard}>
+                          <Image
+                            width={100}
+                            height={100}
+                            src={m.url}
+                            alt="media"
+                            className={styles.mediaThumb}
+                          />
+                          <button
+                            type="button"
+                            className={styles.removeBtn}
+                            onClick={() => removeExistingMedia(m._id)}
+                          >
+                            Удалить
+                          </button>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {newFiles.length > 0 && (
+                  <div className={styles.mediaList}>
+                    <h4>Новые файлы (еще не загружены)</h4>
+                    <div className={styles.mediaGrid}>
+                      {newFiles.map((f, i) => {
+                        const url = URL.createObjectURL(f);
+                        return (
+                          <div key={i} className={styles.mediaCard}>
+                            <Image
+                              width={100}
+                              height={100}
+                              src={url}
+                              alt={f.name}
+                              className={styles.mediaThumb}
+                            />
+                            <div className={styles.mediaInfo}>
+                              <div>{f.name}</div>
+                              <div>
+                                {(f.size / (1024 * 1024)).toFixed(2)} MB
+                              </div>
+                              <button
+                                type="button"
+                                onClick={() => removeNewFile(i)}
+                                className={styles.removeBtn}
+                              >
+                                Удалить
+                              </button>
+                            </div>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </div>
+                )}
+
+                <div className={styles.actions}>
+                  <button type="submit" disabled={submitting}>
+                    {isEdit ? 'Сохранить' : 'Создать пост'}
+                  </button>
+                </div>
+              </Form>
+            )}
+          </Formik>
+        </div>
+      </Container>
+    </section>
   );
 }

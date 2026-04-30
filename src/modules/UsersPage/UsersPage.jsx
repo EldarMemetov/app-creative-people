@@ -9,6 +9,7 @@ import Container from '@/shared/container/Container';
 import s from './UsersPage.module.scss';
 import { useSocket } from '@/hooks/useSocket';
 import { useAuth } from '@/services/store/useAuth';
+import { useTranslation } from 'react-i18next';
 
 export default function UsersPage() {
   const [users, setUsers] = useState([]);
@@ -16,6 +17,7 @@ export default function UsersPage() {
   const [error, setError] = useState('');
   const { usersStatus, usersStatusInitialized, connected } = useSocket();
   const { user: currentUser, loading: authLoading } = useAuth();
+  const { t } = useTranslation(['roles', 'directions']);
 
   useEffect(() => {
     const fetchUsers = async () => {
@@ -53,12 +55,25 @@ export default function UsersPage() {
   return (
     <Container>
       <section className={s.section}>
-        <h1 className={s.title}>Усі користувачі</h1>
+        <header className={s.header}>
+          <p className={s.eyebrow}>Спільнота</p>
+          <h1 className={s.title}>
+            Усі <span className={s.accent}>таланти</span>
+          </h1>
+          <p className={s.subtitle}>
+            Знайомся з творчими людьми платформи — знаходь команду, натхнення та
+            нові проєкти.
+          </p>
+          <p className={s.counter}>
+            <span className={s.counterDot} />
+            {users.length} {users.length === 1 ? 'користувач' : 'користувачів'}{' '}
+            у спільноті
+          </p>
+        </header>
 
         <div className={s.grid}>
-          {users.map((user) => {
+          {users.map((user, idx) => {
             const userIdKey = String(user._id ?? user.id ?? '');
-
             const isOwn = currentUser && String(currentUser._id) === userIdKey;
 
             const isOnline = isOwn
@@ -72,9 +87,21 @@ export default function UsersPage() {
 
             const href = isOwn ? '/profile' : `/talents/${user._id}`;
 
+            const rolesArray =
+              Array.isArray(user.roles) && user.roles.length
+                ? user.roles
+                : user.role
+                  ? [user.role]
+                  : [];
+
             return (
-              <Link key={user._id} href={href} className={s.link}>
-                <div className={s.card}>
+              <Link
+                key={user._id}
+                href={href}
+                className={s.link}
+                style={{ animationDelay: `${Math.min(idx * 0.06, 0.9)}s` }}
+              >
+                <article className={s.card}>
                   <div className={s.photoWrapper}>
                     <ImageWithFallback
                       src={user.safePhoto}
@@ -83,43 +110,55 @@ export default function UsersPage() {
                       height={700}
                       className={s.photo}
                     />
+                    <div className={s.photoGradient} />
+
+                    <div
+                      className={`${s.statusBadge} ${
+                        isOnline ? s.statusOnline : s.statusOffline
+                      }`}
+                    >
+                      <span className={s.statusDot} />
+                      {isOnline ? 'Онлайн' : 'Офлайн'}
+                    </div>
                   </div>
 
                   <div className={s.infoBlur}>
-                    <p className={s.infoRow}>
-                      <span className={s.label}>Ім’я:</span>
-                      <span className={s.value}>{user.name}</span>
-                    </p>
+                    <h2 className={s.name}>
+                      {user.name} {user.surname}
+                    </h2>
 
-                    <p className={s.infoRow}>
-                      <span className={s.label}>Прізвище:</span>
-                      <span className={s.value}>{user.surname}</span>
-                    </p>
+                    {user.city && (
+                      <p className={s.infoRow}>
+                        <span className={s.label}>Місто</span>
+                        <span className={s.value}>{user.city}</span>
+                      </p>
+                    )}
 
-                    <p className={s.infoRow}>
-                      <span className={s.label}>Місто:</span>
-                      <span className={s.value}>{user.city}</span>
-                    </p>
-
-                    <div
-                      style={{
-                        display: 'flex',
-                        alignItems: 'center',
-                        gap: '10px',
-                      }}
-                    >
-                      <div
-                        style={{
-                          width: 12,
-                          height: 12,
-                          borderRadius: '50%',
-                          backgroundColor: isOnline ? 'green' : 'red',
-                        }}
-                      />
-                      <span>{isOnline ? 'Онлайн' : 'Офлайн'}</span>
+                    <div className={s.rolesRow}>
+                      {rolesArray.length > 0 ? (
+                        <ul
+                          className={s.rolesList}
+                          aria-label="Ролі користувача"
+                        >
+                          {rolesArray.slice(0, 3).map((r, i) => (
+                            <li key={i} className={s.roleItem}>
+                              {t(r, { ns: 'roles' })}
+                            </li>
+                          ))}
+                          {rolesArray.length > 3 && (
+                            <li className={`${s.roleItem} ${s.roleMore}`}>
+                              +{rolesArray.length - 3}
+                            </li>
+                          )}
+                        </ul>
+                      ) : (
+                        <span className={s.value}>не вказано</span>
+                      )}
                     </div>
                   </div>
-                </div>
+
+                  <span className={s.hoverGlow} aria-hidden="true" />
+                </article>
               </Link>
             );
           })}

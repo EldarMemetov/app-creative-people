@@ -5,6 +5,7 @@ import { getMyPosts, deletePost } from '@/services/api/post/api';
 import MyPostCard from '../MyPostCard/MyPostCard';
 import s from './MyPostPage.module.scss';
 import Loader from '@/shared/Loader/Loader';
+import Container from '@/shared/container/Container';
 import { useRouter } from 'next/navigation';
 
 export default function MyPostsPage() {
@@ -39,14 +40,15 @@ export default function MyPostsPage() {
   }, [load, page]);
 
   const handleDeletePost = async (postId) => {
-    if (!confirm('Удалить пост? Это действие необратимо.')) return;
+    if (!confirm('Видалити пост? Цю дію неможливо скасувати.')) return;
     setActionBusy(true);
     try {
       await deletePost(postId);
       setItems((prev) => prev.filter((p) => String(p._id) !== String(postId)));
+      setTotal((t) => Math.max(0, t - 1));
     } catch (err) {
       console.error('Delete post failed', err);
-      alert('Не удалось удалить пост');
+      alert('Не вдалося видалити пост');
     } finally {
       setActionBusy(false);
     }
@@ -56,55 +58,126 @@ export default function MyPostsPage() {
     router.push(`/posts/edit/${post._id}`);
   };
 
-  if (loading) return <Loader />;
+  const goToCreate = () => {
+    router.push('/posts/create');
+  };
 
   const totalPages = Math.max(1, Math.ceil(total / limit));
 
   return (
-    <div className={s.myPosts}>
-      <h1>Мои посты</h1>
-      {items.length === 0 ? (
-        <div className={s.empty}>
-          У вас пока нет постов.{' '}
-          <button onClick={() => router.push('/posts/create')}>
-            Создать пост
-          </button>
-        </div>
-      ) : (
-        <>
-          <div className={s.grid}>
-            {items.map((p) => (
-              <MyPostCard
-                key={p._id}
-                post={p}
-                onEdit={(post) => goToEdit(post)}
-                onDelete={() => handleDeletePost(p._id)}
-                onDeleteMedia={(mediaId) => handleDeleteMedia(p._id, mediaId)}
-                onUpload={(files) => handleUploadMedia(p._id, files)}
-                disabled={actionBusy}
-              />
-            ))}
+    <Container>
+      <section className={s.section}>
+        <header className={s.header}>
+          <div className={s.headerTop}>
+            <span className={s.headerLine} />
+            <p className={s.eyebrow}>Workspace · Posts</p>
           </div>
 
-          <div className={s.pagination}>
+          <div className={s.headerRow}>
+            <h1 className={s.title}>Мої публікації</h1>
+
             <button
-              onClick={() => setPage((s) => Math.max(1, s - 1))}
-              disabled={page === 1}
+              type="button"
+              className={s.createBtn}
+              onClick={goToCreate}
+              disabled={actionBusy}
             >
-              ◀ Prev
-            </button>
-            <span>
-              Стр. {page} / {totalPages}
-            </span>
-            <button
-              onClick={() => setPage((s) => Math.min(totalPages, s + 1))}
-              disabled={page >= totalPages}
-            >
-              Next ▶
+              <span className={s.createIcon} aria-hidden="true">
+                +
+              </span>
+              Створити пост
             </button>
           </div>
-        </>
-      )}
-    </div>
+
+          <div className={s.meta}>
+            <p className={s.counter}>
+              <span className={s.counterNum}>
+                {String(total).padStart(3, '0')}
+              </span>
+              <span className={s.counterLabel}>
+                {total === 1 ? 'пост' : 'постів'}
+                <br />у твоєму профілі
+              </span>
+            </p>
+            <p className={s.subtitle}>
+              Керуй своїми публікаціями — редагуй, оновлюй медіа або створюй
+              нові роботи, якими пишаєшся.
+            </p>
+          </div>
+        </header>
+
+        {loading ? (
+          <div className={s.loaderWrap}>
+            <Loader />
+          </div>
+        ) : items.length === 0 ? (
+          <div className={s.empty}>
+            <div className={s.emptyBadge}>00</div>
+            <h2 className={s.emptyTitle}>Поки що порожньо</h2>
+            <p className={s.emptyText}>
+              Тут з’являться твої публікації. Почни з першої — поділись
+              проєктом, ідеєю або портфоліо.
+            </p>
+            <button type="button" className={s.emptyBtn} onClick={goToCreate}>
+              <span className={s.createIcon} aria-hidden="true">
+                +
+              </span>
+              Створити перший пост
+            </button>
+          </div>
+        ) : (
+          <>
+            <ul className={s.grid}>
+              {items.map((p, idx) => (
+                <li
+                  key={p._id}
+                  className={s.cardItem}
+                  style={{ animationDelay: `${Math.min(idx * 0.05, 0.6)}s` }}
+                >
+                  <MyPostCard
+                    post={p}
+                    onEdit={(post) => goToEdit(post)}
+                    onDelete={() => handleDeletePost(p._id)}
+                    disabled={actionBusy}
+                  />
+                </li>
+              ))}
+            </ul>
+
+            {totalPages > 1 && (
+              <nav className={s.pagination} aria-label="Пагінація">
+                <button
+                  type="button"
+                  className={s.pageBtn}
+                  onClick={() => setPage((v) => Math.max(1, v - 1))}
+                  disabled={page === 1}
+                >
+                  <span className={s.pageArrow}>←</span> Попередня
+                </button>
+
+                <span className={s.pageInfo}>
+                  <span className={s.pageNum}>
+                    {String(page).padStart(2, '0')}
+                  </span>
+                  <span className={s.pageDivider}>/</span>
+                  <span className={s.pageTotal}>
+                    {String(totalPages).padStart(2, '0')}
+                  </span>
+                </span>
+
+                <button
+                  type="button"
+                  className={s.pageBtn}
+                  onClick={() => setPage((v) => Math.min(totalPages, v + 1))}
+                  disabled={page >= totalPages}
+                >
+                  Наступна <span className={s.pageArrow}>→</span>
+                </button>
+              </nav>
+            )}
+          </>
+        )}
+      </section>
+    </Container>
   );
 }
