@@ -58,14 +58,13 @@
   }
 }
 
-// ---------- Actions (снаружи Link) ----------
 .actions {
   display: flex;
   gap: 10px;
   padding: 16px 22px 22px;
   border-top: 1px solid rgba(255, 255, 255, 0.06);
   position: relative;
-  z-index: 2; // выше .accentBar чтобы точно кликалось
+  z-index: 2;
 }
 
 .accentBar {

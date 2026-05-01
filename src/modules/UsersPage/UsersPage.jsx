@@ -64,11 +64,6 @@ export default function UsersPage() {
             Знайомся з творчими людьми платформи — знаходь команду, натхнення та
             нові проєкти.
           </p>
-          <p className={s.counter}>
-            <span className={s.counterDot} />
-            {users.length} {users.length === 1 ? 'користувач' : 'користувачів'}{' '}
-            у спільноті
-          </p>
         </header>
 
         <div className={s.grid}>
