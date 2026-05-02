@@ -14,7 +14,6 @@ import { useSocket } from '@/hooks/useSocket';
 import { useAuth } from '@/services/store/useAuth';
 import { getLikeStatus } from '@/services/api/users/api';
 
-import NotificationsIndicator from '@/modules/NotificationPage/NotificationsIndicator/NotificationsIndicator';
 import CompletedProjects from '@/modules/CompletedProjects/CompletedProjects';
 import PortfolioList from '../PortfolioList/PortfolioList';
 
@@ -91,11 +90,13 @@ export default function InfoDetails() {
           </span>
           <h1 className={s.title}>Мій профіль</h1>
         </header>
-        <HandleLogout />
         <div className={s.hero}>
           <div className={s.heroBorder} />
 
           <div className={s.identity}>
+            <div className={s.phoneHandleLogout}>
+              <HandleLogout />
+            </div>
             <div className={s.avatarWrap}>
               <span className={s.avatarOrbit} />
               <span className={s.avatarRing} />
@@ -141,6 +142,9 @@ export default function InfoDetails() {
                 </ul>
               )}
             </div>
+            <div className={s.tabletHandleLogout}>
+              <HandleLogout />
+            </div>
           </div>
 
           <div className={s.stats}>
@@ -159,14 +163,12 @@ export default function InfoDetails() {
         </div>
 
         <nav className={s.actions} aria-label="Дії профілю">
-          <NotificationsIndicator>
-            <LinkButton
-              className={s.actionButton}
-              path="notification"
-              type={LINKDATA.NOTIFICATION}
-              linkText="Сповіщення"
-            />
-          </NotificationsIndicator>
+          <LinkButton
+            className={s.actionButton}
+            path="notification"
+            type={LINKDATA.NOTIFICATION}
+            linkText="Сповіщення"
+          />
 
           <LinkButton
             className={s.actionButton}

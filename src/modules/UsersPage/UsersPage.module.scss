@@ -30,7 +30,7 @@
   font-weight: 500;
   letter-spacing: 0.2em;
   text-transform: uppercase;
-  color: #888;
+  color: #ffffff;
   margin-bottom: 12px;
 }
 
@@ -50,13 +50,9 @@
   }
 }
 
-.accent {
-  color: #c8ff00; // замени на свой акцентный цвет
-}
-
 .subtitle {
   font-size: 14px;
-  color: #888;
+  color: #ffffff;
   max-width: 480px;
   margin: 0 auto;
   line-height: 1.6;
@@ -70,7 +66,7 @@
 
 .grid {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  grid-template-columns: repeat(1, 1fr);
   gap: 16px;
 
   @include media(tablet) {
@@ -99,7 +95,7 @@
   position: relative;
   border-radius: 16px;
   overflow: hidden;
-  background: #111;
+  background: transparent;
   border: 1px solid #222;
   transition:
     transform 0.3s ease,
@@ -220,14 +216,14 @@
 
 .label {
   font-size: 11px;
-  color: #555;
+  color: #ffffff;
   text-transform: uppercase;
   letter-spacing: 0.08em;
 }
 
 .value {
   font-size: 12px;
-  color: #aaa;
+  color: #46e310;
 }
 
 // ─── Roles ────────────────────────────────────────────────

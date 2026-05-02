@@ -26,10 +26,6 @@ export default function GetStarted() {
               На головну
             </button>
           </div>
-
-          <span className={s.note}>
-            <span className={s.noteDot} /> 247 креаторів приєднались цього тижня
-          </span>
         </div>
       </Container>
     </section>

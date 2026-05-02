@@ -20,18 +20,6 @@ export default function HeroAbout() {
               QVRIX народився з простої ідеї — обєднати творчих людей, які
               шукають одне одного, але не знають де знайти.
             </p>
-
-            <div className={s.meta}>
-              <span className={s.metaItem}>
-                <span className={s.metaValue}>2026</span>
-                <span className={s.metaLabel}>Заснування</span>
-              </span>
-              <span className={s.metaDivider} aria-hidden="true" />
-              <span className={s.metaItem}>
-                <span className={s.metaValue}>UA</span>
-                <span className={s.metaLabel}>Створено в Україні</span>
-              </span>
-            </div>
           </div>
 
           <div className={s.collage}>

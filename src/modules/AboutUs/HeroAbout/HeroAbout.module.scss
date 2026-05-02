@@ -116,57 +116,6 @@
   }
 }
 
-.meta {
-  display: flex;
-  align-items: center;
-  gap: 20px;
-  margin-top: 12px;
-
-  @include media(tablet) {
-    gap: 28px;
-    margin-top: 20px;
-  }
-}
-
-.metaItem {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-}
-
-.metaValue {
-  font-weight: 600;
-  font-size: 22px;
-  letter-spacing: -0.01em;
-  background: linear-gradient(135deg, #ffffff 0%, #a6b4ff 70%);
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
-
-  @include media(tablet) {
-    font-size: 26px;
-  }
-}
-
-.metaLabel {
-  font-size: 11px;
-  font-weight: 500;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
-  color: rgba(198, 205, 240, 0.55);
-}
-
-.metaDivider {
-  width: 1px;
-  height: 32px;
-  background: linear-gradient(
-    180deg,
-    transparent,
-    rgba(166, 180, 255, 0.4),
-    transparent
-  );
-}
-
 // ---------- COLLAGE ----------
 .collage {
   position: relative;

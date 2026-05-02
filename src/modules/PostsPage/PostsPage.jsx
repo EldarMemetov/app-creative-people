@@ -195,12 +195,7 @@ export default function PostsPage() {
                         </span>
                       </div>
 
-                      <h2 className={styles.cardTitle}>
-                        {post.title || '—'}
-                        <span className={styles.cardArrow} aria-hidden="true">
-                          →
-                        </span>
-                      </h2>
+                      <h2 className={styles.cardTitle}>{post.title || '—'}</h2>
 
                       {shortDesc && (
                         <p className={styles.cardDesc}>{shortDesc}</p>

@@ -1,5 +1,13 @@
-🎨 IdPostPage.module.scss
-/* ====== ROOT ====== */
+.section {
+  position: relative;
+  z-index: 1;
+  padding: 100px 0 100px;
+  color: #f5f6ff;
+
+  @include media(tablet) {
+    padding: 80px 0 120px;
+  }
+}
 .post {
   position: relative;
   padding: 32px 0 80px;
@@ -42,11 +50,7 @@
   line-height: 1.15;
   letter-spacing: -0.02em;
   margin: 0 0 12px;
-  background: linear-gradient(135deg, #ffffff 0%, #b9a8ff 60%, #ff8fcf 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-
+  word-break: break-all;
   @include media(tablet) {
     font-size: 44px;
   }
@@ -130,7 +134,7 @@
   color: rgba(232, 234, 255, 0.85);
   margin: 0 0 36px;
   white-space: pre-wrap;
-
+  word-break: break-all;
   @include media(tablet) {
     font-size: 17px;
   }

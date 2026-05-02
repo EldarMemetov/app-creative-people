@@ -244,7 +244,7 @@ export default function IdPostPage() {
   };
 
   return (
-    <section>
+    <section className={styles.section}>
       <Container>
         <div className={styles.post}>
           <Link href="/posts" className={styles.back}>
