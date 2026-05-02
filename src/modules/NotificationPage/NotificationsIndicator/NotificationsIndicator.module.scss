@@ -1,18 +1,33 @@
-// .wrapper {
-//   position: relative;
-//   display: inline-flex;
-//   align-items: center;
-// }
-
 .dot {
   position: absolute;
-  top: -4px;
-  right: -4px;
+  top: 4px;
+  right: 4px;
   width: 10px;
   height: 10px;
   border-radius: 50%;
   background: #ef4444;
   box-shadow:
-    0 0 0 2px #ffffff,
-    0 4px 8px rgba(239, 68, 68, 0.6);
+    0 0 0 2px rgba(10, 12, 40, 0.95),
+    0 0 12px rgba(239, 68, 68, 0.7);
+  pointer-events: none;
+
+  &::after {
+    content: '';
+    position: absolute;
+    inset: -4px;
+    border-radius: 50%;
+    background: rgba(239, 68, 68, 0.35);
+    animation: notifPulse 1.8s ease-in-out infinite;
+  }
+}
+
+@keyframes notifPulse {
+  0% {
+    transform: scale(0.7);
+    opacity: 0.8;
+  }
+  100% {
+    transform: scale(1.8);
+    opacity: 0;
+  }
 }

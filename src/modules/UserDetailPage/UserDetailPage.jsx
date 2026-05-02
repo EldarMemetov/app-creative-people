@@ -18,7 +18,6 @@ import SocialLinks from '@/shared/SocialLinks/SocialLinks';
 
 export default function UserDetailPage() {
   const { id } = useParams();
-
   const { t } = useTranslation(['roles', 'directions']);
 
   const [user, setUser] = useState(null);
@@ -42,10 +41,9 @@ export default function UserDetailPage() {
     fetchUser();
   }, [id]);
 
-  if (authLoading) return <Loader />;
-  if (loading) return <Loader />;
-  if (error) return <div>Помилка: {error}</div>;
-  if (!user) return <div>Користувача не знайдено</div>;
+  if (authLoading || loading) return <Loader />;
+  if (error) return <div className={s.error}>Помилка: {error}</div>;
+  if (!user) return <div className={s.noUser}>Користувача не знайдено</div>;
 
   const userIdKey = String(user._id ?? user.id ?? '');
   const isOwn = currentUser && String(currentUser._id) === userIdKey;
@@ -58,18 +56,14 @@ export default function UserDetailPage() {
       : '/image/logo.png';
   };
 
-  let isOnline;
-  if (isOwn) {
-    isOnline =
-      connected ||
+  const isOnline = isOwn
+    ? connected ||
       (usersStatusInitialized
         ? Boolean(usersStatus[userIdKey])
-        : Boolean(user.onlineStatus));
-  } else {
-    isOnline = usersStatusInitialized
+        : Boolean(user.onlineStatus))
+    : usersStatusInitialized
       ? Boolean(usersStatus[userIdKey])
       : Boolean(user.onlineStatus);
-  }
 
   const rolesArray =
     Array.isArray(user.roles) && user.roles.length
@@ -78,116 +72,153 @@ export default function UserDetailPage() {
         ? [user.role]
         : [];
 
-  const directionsTranslated =
-    user.directions && user.directions.length
-      ? user.directions.map((d) => t(d, { ns: 'directions' })).join(', ')
-      : 'не вказано';
-
+  const fullName =
+    `${user.name || ''} ${user.surname || ''}`.trim() || 'Без імені';
+  const location = [user.city, user.country].filter(Boolean).join(', ');
   const likesCountDisplay =
     typeof user.likesCount === 'number' ? user.likesCount : 0;
 
   return (
     <Container>
-      <section>
-        <h1>Профіль користувача</h1>
-        <div>
-          <div style={{ flexShrink: 0 }}>
-            <ImageWithFallback
-              src={getSafePhoto(user.photo)}
-              alt={
-                `${user.name || ''} ${user.surname || ''}`.trim() || 'Аватар'
-              }
-              width={160}
-              height={160}
-            />
-          </div>
+      <section className={s.section}>
+        <header className={s.pageHeader}>
+          <span className={s.eyebrow}>
+            <span className={s.eyebrowDot} />
+            Профіль
+          </span>
+          <h1 className={s.title}>{fullName}</h1>
+          {location && <p className={s.subtitle}>{location}</p>}
+        </header>
 
-          <div>
-            <p>
-              <strong>Ім’я:</strong> {user.name || 'не вказано'}
-            </p>
-            <p>
-              <strong>Прізвище:</strong> {user.surname || 'не вказано'}
-            </p>
-            <p>
-              <strong>Місто:</strong> {user.city || 'не вказано'}
-            </p>
-            <p>
-              <strong>Країна:</strong> {user.country || 'не вказано'}
-            </p>
-            <p>
-              <strong>Email:</strong> {user.email || 'не вказано'}
-            </p>
+        <div className={s.hero}>
+          <div className={s.heroBorder} />
 
-            <div>
-              <strong>Ролі:</strong>{' '}
-              {rolesArray.length > 0 ? (
+          <div className={s.identity}>
+            <div className={s.avatarWrap}>
+              <span className={s.avatarOrbit} />
+              <span className={s.avatarRing} />
+              <ImageWithFallback
+                className={s.avatar}
+                src={getSafePhoto(user.photo)}
+                alt={fullName}
+                width={180}
+                height={180}
+              />
+              <span
+                className={`${s.statusBadge} ${
+                  isOnline ? s.statusOnline : s.statusOffline
+                }`}
+              >
+                <span className={s.statusDot} />
+                {isOnline ? 'Онлайн' : 'Офлайн'}
+              </span>
+            </div>
+
+            <div className={s.identityText}>
+              <h2 className={s.fullName}>{fullName}</h2>
+
+              {location && <p className={s.location}>{location}</p>}
+
+              {rolesArray.length > 0 && (
                 <ul className={s.rolesList} aria-label="Ролі користувача">
                   {rolesArray.map((r, idx) => (
                     <li key={idx} className={s.roleItem}>
-                      {t(r)}
+                      {t(r, { ns: 'roles' })}
                     </li>
                   ))}
                 </ul>
-              ) : (
-                <span>не вказано</span>
               )}
             </div>
+          </div>
 
-            <p>
-              <strong>Рівень доступу:</strong> {user.accessRole || 'не вказано'}
-            </p>
-            <p>
-              <strong>Рейтинг:</strong>{' '}
-              {user.rating !== undefined && user.rating !== null
-                ? user.rating
-                : 'не вказано'}
-            </p>
-            <p>
-              <strong>Досвід:</strong> {user.experience || 'не вказано'}
-            </p>
-
-            <p>
-              <strong>Напрямки:</strong> {directionsTranslated}
-            </p>
-
-            <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-              <div
-                style={{
-                  width: 12,
-                  height: 12,
-                  borderRadius: '50%',
-                  backgroundColor: isOnline ? 'green' : 'red',
-                }}
-              />
-              <span>{isOnline ? 'Онлайн' : 'Офлайн'}</span>
+          <div className={s.stats}>
+            <div className={s.stat}>
+              <span className={s.statLabel}>Рейтинг</span>
+              <span className={s.statValue}>
+                {user.rating !== undefined && user.rating !== null
+                  ? user.rating
+                  : '—'}
+              </span>
             </div>
+            <div className={s.stat}>
+              <span className={s.statLabel}>Досвід</span>
+              <span className={s.statValue}>{user.experience || '—'}</span>
+            </div>
+          </div>
 
-            {currentUser ? (
+          <div className={s.actions}>
+            {currentUser && !isOwn ? (
               <LikeButton
                 userId={user._id}
                 initialCount={user.likesCount}
                 initialLiked={user.liked}
               />
             ) : (
-              <div className={s.likesReadonly}>❤️ {likesCountDisplay}</div>
+              !currentUser && (
+                <div className={s.likesReadonly}>
+                  <span aria-hidden>♥</span> {likesCountDisplay}
+                </div>
+              )
             )}
 
-            <p>
-              <strong>Про себе:</strong> {user.aboutMe || 'не вказано'}
-            </p>
-            <p>
-              <strong>Заблокований:</strong> {user.isBlocked ? 'Так' : 'Ні'}
-            </p>
-
-            <SocialLinks socialLinks={user.socialLinks} />
-
-            <PortfolioList items={user.portfolio} />
+            <LinkButton path={ROUTES.TALENTS} type={LINKDATA.HOME}>
+              ← Повернутись до профілів
+            </LinkButton>
           </div>
-          <CompletedProjects userId={user._id} />
-          <LinkButton path={ROUTES.TALENTS} type={LINKDATA.HOME}>
-            Повернутись до профілей
-          </LinkButton>
+        </div>
+
+        <div className={s.card}>
+          <h3 className={s.sectionTitle}>Основна інформація</h3>
+          <div className={s.details}>
+            <div className={s.detail}>
+              <span className={s.label}>Ім’я</span>
+              <span className={s.value}>{user.name || 'не вказано'}</span>
+            </div>
+            <div className={s.detail}>
+              <span className={s.label}>Прізвище</span>
+              <span className={s.value}>{user.surname || 'не вказано'}</span>
+            </div>
+            <div className={s.detail}>
+              <span className={s.label}>Місто</span>
+              <span className={s.value}>{user.city || 'не вказано'}</span>
+            </div>
+            <div className={s.detail}>
+              <span className={s.label}>Країна</span>
+              <span className={s.value}>{user.country || 'не вказано'}</span>
+            </div>
+          </div>
+        </div>
+
+        <div className={s.card}>
+          <h3 className={s.sectionTitle}>Про себе</h3>
+          <p className={s.about}>{user.aboutMe || 'не вказано'}</p>
+        </div>
+
+        <div className={s.card}>
+          <h3 className={s.sectionTitle}>Напрямки</h3>
+          {user.directions && user.directions.length > 0 ? (
+            <ul className={s.directionsList} aria-label="Напрямки користувача">
+              {user.directions.map((d, idx) => (
+                <li key={idx} className={s.directionItem}>
+                  {t(d, { ns: 'directions' })}
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <p className={s.empty}>не вказано</p>
+          )}
+        </div>
+
+        <CompletedProjects userId={user._id} />
+
+        <div className={s.card}>
+          <h3 className={s.sectionTitle}>Соціальні мережі</h3>
+          <SocialLinks socialLinks={user.socialLinks} />
+        </div>
+
+        <div className={s.card}>
+          <h3 className={s.sectionTitle}>Портфоліо</h3>
+          <PortfolioList items={user.portfolio} />
         </div>
       </section>
     </Container>

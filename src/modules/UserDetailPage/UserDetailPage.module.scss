@@ -1,0 +1,555 @@
+.section {
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+  padding: 100px 0 120px;
+  color: #f5f6ff;
+
+  @include media(tablet) {
+    gap: 36px;
+    padding: 120px 0 140px;
+  }
+
+  @include media(desktop) {
+    gap: 44px;
+    padding: 140px 0 160px;
+  }
+}
+
+// ---------- Page header ----------
+.pageHeader {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: rgba(198, 205, 240, 0.7);
+
+  @include media(tablet) {
+    font-size: 13px;
+  }
+}
+
+.eyebrowDot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #8aa0ff;
+  box-shadow: 0 0 10px rgba(138, 160, 255, 0.8);
+}
+
+.title {
+  margin: 0;
+  font-weight: 600;
+  font-size: 36px;
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+  color: #f6f7ff;
+  word-break: break-word;
+
+  @include media(tablet) {
+    font-size: 52px;
+  }
+
+  @include media(desktop) {
+    font-size: 64px;
+  }
+}
+
+.subtitle {
+  margin: 0;
+  font-size: 15px;
+  color: rgba(222, 226, 250, 0.7);
+
+  @include media(tablet) {
+    font-size: 16px;
+  }
+}
+
+// ============================================
+// HERO
+// ============================================
+.hero {
+  position: relative;
+  overflow: hidden;
+  padding: 24px;
+  border-radius: 22px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+
+  @include media(tablet) {
+    padding: 36px;
+    border-radius: 28px;
+  }
+
+  @include media(desktop) {
+    padding: 48px;
+  }
+}
+
+.heroBorder {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  background:
+    radial-gradient(
+      140% 60% at 0% 0%,
+      rgba(74, 107, 255, 0.16) 0%,
+      rgba(74, 107, 255, 0) 60%
+    ),
+    radial-gradient(
+      120% 50% at 100% 100%,
+      rgba(138, 86, 255, 0.14) 0%,
+      rgba(138, 86, 255, 0) 60%
+    );
+}
+
+// ---------- Identity ----------
+.identity {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+  text-align: center;
+
+  @include media(tablet) {
+    flex-direction: row;
+    align-items: flex-start;
+    gap: 28px;
+    text-align: left;
+  }
+
+  @include media(desktop) {
+    gap: 36px;
+  }
+}
+
+// ---------- Avatar ----------
+.avatarWrap {
+  position: relative;
+  flex-shrink: 0;
+  width: 140px;
+  height: 140px;
+
+  @include media(tablet) {
+    width: 160px;
+    height: 160px;
+  }
+
+  @include media(desktop) {
+    width: 180px;
+    height: 180px;
+  }
+}
+
+.avatarOrbit {
+  position: absolute;
+  inset: -10px;
+  border-radius: 50%;
+  border: 1px dashed rgba(166, 180, 255, 0.28);
+  animation: orbitSpin 28s linear infinite;
+}
+
+.avatarRing {
+  position: absolute;
+  inset: -2px;
+  border-radius: 50%;
+  background: conic-gradient(
+    from 180deg,
+    rgba(74, 107, 255, 0.7) 0deg,
+    rgba(138, 86, 255, 0.6) 120deg,
+    rgba(166, 180, 255, 0.4) 240deg,
+    rgba(74, 107, 255, 0.7) 360deg
+  );
+  padding: 2px;
+  mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  mask-composite: exclude;
+  -webkit-mask-composite: xor;
+}
+
+.avatar {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid rgba(10, 12, 40, 0.9);
+  background: rgba(10, 12, 40, 0.8);
+}
+
+.statusBadge {
+  position: absolute;
+  bottom: -4px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 14px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  background: rgba(10, 12, 40, 0.9);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  white-space: nowrap;
+  z-index: 3;
+
+  @include media(tablet) {
+    font-size: 12px;
+  }
+}
+
+.statusDot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: currentColor;
+}
+
+.statusOnline {
+  color: #7df5b5;
+  .statusDot {
+    background: #4ef0a3;
+    box-shadow: 0 0 8px rgba(78, 240, 163, 0.75);
+  }
+}
+
+.statusOffline {
+  color: rgba(200, 206, 230, 0.75);
+  .statusDot {
+    background: rgba(160, 170, 200, 0.7);
+  }
+}
+
+// ---------- Identity text ----------
+.identityText {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+
+  @include media(tablet) {
+    align-items: flex-start;
+    gap: 10px;
+  }
+}
+
+.fullName {
+  margin: 0;
+  font-size: 24px;
+  font-weight: 600;
+  line-height: 1.2;
+  letter-spacing: -0.015em;
+  color: #f6f7ff;
+  word-break: break-word;
+
+  @include media(tablet) {
+    font-size: 28px;
+  }
+
+  @include media(desktop) {
+    font-size: 34px;
+  }
+}
+
+.location {
+  margin: 0;
+  font-size: 14px;
+  color: rgba(222, 226, 250, 0.7);
+
+  @include media(tablet) {
+    font-size: 15px;
+  }
+}
+
+.rolesList {
+  list-style: none;
+  margin: 6px 0 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  justify-content: center;
+
+  @include media(tablet) {
+    justify-content: flex-start;
+  }
+}
+
+.roleItem {
+  padding: 6px 12px;
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  color: #e5e9ff;
+  background: rgba(122, 91, 255, 0.18);
+  border: 1px solid rgba(138, 160, 255, 0.3);
+  border-radius: 999px;
+}
+
+// ---------- Stats ----------
+.stats {
+  position: relative;
+  z-index: 2;
+  margin-top: 24px;
+  padding-top: 24px;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+
+  @include media(tablet) {
+    margin-top: 32px;
+    padding-top: 28px;
+    gap: 20px;
+  }
+}
+
+.stat {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 14px 14px;
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+
+  @include media(tablet) {
+    padding: 18px 20px;
+    border-radius: 16px;
+  }
+}
+
+.statLabel {
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(180, 188, 220, 0.6);
+
+  @include media(tablet) {
+    font-size: 12px;
+  }
+}
+
+.statValue {
+  font-size: 20px;
+  font-weight: 600;
+  color: #f6f7ff;
+  letter-spacing: -0.01em;
+
+  @include media(tablet) {
+    font-size: 26px;
+  }
+}
+
+// ---------- Actions ----------
+.actions {
+  position: relative;
+  z-index: 2;
+  margin-top: 24px;
+  padding-top: 24px;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+
+  @include media(tablet) {
+    margin-top: 32px;
+    padding-top: 28px;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+  }
+}
+
+.likesReadonly {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 18px;
+  border-radius: 14px;
+  font-size: 15px;
+  font-weight: 600;
+  color: #ffb6c1;
+  background: rgba(239, 68, 68, 0.1);
+  border: 1px solid rgba(239, 68, 68, 0.22);
+
+  span {
+    font-size: 18px;
+    color: #ef4444;
+  }
+}
+
+// ============================================
+// INFO CARDS
+// ============================================
+.card {
+  padding: 24px;
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+
+  @include media(tablet) {
+    padding: 32px;
+    border-radius: 24px;
+    gap: 20px;
+  }
+
+  @include media(desktop) {
+    padding: 40px;
+  }
+}
+
+.sectionTitle {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  color: #f6f7ff;
+
+  @include media(tablet) {
+    font-size: 22px;
+  }
+}
+
+// ---------- Basic info details ----------
+.details {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 14px;
+
+  @include media(mobile) {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 18px;
+  }
+
+  @include media(desktop) {
+    grid-template-columns: repeat(4, 1fr);
+    gap: 24px;
+  }
+}
+
+.detail {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 14px 16px;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.label {
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: rgba(180, 188, 220, 0.6);
+
+  @include media(tablet) {
+    font-size: 12px;
+  }
+}
+
+.value {
+  font-size: 15px;
+  font-weight: 500;
+  color: #e5e9ff;
+  word-break: break-word;
+
+  @include media(tablet) {
+    font-size: 16px;
+  }
+}
+
+// ---------- About ----------
+.about {
+  margin: 0;
+  font-size: 15px;
+  line-height: 1.75;
+  color: rgba(222, 226, 250, 0.85);
+  white-space: pre-wrap;
+
+  @include media(tablet) {
+    font-size: 16px;
+  }
+}
+
+// ---------- Directions ----------
+.directionsList {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.directionItem {
+  padding: 8px 14px;
+  font-size: 13px;
+  font-weight: 500;
+  color: #e5e9ff;
+  background: rgba(74, 107, 255, 0.12);
+  border: 1px solid rgba(138, 160, 255, 0.24);
+  border-radius: 999px;
+
+  @include media(tablet) {
+    padding: 9px 16px;
+    font-size: 14px;
+  }
+}
+
+.empty {
+  margin: 0;
+  font-size: 14px;
+  color: rgba(180, 188, 220, 0.55);
+  font-style: italic;
+}
+
+// ---------- States ----------
+.error {
+  padding: 120px 24px;
+  text-align: center;
+  color: #ff9eae;
+  font-size: 16px;
+  font-weight: 500;
+}
+
+.noUser {
+  padding: 140px 24px;
+  text-align: center;
+  color: rgba(222, 226, 250, 0.7);
+  font-size: 16px;
+  font-weight: 500;
+}
+
+// ---------- Keyframes ----------
+@keyframes orbitSpin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
