@@ -1,0 +1,347 @@
+.triggerButton {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 12px 22px;
+  border-radius: 14px;
+  font-size: 15px;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  color: #f6f7ff;
+  background: rgba(74, 107, 255, 0.18);
+  border: 1px solid rgba(138, 160, 255, 0.35);
+  cursor: pointer;
+  overflow: hidden;
+  transition:
+    background-color 0.25s ease,
+    border-color 0.25s ease,
+    transform 0.2s ease,
+    box-shadow 0.25s ease;
+
+  &::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    pointer-events: none;
+    background: radial-gradient(
+      120% 80% at 50% 0%,
+      rgba(138, 160, 255, 0.28) 0%,
+      rgba(138, 160, 255, 0) 60%
+    );
+    opacity: 0;
+    transition: opacity 0.25s ease;
+  }
+
+  &:hover {
+    background: rgba(74, 107, 255, 0.28);
+    border-color: rgba(166, 180, 255, 0.55);
+    transform: translateY(-1px);
+    box-shadow: 0 10px 28px rgba(74, 107, 255, 0.28);
+
+    &::before {
+      opacity: 1;
+    }
+  }
+
+  &:active {
+    transform: translateY(0);
+  }
+
+  &:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(74, 107, 255, 0.35);
+  }
+
+  &:disabled {
+    cursor: not-allowed;
+    opacity: 0.7;
+    transform: none;
+    box-shadow: none;
+  }
+}
+
+.triggerApplied {
+  color: #7df5b5;
+  background: rgba(78, 240, 163, 0.1);
+  border-color: rgba(78, 240, 163, 0.32);
+
+  &:hover {
+    background: rgba(78, 240, 163, 0.14);
+    border-color: rgba(78, 240, 163, 0.45);
+    box-shadow: 0 8px 22px rgba(78, 240, 163, 0.18);
+  }
+}
+
+// ============================================
+// MODAL PANEL (передаётся в Modal через contentClassName)
+// ============================================
+.modalPanel {
+  width: 100%;
+  max-width: 520px;
+  padding: 0 !important;
+  background: linear-gradient(
+    180deg,
+    rgba(20, 22, 50, 0.96) 0%,
+    rgba(12, 14, 36, 0.96) 100%
+  );
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 22px !important;
+  box-shadow:
+    0 30px 80px rgba(0, 0, 0, 0.55),
+    0 0 0 1px rgba(138, 160, 255, 0.06);
+  color: #f5f6ff;
+  overflow: hidden;
+}
+
+.modalContent {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  padding: 32px 28px 28px;
+}
+
+.modalHeader {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding-right: 28px; // место под крестик закрытия
+}
+
+.eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: rgba(198, 205, 240, 0.75);
+}
+
+.eyebrowDot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #8aa0ff;
+  box-shadow: 0 0 10px rgba(138, 160, 255, 0.8);
+}
+
+.title {
+  margin: 0;
+  font-size: 22px;
+  font-weight: 600;
+  line-height: 1.25;
+  letter-spacing: -0.01em;
+  color: #f6f7ff;
+  word-break: break-word;
+}
+
+.subtitle {
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.55;
+  color: rgba(222, 226, 250, 0.7);
+}
+
+// ============================================
+// FORM
+// ============================================
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.label {
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: rgba(180, 188, 220, 0.75);
+}
+
+.optional {
+  text-transform: none;
+  letter-spacing: 0;
+  color: rgba(180, 188, 220, 0.5);
+  font-weight: 400;
+}
+
+// ----- Select -----
+.selectWrap {
+  position: relative;
+}
+
+.select {
+  width: 100%;
+  appearance: none;
+  -webkit-appearance: none;
+  padding: 12px 40px 12px 14px;
+  border-radius: 12px;
+  font-size: 15px;
+  color: #f5f6ff;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  cursor: pointer;
+  transition:
+    border-color 0.2s ease,
+    background-color 0.2s ease,
+    box-shadow 0.2s ease;
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.06);
+    border-color: rgba(166, 180, 255, 0.3);
+  }
+
+  &:focus {
+    outline: none;
+    border-color: rgba(138, 160, 255, 0.55);
+    box-shadow: 0 0 0 3px rgba(74, 107, 255, 0.25);
+  }
+
+  option {
+    background: #14163a;
+    color: #f5f6ff;
+  }
+}
+
+.selectChevron {
+  position: absolute;
+  right: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 12px;
+  color: rgba(198, 205, 240, 0.6);
+  pointer-events: none;
+}
+
+// ----- Textarea -----
+.textarea {
+  width: 100%;
+  min-height: 110px;
+  resize: vertical;
+  padding: 12px 14px;
+  border-radius: 12px;
+  font-size: 15px;
+  font-family: inherit;
+  line-height: 1.55;
+  color: #f5f6ff;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  transition:
+    border-color 0.2s ease,
+    background-color 0.2s ease,
+    box-shadow 0.2s ease;
+
+  &::placeholder {
+    color: rgba(180, 188, 220, 0.45);
+  }
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.06);
+    border-color: rgba(166, 180, 255, 0.3);
+  }
+
+  &:focus {
+    outline: none;
+    border-color: rgba(138, 160, 255, 0.55);
+    box-shadow: 0 0 0 3px rgba(74, 107, 255, 0.25);
+  }
+}
+
+// ----- Error -----
+.errorBox {
+  padding: 12px 14px;
+  border-radius: 12px;
+  font-size: 14px;
+  color: #ffb6c1;
+  background: rgba(239, 68, 68, 0.1);
+  border: 1px solid rgba(239, 68, 68, 0.28);
+}
+
+// ============================================
+// ACTIONS
+// ============================================
+.actions {
+  display: flex;
+  flex-direction: column-reverse;
+  gap: 10px;
+  margin-top: 4px;
+
+  @media (min-width: 480px) {
+    flex-direction: row;
+    justify-content: flex-end;
+    gap: 12px;
+  }
+}
+
+.btnGhost,
+.btnPrimary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 12px 20px;
+  border-radius: 12px;
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  cursor: pointer;
+  transition:
+    background-color 0.2s ease,
+    border-color 0.2s ease,
+    transform 0.2s ease,
+    box-shadow 0.2s ease,
+    color 0.2s ease;
+
+  &:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(74, 107, 255, 0.3);
+  }
+
+  &:disabled {
+    cursor: not-allowed;
+    opacity: 0.6;
+    transform: none;
+    box-shadow: none;
+  }
+}
+
+.btnGhost {
+  color: rgba(222, 226, 250, 0.85);
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+
+  &:hover:not(:disabled) {
+    background: rgba(255, 255, 255, 0.07);
+    border-color: rgba(166, 180, 255, 0.28);
+  }
+}
+
+.btnPrimary {
+  color: #f6f7ff;
+  background: linear-gradient(
+    135deg,
+    rgba(74, 107, 255, 0.95) 0%,
+    rgba(138, 86, 255, 0.95) 100%
+  );
+  border: 1px solid rgba(166, 180, 255, 0.45);
+
+  &:hover:not(:disabled) {
+    transform: translateY(-1px);
+    box-shadow: 0 12px 28px rgba(74, 107, 255, 0.4);
+    border-color: rgba(186, 200, 255, 0.6);
+  }
+
+  &:active:not(:disabled) {
+    transform: translateY(0);
+  }
+}

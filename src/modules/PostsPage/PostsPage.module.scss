@@ -98,23 +98,6 @@
   }
 }
 
-.accent {
-  font-style: italic;
-  font-weight: 400;
-  background: linear-gradient(
-    100deg,
-    #a6b4ff 0%,
-    #c9b2ff 40%,
-    #8aa0ff 70%,
-    #ffffff 100%
-  );
-  background-size: 200% 100%;
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
-  animation: shine 8s ease-in-out infinite;
-}
-
 .headerCta {
   flex-shrink: 0;
 }
@@ -130,7 +113,7 @@
   opacity: 0;
   transform: translateY(16px);
   animation: fadeUp 1.2s cubic-bezier(0.16, 1, 0.3, 1) 0.45s forwards;
-
+  margin-bottom: 50px;
   @include media(tablet) {
     grid-template-columns: auto 1fr;
     gap: 56px;

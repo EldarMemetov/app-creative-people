@@ -1,38 +1,117 @@
-.likeWrapper {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
 .likeButton {
-  background: linear-gradient(135deg, #f0edeb, #ef89a7);
-  border: none;
-  border-radius: 50%;
-
-  font-size: 20px;
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 22px;
+  border-radius: 14px;
+  font-size: 15px;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  color: #f6f7ff;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.1);
   cursor: pointer;
+  overflow: hidden;
   transition:
+    background-color 0.25s ease,
+    border-color 0.25s ease,
     transform 0.2s ease,
-    box-shadow 0.2s ease;
+    box-shadow 0.25s ease,
+    color 0.25s ease;
+
+  &::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    pointer-events: none;
+    background: radial-gradient(
+      120% 80% at 50% 0%,
+      rgba(138, 160, 255, 0.18) 0%,
+      rgba(138, 160, 255, 0) 60%
+    );
+    opacity: 0;
+    transition: opacity 0.25s ease;
+  }
 
   &:hover {
-    transform: scale(1.1);
-    box-shadow: 0 4px 12px rgba(255, 44, 109, 0.5);
+    background: rgba(255, 255, 255, 0.07);
+    border-color: rgba(166, 180, 255, 0.32);
+    transform: translateY(-1px);
+    box-shadow: 0 8px 24px rgba(74, 107, 255, 0.18);
+
+    &::before {
+      opacity: 1;
+    }
+  }
+
+  &:active {
+    transform: translateY(0);
+    box-shadow: 0 4px 12px rgba(74, 107, 255, 0.14);
+  }
+
+  &:focus-visible {
+    outline: none;
+    border-color: rgba(138, 160, 255, 0.55);
+    box-shadow: 0 0 0 3px rgba(74, 107, 255, 0.28);
   }
 
   &:disabled {
     cursor: not-allowed;
     opacity: 0.6;
+    transform: none;
+    box-shadow: none;
+  }
+
+  & > :first-child {
+    font-size: 18px;
+    line-height: 1;
+    display: inline-flex;
+    transition: transform 0.25s ease;
+  }
+
+  &:hover > :first-child {
+    transform: scale(1.12);
   }
 }
 
 .liked {
-  animation: pulse 0.3s ease;
+  color: #ffb6c1;
+  background: rgba(239, 68, 68, 0.12);
+  border-color: rgba(239, 68, 68, 0.28);
+
+  &::before {
+    background: radial-gradient(
+      120% 80% at 50% 0%,
+      rgba(239, 68, 68, 0.22) 0%,
+      rgba(239, 68, 68, 0) 60%
+    );
+    opacity: 1;
+  }
+
+  &:hover {
+    background: rgba(239, 68, 68, 0.18);
+    border-color: rgba(239, 68, 68, 0.45);
+    box-shadow: 0 8px 24px rgba(239, 68, 68, 0.22);
+  }
+
+  & > :first-child {
+    animation: likePulse 0.45s ease;
+  }
 }
 
-.likesCount {
-  font-weight: bold;
-  font-size: 16px;
-  color: #fffefe;
-  margin: 0;
+@keyframes likePulse {
+  0% {
+    transform: scale(1);
+  }
+  40% {
+    transform: scale(1.35);
+  }
+  70% {
+    transform: scale(0.95);
+  }
+  100% {
+    transform: scale(1);
+  }
 }

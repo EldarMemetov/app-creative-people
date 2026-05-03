@@ -175,3 +175,17 @@ export const extendPostDate = async (postId, newDate) => {
     throw handleError(err);
   }
 };
+export const filterPosts = async (params = {}) => {
+  const clean = Object.fromEntries(
+    Object.entries(params).filter(
+      ([, v]) => v !== '' && v !== null && v !== undefined
+    )
+  );
+  try {
+    const { data } = await api.get('/posts/filter', { params: clean });
+
+    return { items: data.data, meta: data.meta };
+  } catch (err) {
+    throw handleError(err);
+  }
+};

@@ -82,14 +82,12 @@ export default function EditProfileForm({
           const details = err.response?.data?.details;
 
           if (Array.isArray(details) && details.length > 0) {
-            // Пробрасываем серверные ошибки в соответствующие поля формы
             details.forEach((d) => {
               const fieldPath = Array.isArray(d.path)
                 ? d.path.join('.')
                 : d.path;
               if (!fieldPath) return;
 
-              // Локализация частых случаев по roles
               if (fieldPath === 'roles' && d.type === 'array.min') {
                 actions.setFieldError('roles', t('roles.choose_at_least_one'));
               } else if (fieldPath === 'roles' && d.type === 'array.max') {
