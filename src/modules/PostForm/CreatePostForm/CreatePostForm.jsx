@@ -11,11 +11,11 @@ import {
   uploadPostMedia,
   deletePostMedia,
 } from '../../../services/api/post/api';
-import styles from './CreatePostForm.module.scss';
+import s from './CreatePostForm.module.scss';
 import { useRouter } from 'next/navigation';
-import roles from '@/utils/roles';
 import Image from 'next/image';
 import Container from '@/shared/container/Container';
+import RoleSelector from '@/modules/RegisterPage/RoleSelector/RoleSelector';
 
 const MAX_PHOTO_COUNT = 3;
 const MAX_PHOTO_BYTES = 5 * 1024 * 1024;
@@ -55,28 +55,20 @@ export default function CreatePostForm({ initial = null }) {
     maxAssigned: initial?.maxAssigned ?? 5,
   };
 
-  const countExisting = () => {
-    let photos = 0;
-    existingMedia.forEach((m) => (m.type === 'photo' ? photos++ : null));
-    return { photos };
-  };
+  const countExistingPhotos = () =>
+    existingMedia.filter((m) => m.type === 'photo').length;
 
-  const countNewFiles = (filesArr) => {
-    let photos = 0;
-    filesArr.forEach((f) => {
-      if (f.type.startsWith('image')) photos++;
-    });
-    return { photos };
-  };
+  const countNewPhotos = (filesArr) =>
+    filesArr.filter((f) => f.type.startsWith('image')).length;
 
   const handleFilesChange = (e) => {
     const list = Array.from(e.target.files || []);
     if (list.length === 0) return;
 
-    const existing = countExisting();
-    const newCounts = countNewFiles(list);
+    const existingPhotos = countExistingPhotos();
+    const newPhotos = countNewPhotos(list);
 
-    if (existing.photos + newCounts.photos > MAX_PHOTO_COUNT) {
+    if (existingPhotos + newPhotos > MAX_PHOTO_COUNT) {
       alert(
         `Можно загрузить максимум ${MAX_PHOTO_COUNT} фото (включая уже загруженные).`
       );
@@ -193,10 +185,12 @@ export default function CreatePostForm({ initial = null }) {
   };
 
   return (
-    <section>
+    <section className={s.section}>
       <Container>
-        <div className={styles.formWrap}>
-          <h2>{isEdit ? 'Редактировать пост' : 'Создать пост'}</h2>
+        <div className={s.formWrap}>
+          <h2 className={s.title}>
+            {isEdit ? 'Редактировать пост' : 'Создать пост'}
+          </h2>
 
           <Formik
             enableReinitialize={true}
@@ -205,7 +199,7 @@ export default function CreatePostForm({ initial = null }) {
             onSubmit={onSubmit}
           >
             {({ values, setFieldValue, errors }) => (
-              <Form className={styles.form}>
+              <Form className={s.form}>
                 <FormInput
                   label="Заголовок"
                   name="title"
@@ -220,10 +214,10 @@ export default function CreatePostForm({ initial = null }) {
                 <FormInput label="Страна" name="country" />
                 <FormInput label="Город" name="city" />
 
-                {/* Дата + чекбокс "без даты" */}
-                <div className={styles.dateRow}>
-                  <label className={styles.checkboxLabel}>
+                <div className={s.dateRow}>
+                  <label className={s.checkboxLabel}>
                     <input
+                      className={s.checkbox}
                       type="checkbox"
                       checked={values.hasNoDate}
                       onChange={(e) => {
@@ -231,7 +225,7 @@ export default function CreatePostForm({ initial = null }) {
                         if (e.target.checked) setFieldValue('date', '');
                       }}
                     />
-                    Дата не определена
+                    <span className={s.checkboxText}>Дата не определена</span>
                   </label>
 
                   {!values.hasNoDate && (
@@ -244,16 +238,15 @@ export default function CreatePostForm({ initial = null }) {
                   )}
                 </div>
 
-                {/* Тип оплаты */}
-                <div className={styles.row}>
-                  <div>
-                    <label>Тип оплаты</label>
+                <div className={s.row}>
+                  <div className={s.field}>
+                    <label className={s.label}>Тип оплаты</label>
                     <select
+                      className={s.select}
                       name="type"
                       value={values.type}
                       onChange={(e) => {
                         setFieldValue('type', e.target.value);
-                        // сбрасываем числовые поля при смене типа
                         setFieldValue('price', 0);
                         setFieldValue('percent', 0);
                       }}
@@ -270,7 +263,7 @@ export default function CreatePostForm({ initial = null }) {
                   </div>
 
                   {values.type === 'paid' && (
-                    <div>
+                    <div className={s.field}>
                       <FormInput
                         label="Цена (€)"
                         name="price"
@@ -281,7 +274,7 @@ export default function CreatePostForm({ initial = null }) {
                   )}
 
                   {values.type === 'percent' && (
-                    <div>
+                    <div className={s.field}>
                       <FormInput
                         label="Процент (%)"
                         name="percent"
@@ -293,100 +286,54 @@ export default function CreatePostForm({ initial = null }) {
                   )}
                 </div>
 
-                {/* Роли */}
-                <div className={styles.roleSection}>
-                  <label>Роли</label>
-                  <div className={styles.quickButtons}>
-                    <span>Быстрые роли:</span>
-                    {roles.map((r) => (
-                      <button
-                        key={r}
-                        type="button"
-                        onClick={() => {
-                          const parsed = [...(values.roleSlots || [])];
-                          parsed.push({ role: r, required: 1 });
-                          setFieldValue('roleSlots', parsed);
-                        }}
-                        className={styles.roleBtn}
-                      >
-                        {r}
-                      </button>
-                    ))}
-                  </div>
-
-                  {Array.isArray(values.roleSlots) &&
-                  values.roleSlots.length > 0 ? (
-                    <div className={styles.selectedRoles}>
-                      {values.roleSlots.map((rs, idx) => (
-                        <div key={idx} className={styles.selectedRole}>
-                          <span>{rs.role}</span>
-                          <input
-                            type="number"
-                            min={1}
-                            value={rs.required}
-                            onChange={(e) => {
-                              const newSlots = [...values.roleSlots];
-                              newSlots[idx] = {
-                                ...newSlots[idx],
-                                required: Math.max(1, Number(e.target.value)),
-                              };
-                              setFieldValue('roleSlots', newSlots);
-                            }}
-                            style={{ width: 50 }}
-                          />
-                          <button
-                            type="button"
-                            className={styles.removeRoleBtn}
-                            onClick={() => {
-                              const newSlots = [...(values.roleSlots || [])];
-                              newSlots.splice(idx, 1);
-                              setFieldValue('roleSlots', newSlots);
-                            }}
-                          >
-                            Удалить
-                          </button>
-                        </div>
-                      ))}
-                    </div>
-                  ) : (
-                    <div className={styles.noRoles}>Роли не выбраны</div>
-                  )}
-
-                  {errors.roleSlots && (
-                    <div className={styles.error}>{errors.roleSlots}</div>
-                  )}
+                <div className={s.roleSection}>
+                  <RoleSelector
+                    label="Роли"
+                    values={(values.roleSlots || []).map((rs) => rs.role)}
+                    onChange={(nextRoles) =>
+                      setFieldValue(
+                        'roleSlots',
+                        nextRoles.map((r) => ({ role: r, required: 1 }))
+                      )
+                    }
+                    error={errors.roleSlots}
+                  />
                 </div>
 
-                {/* Файлы */}
-                <div className={styles.filesRow}>
-                  <label>Файлы (фото): макс {MAX_PHOTO_COUNT}</label>
+                <div className={s.filesRow}>
+                  <label className={s.label}>
+                    Файлы (фото): макс {MAX_PHOTO_COUNT}
+                  </label>
                   <input
+                    className={s.fileInput}
                     type="file"
                     accept="image/*"
                     multiple
                     onChange={handleFilesChange}
                   />
                   {newFiles.length > 0 && (
-                    <p>{newFiles.length} новых файлов готовы к загрузке</p>
+                    <p className={s.filesHint}>
+                      {newFiles.length} новых файлов готовы к загрузке
+                    </p>
                   )}
                 </div>
 
                 {existingMedia.length > 0 && (
-                  <div className={styles.mediaList}>
-                    <h4>Загруженные медиа</h4>
-                    <div className={styles.mediaGrid}>
+                  <div className={s.mediaList}>
+                    <h4 className={s.mediaTitle}>Загруженные медиа</h4>
+                    <div className={s.mediaGrid}>
                       {existingMedia.map((m) => (
-                        <div key={m._id} className={styles.mediaCard}>
+                        <div key={m._id} className={s.mediaCard}>
                           <Image
                             width={100}
                             height={100}
                             src={m.url}
                             alt="media"
-                            className={styles.mediaThumb}
+                            className={s.mediaThumb}
                           />
                           <button
                             type="button"
-                            className={styles.removeBtn}
+                            className={s.removeBtn}
                             onClick={() => removeExistingMedia(m._id)}
                           >
                             Удалить
@@ -398,29 +345,31 @@ export default function CreatePostForm({ initial = null }) {
                 )}
 
                 {newFiles.length > 0 && (
-                  <div className={styles.mediaList}>
-                    <h4>Новые файлы (еще не загружены)</h4>
-                    <div className={styles.mediaGrid}>
+                  <div className={s.mediaList}>
+                    <h4 className={s.mediaTitle}>
+                      Новые файлы (еще не загружены)
+                    </h4>
+                    <div className={s.mediaGrid}>
                       {newFiles.map((f, i) => {
                         const url = URL.createObjectURL(f);
                         return (
-                          <div key={i} className={styles.mediaCard}>
+                          <div key={i} className={s.mediaCard}>
                             <Image
                               width={100}
                               height={100}
                               src={url}
                               alt={f.name}
-                              className={styles.mediaThumb}
+                              className={s.mediaThumb}
                             />
-                            <div className={styles.mediaInfo}>
-                              <div>{f.name}</div>
-                              <div>
+                            <div className={s.mediaInfo}>
+                              <div className={s.mediaName}>{f.name}</div>
+                              <div className={s.mediaSize}>
                                 {(f.size / (1024 * 1024)).toFixed(2)} MB
                               </div>
                               <button
                                 type="button"
                                 onClick={() => removeNewFile(i)}
-                                className={styles.removeBtn}
+                                className={s.removeBtn}
                               >
                                 Удалить
                               </button>
@@ -432,8 +381,12 @@ export default function CreatePostForm({ initial = null }) {
                   </div>
                 )}
 
-                <div className={styles.actions}>
-                  <button type="submit" disabled={submitting}>
+                <div className={s.actions}>
+                  <button
+                    type="submit"
+                    disabled={submitting}
+                    className={s.submitBtn}
+                  >
                     {isEdit ? 'Сохранить' : 'Создать пост'}
                   </button>
                 </div>

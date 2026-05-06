@@ -1,26 +1,13 @@
 .wrapper {
   position: fixed;
   top: 0;
+  left: 0;
   width: 100vw;
   height: 100vh;
   z-index: 99;
   display: flex;
   justify-content: center;
   align-items: center;
-  background: linear-gradient(
-      to bottom,
-      rgb(0 0 0 / 36%) 0%,
-      rgb(0 0 0) 20%,
-      rgb(0 0 0) 100%
-    ),
-    linear-gradient(
-      to right,
-      #00008b 0%,
-      #00004d 30%,
-      #2c0bd4 50%,
-      #8a2be2 80%,
-      #8a2be2 100%
-    );
 }
 
 .loader {

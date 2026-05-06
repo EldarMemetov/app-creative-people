@@ -11,9 +11,9 @@ import LinkButton from '@/shared/components/LinkButton/LinkButton';
 import { ROUTES, LINKDATA } from '@/shared/constants';
 import EditProfileAvatar from './EditProfileAvatar/EditProfileAvatar';
 import EditProfileForm from './EditProfileForm/EditProfileForm';
-
 import { getProfile } from '@/services/api/auth/auth';
 import PortfolioManager from './PortfolioManager/PortfolioManager';
+import s from './EditProfile.module.scss';
 
 export default function EditProfile() {
   const { user: authUser, loading: guardLoading } = useAuthGuard();
@@ -41,38 +41,48 @@ export default function EditProfile() {
   }, [setUserStore]);
 
   if (guardLoading) return <Loader />;
-  if (!authUser) return <div>{t('not_found')}</div>;
+  if (!authUser) return <div className={s.notFound}>{t('not_found')}</div>;
 
   return (
     <Container>
-      <section>
-        <LinkButton path={ROUTES.PROFILE} type={LINKDATA.HOME}>
-          {t('back_to_profile')}
-        </LinkButton>
-        <h1>{t('edit_profile')}</h1>
+      <section className={s.section}>
+        <div className={s.backWrap}>
+          <LinkButton path={ROUTES.PROFILE} type={LINKDATA.HOME}>
+            {t('back_to_profile')}
+          </LinkButton>
+        </div>
 
-        <EditProfileAvatar
-          user={authUser}
-          setUser={() => {}}
-          t={t}
-          uploadingPhoto={uploadingPhoto}
-          setUploadingPhoto={setUploadingPhoto}
-          refreshUser={refreshUser}
-          refreshing={refreshing}
-        />
+        <h1 className={s.title}>{t('edit_profile')}</h1>
 
-        <EditProfileForm
-          user={authUser}
-          ProfileSchema={ProfileSchema}
-          t={t}
-          uploadingPhoto={uploadingPhoto}
-          refreshUser={refreshUser}
-          refreshing={refreshing}
-        />
-        <PortfolioManager
-          initialPortfolio={authUser.portfolio}
-          refreshUser={refreshUser}
-        />
+        <div className={s.card}>
+          <EditProfileAvatar
+            user={authUser}
+            setUser={() => {}}
+            t={t}
+            uploadingPhoto={uploadingPhoto}
+            setUploadingPhoto={setUploadingPhoto}
+            refreshUser={refreshUser}
+            refreshing={refreshing}
+          />
+        </div>
+
+        <div className={s.card}>
+          <EditProfileForm
+            user={authUser}
+            ProfileSchema={ProfileSchema}
+            t={t}
+            uploadingPhoto={uploadingPhoto}
+            refreshUser={refreshUser}
+            refreshing={refreshing}
+          />
+        </div>
+
+        <div className={s.card}>
+          <PortfolioManager
+            initialPortfolio={authUser.portfolio}
+            refreshUser={refreshUser}
+          />
+        </div>
       </section>
     </Container>
   );

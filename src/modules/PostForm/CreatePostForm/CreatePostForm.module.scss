@@ -1,28 +1,444 @@
-.selectedRoles {
-  margin-top: 8px;
+.section {
+  position: relative;
+  padding: 80px 0 120px;
+  color: #f5f6ff;
+
+  @include media(tablet) {
+    padding: 110px 0 140px;
+  }
+
+  @include media(desktop) {
+    padding: 140px 0 160px;
+  }
 }
-.selectedRole {
+
+// ---------- Glass card wrapper ----------
+.formWrap {
+  position: relative;
+  padding: 28px 22px;
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  box-shadow:
+    0 30px 80px -30px rgba(3, 5, 37, 0.7),
+    inset 0 1px 0 rgba(255, 255, 255, 0.06);
+
+  @include media(tablet) {
+    padding: 40px 36px;
+    border-radius: 24px;
+  }
+
+  @include media(desktop) {
+    padding: 56px 56px;
+    border-radius: 28px;
+  }
+}
+
+// ---------- Title ----------
+.title {
+  margin: 0 0 24px;
+  font-weight: 600;
+  font-size: 28px;
+  line-height: 1.1;
+  letter-spacing: -0.01em;
+  background: linear-gradient(100deg, #f6f7ff 0%, #c9b2ff 60%, #8aa0ff 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+
+  @include media(tablet) {
+    font-size: 36px;
+    margin: 0 0 32px;
+  }
+
+  @include media(desktop) {
+    font-size: 44px;
+    margin: 0 0 40px;
+  }
+}
+
+// ---------- Form ----------
+.form {
   display: flex;
+  flex-direction: column;
+  gap: 20px;
+
+  @include media(tablet) {
+    gap: 24px;
+  }
+
+  @include media(desktop) {
+    gap: 28px;
+  }
+}
+
+// ---------- Generic field ----------
+.field {
+  display: flex;
+  flex-direction: column;
   gap: 8px;
+  flex: 1 1 220px;
+  min-width: 0;
+}
+
+.label {
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  color: rgba(222, 226, 250, 0.6);
+}
+
+// ---------- Date row ----------
+.dateRow {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+
+  @include media(tablet) {
+    flex-direction: row;
+    align-items: flex-end;
+    gap: 24px;
+  }
+}
+
+.checkboxLabel {
+  display: inline-flex;
   align-items: center;
-  margin-bottom: 4px;
-}
-.removeRoleBtn {
-  background: transparent;
-  border: none;
-  color: #c00;
+  gap: 12px;
+  padding: 12px 16px;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: #eef0ff;
+  font-size: 14px;
   cursor: pointer;
+  transition:
+    background 0.4s ease,
+    border-color 0.4s ease,
+    transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.07);
+    border-color: rgba(255, 255, 255, 0.22);
+  }
 }
-.roleJson {
-  margin-top: 8px;
+
+.checkbox {
+  appearance: none;
+  width: 18px;
+  height: 18px;
+  border-radius: 5px;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  background: rgba(255, 255, 255, 0.04);
+  cursor: pointer;
+  display: grid;
+  place-items: center;
+  transition:
+    background 0.3s ease,
+    border-color 0.3s ease;
+
+  &::after {
+    content: '';
+    width: 10px;
+    height: 10px;
+    border-radius: 3px;
+    background: linear-gradient(135deg, #4a6bff 0%, #7a5bff 100%);
+    transform: scale(0);
+    transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  &:checked {
+    border-color: rgba(122, 91, 255, 0.6);
+
+    &::after {
+      transform: scale(1);
+    }
+  }
 }
-.roleTextArea {
+
+.checkboxText {
+  user-select: none;
+}
+
+// ---------- Row (type + price/percent) ----------
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+
+  @include media(tablet) {
+    gap: 20px;
+  }
+}
+
+// ---------- Select ----------
+.select {
   width: 100%;
-  min-height: 80px;
-  margin-top: 4px;
+  font: inherit;
+  padding: 14px 16px;
+  border-radius: 12px;
+  font-size: 15px;
+  color: #eef0ff;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  cursor: pointer;
+  transition:
+    background 0.4s ease,
+    border-color 0.4s ease,
+    box-shadow 0.4s ease;
+
+  appearance: none;
+  background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='%23a6b4ff' d='M6 8 0 0h12z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 16px center;
+  background-size: 10px 7px;
+  padding-right: 40px;
+
+  &:hover {
+    background-color: rgba(255, 255, 255, 0.06);
+    border-color: rgba(255, 255, 255, 0.22);
+  }
+
+  &:focus {
+    outline: none;
+    border-color: rgba(122, 91, 255, 0.55);
+    box-shadow:
+      0 0 0 3px rgba(122, 91, 255, 0.15),
+      0 8px 28px -10px rgba(74, 107, 255, 0.45);
+  }
+
+  option {
+    background: #0b0e2a;
+    color: #eef0ff;
+  }
 }
-.error {
-  color: #b00020;
+
+// ---------- Roles ----------
+.roleSection {
+  display: flex;
+  flex-direction: column;
+}
+
+// ---------- Files ----------
+.filesRow {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.fileInput {
+  font: inherit;
+  padding: 14px 16px;
+  border-radius: 12px;
+  color: #eef0ff;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px dashed rgba(255, 255, 255, 0.18);
+  cursor: pointer;
+  transition:
+    background 0.4s ease,
+    border-color 0.4s ease;
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.07);
+    border-color: rgba(122, 91, 255, 0.45);
+  }
+
+  &::file-selector-button {
+    font: inherit;
+    cursor: pointer;
+    margin-right: 14px;
+    padding: 8px 16px;
+    border: 0;
+    border-radius: 8px;
+    color: #ffffff;
+    background: linear-gradient(135deg, #4a6bff 0%, #7a5bff 100%);
+    transition: filter 0.3s ease;
+
+    &:hover {
+      filter: brightness(1.08);
+    }
+  }
+}
+
+.filesHint {
+  margin: 0;
+  font-size: 13px;
+  color: rgba(222, 226, 250, 0.7);
+}
+
+// ---------- Media list ----------
+.mediaList {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.mediaTitle {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: rgba(222, 226, 250, 0.65);
+}
+
+.mediaGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 14px;
+
+  @include media(tablet) {
+    grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
+    gap: 18px;
+  }
+}
+
+.mediaCard {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 10px;
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  transition:
+    transform 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+    border-color 0.4s ease,
+    box-shadow 0.4s ease;
+
+  &:hover {
+    transform: translateY(-2px);
+    border-color: rgba(122, 91, 255, 0.35);
+    box-shadow: 0 18px 40px -22px rgba(122, 91, 255, 0.55);
+  }
+}
+
+.mediaThumb {
+  width: 100%;
+  height: auto;
+  aspect-ratio: 1 / 1;
+  object-fit: cover;
+  border-radius: 10px;
+  display: block;
+}
+
+.mediaInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: 12px;
+  color: rgba(222, 226, 250, 0.75);
+}
+
+.mediaName {
+  font-weight: 500;
+  color: #eef0ff;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.mediaSize {
+  color: rgba(222, 226, 250, 0.55);
+}
+
+.removeBtn {
+  font: inherit;
+  cursor: pointer;
+  padding: 8px 12px;
+  border-radius: 10px;
+  font-size: 13px;
+  font-weight: 500;
+  color: #ffd3d3;
+  background: rgba(255, 80, 100, 0.08);
+  border: 1px solid rgba(255, 80, 100, 0.25);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  transition:
+    background 0.4s ease,
+    border-color 0.4s ease,
+    color 0.4s ease,
+    transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+
+  &:hover {
+    background: rgba(255, 80, 100, 0.16);
+    border-color: rgba(255, 80, 100, 0.45);
+    color: #ffffff;
+    transform: translateY(-1px);
+  }
+
+  &:active {
+    transform: translateY(0);
+  }
+}
+
+// ---------- Actions ----------
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
   margin-top: 8px;
-  font-size: 0.9rem;
+
+  @include media(tablet) {
+    margin-top: 16px;
+  }
+}
+
+.submitBtn {
+  font: inherit;
+  cursor: pointer;
+  border: 0;
+  padding: 16px 28px;
+  border-radius: 14px;
+  font-size: 15px;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  color: #ffffff;
+  background: linear-gradient(135deg, #4a6bff 0%, #7a5bff 100%);
+  box-shadow:
+    0 12px 40px -10px rgba(74, 107, 255, 0.7),
+    inset 0 1px 0 rgba(255, 255, 255, 0.25);
+  transition:
+    transform 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+    box-shadow 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+    filter 0.5s ease,
+    opacity 0.3s ease;
+
+  &:hover:not(:disabled) {
+    transform: translateY(-2px) scale(1.02);
+    box-shadow:
+      0 18px 50px -8px rgba(122, 91, 255, 0.75),
+      inset 0 1px 0 rgba(255, 255, 255, 0.35);
+    filter: brightness(1.08);
+  }
+
+  &:active:not(:disabled) {
+    transform: translateY(0) scale(0.99);
+  }
+
+  &:disabled {
+    cursor: not-allowed;
+    opacity: 0.55;
+    filter: grayscale(0.2);
+  }
+
+  @include media(tablet) {
+    padding: 18px 38px;
+    border-radius: 16px;
+    font-size: 16px;
+  }
+}
+
+// ---------- Error ----------
+.error {
+  font-size: 13px;
+  color: #ffb4be;
+  letter-spacing: 0.01em;
 }

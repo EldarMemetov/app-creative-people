@@ -51,52 +51,75 @@ export default function ChangePasswordPage() {
   };
 
   return (
-    <Container>
-      <div style={{ maxWidth: 560 }}>
-        <h1>{t('change_password')}</h1>
-        <Formik
-          initialValues={{
-            currentPassword: '',
-            newPassword: '',
-            confirmNew: '',
-          }}
-          validationSchema={schema}
-          onSubmit={handleChangePassword}
-        >
-          {({ isSubmitting }) => (
-            <Form autoComplete="on">
-              <input
-                name="username"
-                type="text"
-                autoComplete="username"
-                className={s.visuallyHidden}
-              />
+    <section className={s.page}>
+      <Container>
+        <div className={s.inner}>
+          <div className={s.card}>
+            <h1 className={s.title}>{t('change_password')}</h1>
+            <p className={s.subtitle}>{t('change_password_hint') || ''}</p>
 
-              <FormInput
-                label={t('current_password')}
-                name="currentPassword"
-                type="password"
-                autoComplete="current-password"
-              />
-              <FormInput
-                label={t('new_password')}
-                name="newPassword"
-                type="password"
-                autoComplete="new-password"
-              />
-              <FormInput
-                label={t('confirm_new_password')}
-                name="confirmNew"
-                type="password"
-                autoComplete="new-password"
-              />
-              <button type="submit" disabled={isSubmitting}>
-                {isSubmitting ? t('saving') : t('save')}
-              </button>
-            </Form>
-          )}
-        </Formik>
-      </div>
-    </Container>
+            <Formik
+              initialValues={{
+                currentPassword: '',
+                newPassword: '',
+                confirmNew: '',
+              }}
+              validationSchema={schema}
+              onSubmit={handleChangePassword}
+            >
+              {({ isSubmitting }) => (
+                <Form className={s.form} autoComplete="on">
+                  <input
+                    name="username"
+                    type="text"
+                    autoComplete="username"
+                    className={s.visuallyHidden}
+                  />
+
+                  <div className={s.field}>
+                    <FormInput
+                      label={t('current_password')}
+                      name="currentPassword"
+                      type="password"
+                      autoComplete="current-password"
+                    />
+                  </div>
+
+                  <div className={s.field}>
+                    <FormInput
+                      label={t('new_password')}
+                      name="newPassword"
+                      type="password"
+                      autoComplete="new-password"
+                    />
+                  </div>
+
+                  <div className={s.field}>
+                    <FormInput
+                      label={t('confirm_new_password')}
+                      name="confirmNew"
+                      type="password"
+                      autoComplete="new-password"
+                    />
+                  </div>
+
+                  <div className={s.actions}>
+                    <button
+                      type="submit"
+                      disabled={isSubmitting}
+                      className={s.submit}
+                    >
+                      <span className={s.submitLabel}>
+                        {isSubmitting ? t('saving') : t('save')}
+                      </span>
+                    </button>
+                  </div>
+                </Form>
+              )}
+            </Formik>
+          </div>
+        </div>
+      </Container>
+    </section>
   );
 }

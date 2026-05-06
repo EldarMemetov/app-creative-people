@@ -248,7 +248,7 @@ export default function IdPostPage() {
       <Container>
         <div className={styles.post}>
           <Link href="/posts" className={styles.back}>
-            ← Back
+            <span className={styles.arrow}>←</span> Back
           </Link>
 
           <h1 className={styles.title}>{post.title}</h1>

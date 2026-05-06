@@ -116,7 +116,7 @@ export default function EditProfileForm({
         errors,
         touched,
       }) => (
-        <Form className="profile-form">
+        <Form className={s.form}>
           <FormInput
             label={t('name')}
             name="name"
@@ -185,7 +185,11 @@ export default function EditProfileForm({
             </div>
           </div>
 
-          <button type="submit" disabled={isSubmitting || uploadingPhoto}>
+          <button
+            type="submit"
+            className={s.submitBtn}
+            disabled={isSubmitting || uploadingPhoto}
+          >
             {isSubmitting ? t('saving') : t('save')}
           </button>
         </Form>

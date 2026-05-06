@@ -5,6 +5,7 @@ import { toast } from 'react-hot-toast';
 import Loader from '@/shared/Loader/Loader';
 import { ImageWithFallback } from '@/shared/ImageWithFallback/ImageWithFallback';
 import { uploadPhoto, deletePhoto } from '@/services/api/profileEdit/media';
+import s from './EditProfileAvatar.module.scss';
 
 export default function EditProfileAvatar({ user, t, refreshUser }) {
   const inputRef = useRef(null);
@@ -51,31 +52,35 @@ export default function EditProfileAvatar({ user, t, refreshUser }) {
   };
 
   return (
-    <div>
-      <div>
+    <div className={s.wrapper}>
+      <div className={s.avatarBox}>
         {loading ? (
-          <Loader />
+          <div className={s.loaderBox}>
+            <Loader />
+          </div>
         ) : (
           <ImageWithFallback
             src={user.photo || '/image/logo.png'}
             alt="avatar"
-            width={100}
-            height={100}
+            width={140}
+            height={140}
+            className={s.avatar}
           />
         )}
       </div>
 
-      <div>
+      <div className={s.controls}>
         <input
           type="file"
           accept="image/*"
           ref={inputRef}
-          style={{ display: 'none' }}
+          className={s.fileInput}
           onChange={(e) => handlePhotoChange(e.target.files?.[0])}
         />
 
         <button
           type="button"
+          className={s.changeBtn}
           onClick={() => inputRef.current?.click()}
           disabled={loading}
         >
@@ -83,7 +88,12 @@ export default function EditProfileAvatar({ user, t, refreshUser }) {
         </button>
 
         {user.photo && (
-          <button type="button" disabled={loading} onClick={handleDelete}>
+          <button
+            type="button"
+            className={s.removeBtn}
+            disabled={loading}
+            onClick={handleDelete}
+          >
             {loading ? t('deleting') : t('remove_photo')}
           </button>
         )}

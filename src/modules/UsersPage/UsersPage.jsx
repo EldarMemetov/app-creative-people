@@ -197,16 +197,27 @@ export default function UsersPage() {
             </div>
 
             {totalPages > 1 && (
-              <div className={s.pagination}>
-                <button disabled={page <= 1} onClick={() => goToPage(page - 1)}>
+              <div
+                className={s.pagination}
+                role="navigation"
+                aria-label="Пагінація"
+              >
+                <button
+                  className={s.buttonStr}
+                  disabled={page <= 1}
+                  onClick={() => goToPage(page - 1)}
+                  aria-label="Попередня сторінка"
+                >
                   ← Назад
                 </button>
-                <span>
+                <span className={s.spanPage} aria-live="polite">
                   {page} / {totalPages}
                 </span>
                 <button
+                  className={s.buttonStr}
                   disabled={page >= totalPages}
                   onClick={() => goToPage(page + 1)}
+                  aria-label="Наступна сторінка"
                 >
                   Вперед →
                 </button>

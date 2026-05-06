@@ -103,7 +103,11 @@ export default function PostsPage() {
             <h1 className={styles.title}>Усі пости</h1>
 
             <div className={styles.headerCta}>
-              <LinkButton path={ROUTES.CREATE} type={LINKDATA.CREATE}>
+              <LinkButton
+                path={ROUTES.CREATE}
+                type={LINKDATA.CREATE}
+                className={styles.createBtn}
+              >
                 + Створити пост
               </LinkButton>
             </div>
@@ -254,16 +258,27 @@ export default function PostsPage() {
             </ul>
 
             {totalPages > 1 && (
-              <div className={styles.pagination}>
-                <button disabled={page <= 1} onClick={() => goToPage(page - 1)}>
+              <div
+                className={styles.pagination}
+                role="navigation"
+                aria-label="Пагінація"
+              >
+                <button
+                  className={styles.buttonStr}
+                  disabled={page <= 1}
+                  onClick={() => goToPage(page - 1)}
+                  aria-label="Попередня сторінка"
+                >
                   ← Назад
                 </button>
-                <span>
+                <span className={styles.spanPage} aria-live="polite">
                   {page} / {totalPages}
                 </span>
                 <button
+                  className={styles.buttonStr}
                   disabled={page >= totalPages}
                   onClick={() => goToPage(page + 1)}
+                  aria-label="Наступна сторінка"
                 >
                   Вперед →
                 </button>
