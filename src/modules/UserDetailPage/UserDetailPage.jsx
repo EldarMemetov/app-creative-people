@@ -12,7 +12,7 @@ import LinkButton from '@/shared/components/LinkButton/LinkButton';
 import { LINKDATA, ROUTES } from '@/shared/constants';
 import LikeButton from '@/shared/components/LikeButton/LikeButton';
 import { useAuth } from '@/services/store/useAuth';
-import PortfolioList from '../ProfilePage/PortfolioList/PortfolioList';
+import PortfolioHero from '../ProfilePage/PortfolioHero/PortfolioHero';
 import CompletedProjects from '../CompletedProjects/CompletedProjects';
 import SocialLinks from '@/shared/SocialLinks/SocialLinks';
 
@@ -81,6 +81,7 @@ export default function UserDetailPage() {
   return (
     <Container>
       <section className={s.section}>
+        <PortfolioHero heroType={user.heroType} heroMedia={user.heroMedia} />
         <header className={s.pageHeader}>
           <span className={s.eyebrow}>
             <span className={s.eyebrowDot} />
@@ -214,11 +215,6 @@ export default function UserDetailPage() {
         <div className={s.card}>
           <h3 className={s.sectionTitle}>Соціальні мережі</h3>
           <SocialLinks socialLinks={user.socialLinks} />
-        </div>
-
-        <div className={s.card}>
-          <h3 className={s.sectionTitle}>Портфоліо</h3>
-          <PortfolioList items={user.portfolio} />
         </div>
       </section>
     </Container>

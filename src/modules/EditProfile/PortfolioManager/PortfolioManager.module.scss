@@ -340,3 +340,171 @@
     transform: translateY(0);
   }
 }
+.modeSelector {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.modeHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.modeTitle {
+  font-size: 16px;
+  font-weight: 600;
+  margin: 0;
+}
+
+.clearBtn {
+  background: transparent;
+  border: 1px solid #e74c3c;
+  color: #e74c3c;
+  padding: 6px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 13px;
+  transition:
+    background 0.15s,
+    color 0.15s;
+
+  &:hover:not(:disabled) {
+    background: #e74c3c;
+    color: #fff;
+  }
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+}
+
+.modeGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 12px;
+}
+
+.modeCard {
+  text-align: left;
+  background: #f7f8fa;
+  border: 2px solid transparent;
+  border-radius: 10px;
+  padding: 14px;
+  cursor: pointer;
+  transition:
+    border-color 0.15s,
+    background 0.15s;
+
+  &:hover:not(:disabled) {
+    background: #eef0f4;
+  }
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+}
+
+.modeCardActive {
+  border-color: #3b82f6;
+  background: #eff6ff;
+}
+
+.modeCardTitle {
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+
+.modeCardDesc {
+  font-size: 13px;
+  color: #6b7280;
+  margin-bottom: 6px;
+}
+
+.modeCardMeta {
+  font-size: 12px;
+  color: #9ca3af;
+}
+
+.modeHint {
+  font-size: 13px;
+  color: #6b7280;
+  font-style: italic;
+}
+
+.uploadZoneDisabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+.confirmModal {
+  background: #fff;
+  min-width: 320px;
+  max-width: 440px;
+  padding: 24px;
+}
+
+.confirmTitle {
+  font-size: 18px;
+  font-weight: 600;
+  margin: 0 0 8px;
+  color: #111;
+}
+
+.confirmMessage {
+  font-size: 14px;
+  color: #4b5563;
+  line-height: 1.5;
+  margin: 0 0 20px;
+}
+
+.confirmActions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+.confirmCancel,
+.confirmOk {
+  padding: 10px 18px;
+  border-radius: 8px;
+  border: none;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition:
+    background 0.15s,
+    transform 0.1s;
+
+  &:active {
+    transform: scale(0.97);
+  }
+}
+
+.confirmCancel {
+  background: #f3f4f6;
+  color: #111;
+
+  &:hover {
+    background: #e5e7eb;
+  }
+}
+
+.confirmOk {
+  background: #3b82f6;
+  color: #fff;
+
+  &:hover {
+    background: #2563eb;
+  }
+}
+
+.confirmDanger {
+  background: #ef4444;
+
+  &:hover {
+    background: #dc2626;
+  }
+}

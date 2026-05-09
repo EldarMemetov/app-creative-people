@@ -1,32 +1,34 @@
 import { api } from '../lib/api';
 
 export const uploadPortfolioFiles = async (formData, onProgress) => {
-  try {
-    const { data } = await api.post('/portfolio', formData, {
-      withCredentials: true,
-      headers: {
-        'Content-Type': 'multipart/form-data',
-      },
-      onUploadProgress: (e) => {
-        onProgress?.(Math.round((e.loaded * 100) / (e.total || 1)));
-      },
-    });
+  const { data } = await api.post('/portfolio', formData, {
+    withCredentials: true,
+    headers: { 'Content-Type': 'multipart/form-data' },
+    onUploadProgress: (e) => {
+      onProgress?.(Math.round((e.loaded * 100) / (e.total || 1)));
+    },
+  });
 
-    return data.data;
-  } catch (err) {
-    console.error('uploadPortfolioFiles error', err);
-    throw err;
-  }
+  return data.data;
+};
+
+export const setHeroMode = async (heroType) => {
+  const { data } = await api.patch(
+    '/portfolio/mode',
+    { heroType },
+    { withCredentials: true }
+  );
+  return data.data;
 };
 
 export const deletePortfolioItem = async (itemId) => {
-  try {
-    const { data } = await api.delete(`/portfolio/${itemId}`, {
-      withCredentials: true,
-    });
-    return data;
-  } catch (err) {
-    console.error('deletePortfolioItem error', err);
-    throw err;
-  }
+  const { data } = await api.delete(`/portfolio/${itemId}`, {
+    withCredentials: true,
+  });
+  return data.data;
+};
+
+export const clearPortfolio = async () => {
+  const { data } = await api.delete('/portfolio', { withCredentials: true });
+  return data.data; // { heroType: null, heroMedia: [] }
 };

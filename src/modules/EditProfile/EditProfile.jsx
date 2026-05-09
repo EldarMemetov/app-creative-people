@@ -79,7 +79,8 @@ export default function EditProfile() {
 
         <div className={s.card}>
           <PortfolioManager
-            initialPortfolio={authUser.portfolio}
+            initialHeroType={authUser.heroType}
+            initialHeroMedia={authUser.heroMedia}
             refreshUser={refreshUser}
           />
         </div>

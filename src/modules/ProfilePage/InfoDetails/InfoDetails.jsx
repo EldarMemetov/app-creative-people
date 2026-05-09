@@ -15,7 +15,7 @@ import { useAuth } from '@/services/store/useAuth';
 import { getLikeStatus } from '@/services/api/users/api';
 
 import CompletedProjects from '@/modules/CompletedProjects/CompletedProjects';
-import PortfolioList from '../PortfolioList/PortfolioList';
+import PortfolioHero from '../PortfolioHero/PortfolioHero';
 
 import s from './InfoDetails.module.scss';
 import HandleLogout from '@/shared/HandleLogout/HandleLogout';
@@ -83,6 +83,7 @@ export default function InfoDetails() {
   return (
     <section className={s.section}>
       <div className={s.infoDetails}>
+        <PortfolioHero heroType={user.heroType} heroMedia={user.heroMedia} />
         <header className={s.pageHeader}>
           <span className={s.eyebrow}>
             <span className={s.eyebrowDot} />
@@ -241,11 +242,6 @@ export default function InfoDetails() {
         <div className={s.card}>
           <h3 className={s.sectionTitle}>Соціальні мережі</h3>
           <SocialLinks socialLinks={user.socialLinks} />
-        </div>
-
-        <div className={s.card}>
-          <h3 className={s.sectionTitle}>Портфоліо</h3>
-          <PortfolioList items={user.portfolio} />
         </div>
       </div>
     </section>

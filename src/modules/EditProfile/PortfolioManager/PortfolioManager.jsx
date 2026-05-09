@@ -2,41 +2,65 @@
 
 import React from 'react';
 import { usePortfolioManager } from './usePortfolioManager';
+import HeroModeSelector from './HeroModeSelector';
 import UploadZone from './UploadZone';
 import UploadQueue from './UploadQueue';
 import PortfolioGrid from './PortfolioGrid';
 import s from './PortfolioManager.module.scss';
 
 export default function PortfolioManager({
-  initialPortfolio = [],
+  initialHeroType = null,
+  initialHeroMedia = [],
   refreshUser,
 }) {
   const {
+    heroType,
     items,
     uploadQueue,
     dragOver,
+    errors,
+    busy,
     inputRef,
-    onFilesSelected,
+    limits,
+    remaining,
+    changeMode,
+    clearAll,
     handleInputChange,
     handleDelete,
     onDrop,
     onDragOver,
     onDragLeave,
     openFileDialog,
-    errors,
-  } = usePortfolioManager({ initialPortfolio, refreshUser });
+  } = usePortfolioManager({
+    initialHeroType,
+    initialHeroMedia,
+    refreshUser,
+  });
 
   return (
     <div className={s.wrapper}>
-      <UploadZone
-        inputRef={inputRef}
-        dragOver={dragOver}
-        onDrop={onDrop}
-        onDragOver={onDragOver}
-        onDragLeave={onDragLeave}
-        openFileDialog={openFileDialog}
-        handleInputChange={handleInputChange}
+      <HeroModeSelector
+        heroType={heroType}
+        onChange={changeMode}
+        onClear={clearAll}
+        busy={busy}
+        hasMedia={items.length > 0}
       />
+
+      {heroType && (
+        <UploadZone
+          inputRef={inputRef}
+          dragOver={dragOver}
+          onDrop={onDrop}
+          onDragOver={onDragOver}
+          onDragLeave={onDragLeave}
+          openFileDialog={openFileDialog}
+          handleInputChange={handleInputChange}
+          limits={limits}
+          remaining={remaining}
+          disabled={busy}
+        />
+      )}
 
       {errors && errors.length > 0 && (
         <div className={s.errors}>

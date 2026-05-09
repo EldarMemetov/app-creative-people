@@ -1,13 +1,12 @@
 'use client';
 
 import React from 'react';
-
-import s from './PortfolioManager.module.scss';
 import Image from 'next/image';
+import s from './PortfolioManager.module.scss';
 
 export default function PortfolioGrid({ items = [], onDelete }) {
   if (!items || items.length === 0) {
-    return <div className={s.empty}>Портфолио пусто</div>;
+    return <div className={s.empty}>Файлов пока нет</div>;
   }
 
   const renderPreview = (item) => {
@@ -25,7 +24,8 @@ export default function PortfolioGrid({ items = [], onDelete }) {
         height={300}
         className={s.image}
         src={item.url}
-        alt={item.description || 'portfolio'}
+        alt="portfolio"
+        unoptimized
       />
     );
   };
@@ -41,7 +41,6 @@ export default function PortfolioGrid({ items = [], onDelete }) {
               <div className={s.typeBadge}>
                 {it.type === 'video' ? 'Видео' : 'Фото'}
               </div>
-              <div className={s.desc}>{it.description || '—'}</div>
             </div>
 
             <div className={s.cardActions}>
