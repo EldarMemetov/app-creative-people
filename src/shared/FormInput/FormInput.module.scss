@@ -14,7 +14,6 @@
   color: rgba(180, 188, 220, 0.75);
 }
 
-// ----- Inner wrapper (для input + иконка глаза) -----
 .inputInner {
   position: relative;
   display: flex;
@@ -28,8 +27,7 @@
   width: 100%;
   padding: 12px 14px;
   border-radius: 12px;
-  font-size: 15px;
-  font-family: inherit;
+  font-size: 14px;
   font-weight: 500;
   line-height: 1.4;
   color: #f5f6ff;
@@ -63,7 +61,6 @@
     opacity: 0.55;
   }
 
-  // автозаполнение браузеров — убираем белый фон
   &:-webkit-autofill,
   &:-webkit-autofill:hover,
   &:-webkit-autofill:focus {
@@ -73,7 +70,6 @@
     transition: background-color 9999s ease-in-out 0s;
   }
 
-  // убираем стрелки у number-инпутов
   &[type='number'] {
     -moz-appearance: textfield;
     &::-webkit-outer-spin-button,
@@ -90,12 +86,10 @@
   line-height: 1.6;
 }
 
-// когда рядом есть кнопка глаза — место справа под неё
 .inputInner:has(.eyeButton) .input {
   padding-right: 46px;
 }
 
-// ----- Eye button (для password) -----
 .eyeButton {
   position: absolute;
   top: 50%;
