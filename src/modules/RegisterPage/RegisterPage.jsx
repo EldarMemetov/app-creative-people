@@ -11,6 +11,7 @@ import { toast } from 'react-hot-toast';
 import FormInput from '@/shared/FormInput/FormInput';
 import { RegisterSchema } from '@/shared/FormSchema/RegisterSchema/RegisterSchema';
 import RoleSelector from './RoleSelector/RoleSelector';
+import CountryCitySelector from '@/shared/CountryCitySelector/CountryCitySelector';
 
 export default function RegisterPage() {
   const router = useRouter();
@@ -72,21 +73,8 @@ export default function RegisterPage() {
                     </div>
                   </div>
 
-                  <div className={s.row}>
-                    <div className={s.field}>
-                      <FormInput
-                        label={t('country')}
-                        name="country"
-                        placeholder={t('country_placeholder')}
-                      />
-                    </div>
-                    <div className={s.field}>
-                      <FormInput
-                        label={t('city')}
-                        name="city"
-                        placeholder={t('city_placeholder')}
-                      />
-                    </div>
+                  <div>
+                    <CountryCitySelector />
                   </div>
 
                   <div className={s.field}>

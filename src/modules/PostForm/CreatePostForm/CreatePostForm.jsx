@@ -16,6 +16,7 @@ import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import Container from '@/shared/container/Container';
 import RoleSelector from '@/modules/RegisterPage/RoleSelector/RoleSelector';
+import CountryCitySelector from '@/shared/CountryCitySelector/CountryCitySelector';
 
 const MAX_PHOTO_COUNT = 3;
 const MAX_PHOTO_BYTES = 5 * 1024 * 1024;
@@ -211,9 +212,7 @@ export default function CreatePostForm({ initial = null }) {
                   name="description"
                   placeholder="Описание..."
                 />
-                <FormInput label="Страна" name="country" />
-                <FormInput label="Город" name="city" />
-
+                <CountryCitySelector />
                 <div className={s.dateRow}>
                   <label className={s.checkboxLabel}>
                     <input
