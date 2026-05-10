@@ -1,6 +1,7 @@
 import Container from '@/shared/container/Container';
 import s from './GetStarted.module.scss';
-
+import { ROUTES, LINKDATA } from '@/shared/constants';
+import LinkButton from '@/shared/components/LinkButton/LinkButton';
 export default function GetStarted() {
   return (
     <section className={s.cta}>
@@ -19,12 +20,18 @@ export default function GetStarted() {
           </p>
 
           <div className={s.actions}>
-            <button type="button" className={s.primary}>
-              Зареєструватись
-            </button>
-            <button type="button" className={s.secondary}>
-              На головну
-            </button>
+            <LinkButton
+              className={s.primary}
+              path={ROUTES.REGISTER}
+              type={LINKDATA.TYPE_LIGHT_BORDER}
+              linkText=" Реєстрація"
+            />
+            <LinkButton
+              className={s.secondary}
+              path={ROUTES.LOGIN}
+              type={LINKDATA.TYPE_LIGHT_BORDER}
+              linkText="Увійти"
+            />
           </div>
         </div>
       </Container>

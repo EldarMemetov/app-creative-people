@@ -11,22 +11,24 @@ export default function ButtonLoginRegister({ onCloseMenu }) {
   if (auth.user) return null;
 
   return (
-    <div className={s.wrapper}>
+    <div className={s.actions}>
       <LinkButton
+        className={s.primary}
         path={ROUTES.LOGIN}
         type={LINKDATA.TYPE_LIGHT_BORDER}
         linkText={t('login')}
         onClick={() => {
-          onCloseMenu?.(); // <<–– правильно
+          onCloseMenu?.();
         }}
       />
 
       <LinkButton
+        className={s.secondary}
         path={ROUTES.REGISTER}
         type={LINKDATA.TYPE_LIGHT_BORDER}
         linkText={t('register')}
         onClick={() => {
-          onCloseMenu?.(); // <<–– правильно
+          onCloseMenu?.();
         }}
       />
     </div>

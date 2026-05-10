@@ -4,7 +4,8 @@ import { useEffect, useState } from 'react';
 import Container from '@/shared/container/Container';
 import { getAllUsers } from '@/services/api/users/api';
 import s from './JoinNow.module.scss';
-
+import { ROUTES, LINKDATA } from '@/shared/constants';
+import LinkButton from '@/shared/components/LinkButton/LinkButton';
 const TARGET = 1000;
 
 export default function JoinNow() {
@@ -85,12 +86,18 @@ export default function JoinNow() {
           </div>
 
           <div className={s.actions}>
-            <button type="button" className={s.primary}>
-              Зареєструватися
-            </button>
-            <button type="button" className={s.secondary}>
-              Увійти
-            </button>
+            <LinkButton
+              className={s.primary}
+              path={ROUTES.REGISTER}
+              type={LINKDATA.TYPE_LIGHT_BORDER}
+              linkText=" Реєстрація"
+            />
+            <LinkButton
+              className={s.secondary}
+              path={ROUTES.LOGIN}
+              type={LINKDATA.TYPE_LIGHT_BORDER}
+              linkText="Увійти"
+            />
           </div>
 
           <div className={s.stores}>

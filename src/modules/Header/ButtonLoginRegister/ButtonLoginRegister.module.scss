@@ -1,4 +1,80 @@
-.wrapper {
+.actions {
   display: flex;
+  flex-wrap: wrap;
   gap: 12px;
+  justify-content: flex-end;
+  @include media(tablet) {
+    gap: 16px;
+  }
+}
+.primary {
+  font: inherit;
+  cursor: pointer;
+  border: 0;
+  padding: 16px 28px;
+  border-radius: 14px;
+  font-size: 15px;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  color: #ffffff;
+  background: linear-gradient(135deg, #4a6bff 0%, #7a5bff 100%);
+  box-shadow:
+    0 12px 40px -10px rgba(74, 107, 255, 0.7),
+    inset 0 1px 0 rgba(255, 255, 255, 0.25);
+  transition:
+    transform 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+    box-shadow 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+    filter 0.5s ease;
+
+  &:hover {
+    transform: translateY(-2px) scale(1.02);
+    box-shadow:
+      0 18px 50px -8px rgba(122, 91, 255, 0.75),
+      inset 0 1px 0 rgba(255, 255, 255, 0.35);
+    filter: brightness(1.08);
+  }
+
+  &:active {
+    transform: translateY(0) scale(0.99);
+  }
+
+  @include media(tablet) {
+    padding: 18px 38px;
+    border-radius: 16px;
+    font-size: 16px;
+  }
+}
+
+.secondary {
+  font: inherit;
+  cursor: pointer;
+  padding: 16px 28px;
+  border-radius: 14px;
+  font-size: 15px;
+  font-weight: 500;
+  color: #eef0ff;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  transition:
+    transform 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+    background 0.5s ease,
+    border-color 0.5s ease;
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.09);
+    border-color: rgba(255, 255, 255, 0.28);
+    transform: translateY(-2px);
+  }
+
+  &:active {
+    transform: translateY(0);
+  }
+
+  @include media(tablet) {
+    padding: 18px 38px;
+    border-radius: 16px;
+    font-size: 16px;
+  }
 }
