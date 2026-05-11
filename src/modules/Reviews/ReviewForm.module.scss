@@ -1,109 +1,391 @@
 .form {
-  padding: 20px;
-  background: #f9f9f9;
-  border-radius: 8px;
-  margin-top: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding: 24px;
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 16px;
+  backdrop-filter: blur(6px);
 
-  h3 {
-    margin-bottom: 16px;
+  @include media(tablet) {
+    padding: 32px;
+    gap: 24px;
+  }
+
+  @include media(desktop) {
+    padding: 40px;
   }
 }
+
+// ─── Title ────────────────────────────────────────────────
+
+.title {
+  font-size: 20px;
+  font-weight: 700;
+  color: #fff;
+  line-height: 1.2;
+  margin: 0 0 4px;
+
+  @include media(tablet) {
+    font-size: 24px;
+    margin: 0 0 8px;
+  }
+
+  @include media(desktop) {
+    font-size: 28px;
+  }
+}
+
+// ─── Field ────────────────────────────────────────────────
 
 .field {
-  margin-bottom: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
 
-  label {
-    display: block;
-    margin-bottom: 8px;
-    font-weight: 500;
+.label {
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #bbb;
+  margin: 0;
+}
+
+// ─── Text inputs ──────────────────────────────────────────
+
+.input,
+.textarea {
+  width: 100%;
+  padding: 12px 14px;
+  margin: 0;
+  font-size: 14px;
+  font-family: inherit;
+  color: #fff;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
+  transition:
+    border-color 0.25s ease,
+    background 0.25s ease,
+    box-shadow 0.25s ease;
+  resize: none;
+  &::placeholder {
+    color: #666;
   }
 
-  textarea,
-  input[type='url'],
-  input[type='text'] {
-    width: 100%;
-    padding: 10px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    font-size: 14px;
+  &:hover {
+    border-color: rgba(255, 255, 255, 0.18);
+  }
+
+  &:focus {
+    outline: none;
+    border-color: rgba(138, 43, 226, 0.6);
+    background: rgba(138, 43, 226, 0.06);
+    box-shadow: 0 0 0 3px rgba(138, 43, 226, 0.18);
+  }
+
+  @include media(tablet) {
+    font-size: 15px;
+    padding: 14px 16px;
   }
 }
 
+.textarea {
+  min-height: 110px;
+  line-height: 1.5;
+  resize: vertical;
+}
+
+// ─── File input ───────────────────────────────────────────
+
+.fileInput {
+  width: 100%;
+  margin: 0;
+  font-size: 13px;
+  color: #bbb;
+  cursor: pointer;
+
+  &::file-selector-button {
+    margin-right: 12px;
+    padding: 10px 18px;
+    font-size: 13px;
+    font-weight: 500;
+    color: #fff;
+    background: rgba(138, 43, 226, 0.15);
+    border: 1px solid rgba(138, 43, 226, 0.4);
+    border-radius: 10px;
+    cursor: pointer;
+    transition:
+      background 0.25s ease,
+      border-color 0.25s ease,
+      transform 0.2s ease;
+
+    &:hover {
+      background: rgba(138, 43, 226, 0.28);
+      border-color: rgba(138, 43, 226, 0.7);
+      transform: translateY(-1px);
+    }
+  }
+
+  &:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+
+    &::file-selector-button {
+      cursor: not-allowed;
+    }
+  }
+}
+
+// ─── Photo preview ────────────────────────────────────────
+
 .photoPreview {
-  display: flex;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(96px, 1fr));
   gap: 10px;
-  margin-top: 10px;
-  flex-wrap: wrap;
+  margin-top: 4px;
+
+  @include media(tablet) {
+    grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
+    gap: 12px;
+    margin-top: 6px;
+  }
 }
 
 .photoItem {
   position: relative;
-  width: 80px;
-  height: 80px;
+  aspect-ratio: 1 / 1;
+  border-radius: 10px;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  transition:
+    border-color 0.25s ease,
+    transform 0.25s ease;
 
-  img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    border-radius: 4px;
+  &:hover {
+    border-color: rgba(138, 43, 226, 0.5);
+    transform: translateY(-2px);
+
+    .photoRemoveBtn {
+      opacity: 1;
+    }
+  }
+}
+
+.photoImg {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.photoRemoveBtn {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  width: 24px;
+  height: 24px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  margin: 0;
+  font-size: 16px;
+  line-height: 1;
+  color: #fff;
+  background: rgba(0, 0, 0, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 50%;
+  cursor: pointer;
+  opacity: 0;
+  backdrop-filter: blur(6px);
+  transition:
+    background 0.25s ease,
+    border-color 0.25s ease,
+    color 0.25s ease,
+    opacity 0.25s ease,
+    transform 0.2s ease;
+
+  &:hover {
+    background: rgba(255, 59, 107, 0.25);
+    border-color: rgba(255, 59, 107, 0.7);
+    color: #ff6b8b;
+    transform: scale(1.08);
   }
 
-  button {
-    position: absolute;
-    top: -8px;
-    right: -8px;
-    width: 20px;
-    height: 20px;
-    border-radius: 50%;
-    background: red;
-    color: white;
-    border: none;
-    cursor: pointer;
+  &:focus-visible {
+    opacity: 1;
+    outline: 2px solid #8a2be2;
+    outline-offset: 2px;
+  }
+
+  @media (hover: none) {
+    opacity: 1;
+  }
+}
+
+// ─── Video links ──────────────────────────────────────────
+
+.videoLinkList {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 12px;
+
+  @include media(tablet) {
+    gap: 12px;
+    margin-bottom: 14px;
   }
 }
 
 .videoLinkRow {
-  display: flex;
+  display: grid;
+  grid-template-columns: 1fr;
   gap: 8px;
-  margin-bottom: 8px;
+  align-items: stretch;
 
-  input {
-    flex: 1;
-  }
-
-  button {
-    padding: 0 10px;
-    background: #ff4444;
-    color: white;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
+  @include media(tablet) {
+    grid-template-columns: 1.4fr 1fr auto;
+    gap: 10px;
   }
 }
 
-.addLink {
-  background: none;
-  border: 1px dashed #999;
-  padding: 8px 16px;
+.videoRemoveBtn {
+  width: 100%;
+  min-width: 44px;
+  padding: 10px 14px;
+  margin: 0;
+  font-size: 16px;
+  line-height: 1;
+  color: #ccc;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
   cursor: pointer;
-  border-radius: 4px;
+  transition:
+    background 0.25s ease,
+    border-color 0.25s ease,
+    color 0.25s ease,
+    transform 0.2s ease;
 
   &:hover {
-    background: #f0f0f0;
+    background: rgba(255, 59, 107, 0.15);
+    border-color: rgba(255, 59, 107, 0.55);
+    color: #ff6b8b;
+    transform: translateY(-1px);
+  }
+
+  &:focus-visible {
+    outline: 2px solid #8a2be2;
+    outline-offset: 2px;
+  }
+
+  @include media(tablet) {
+    width: auto;
   }
 }
 
-.submitBtn {
-  padding: 12px 24px;
-  background: #4caf50;
-  color: white;
-  border: none;
-  border-radius: 4px;
+// ─── Add link button ──────────────────────────────────────
+
+.addLink {
+  align-self: flex-start;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 10px 16px;
+  margin: 0;
+  font-size: 13px;
+  font-weight: 500;
+  color: #fff;
+  background: rgba(138, 43, 226, 0.1);
+  border: 1px solid rgba(138, 43, 226, 0.35);
+  border-radius: 10px;
   cursor: pointer;
-  font-size: 16px;
+  transition:
+    background 0.25s ease,
+    border-color 0.25s ease,
+    transform 0.2s ease;
+
+  &:hover {
+    background: rgba(138, 43, 226, 0.22);
+    border-color: rgba(138, 43, 226, 0.7);
+    transform: translateY(-1px);
+  }
+
+  &:active {
+    transform: translateY(0);
+  }
+
+  &:focus-visible {
+    outline: 2px solid #8a2be2;
+    outline-offset: 2px;
+  }
+
+  @include media(tablet) {
+    font-size: 14px;
+    padding: 12px 18px;
+  }
+}
+
+// ─── Submit ───────────────────────────────────────────────
+
+.submitBtn {
+  align-self: flex-start;
+  min-width: 180px;
+  padding: 12px 28px;
+  margin: 4px 0 0;
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  color: #fff;
+  background: linear-gradient(
+    135deg,
+    rgba(138, 43, 226, 0.85) 0%,
+    rgba(138, 43, 226, 0.55) 100%
+  );
+  border: 1px solid rgba(138, 43, 226, 0.6);
+  border-radius: 12px;
+  cursor: pointer;
+  transition:
+    background 0.25s ease,
+    border-color 0.25s ease,
+    transform 0.2s ease,
+    box-shadow 0.25s ease,
+    opacity 0.25s ease;
+
+  &:hover:not(:disabled) {
+    background: linear-gradient(
+      135deg,
+      rgba(138, 43, 226, 1) 0%,
+      rgba(138, 43, 226, 0.7) 100%
+    );
+    border-color: rgba(138, 43, 226, 0.9);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(138, 43, 226, 0.3);
+  }
+
+  &:active:not(:disabled) {
+    transform: translateY(0);
+    box-shadow: 0 4px 12px rgba(138, 43, 226, 0.25);
+  }
+
+  &:focus-visible {
+    outline: 2px solid #8a2be2;
+    outline-offset: 3px;
+  }
 
   &:disabled {
-    opacity: 0.6;
+    opacity: 0.5;
     cursor: not-allowed;
+  }
+
+  @include media(tablet) {
+    min-width: 200px;
+    padding: 14px 32px;
+    font-size: 15px;
+    margin: 8px 0 0;
   }
 }

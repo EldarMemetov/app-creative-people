@@ -1,11 +1,12 @@
 'use client';
 
-import { useEffect, useState, useMemo } from 'react';
+import { useEffect, useState, useMemo, useCallback } from 'react';
 import Link from 'next/link';
 import { useRouter, useSearchParams, usePathname } from 'next/navigation';
 import { useTranslation } from 'react-i18next';
 
 import { filterUsers } from '@/services/api/users/api';
+import { toggleFavorite, getMyFavorites } from '@/services/api/post/api';
 import { ImageWithFallback } from '@/shared/ImageWithFallback/ImageWithFallback';
 import Loader from '@/shared/Loader/Loader';
 import Container from '@/shared/container/Container';
@@ -28,6 +29,10 @@ export default function UsersPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
 
+  // ─── избранное ──────────────────────────────
+  const [favoriteIds, setFavoriteIds] = useState(() => new Set());
+  const [pendingIds, setPendingIds] = useState(() => new Set());
+
   const { usersStatus, usersStatusInitialized, connected } = useSocket();
   const { user: currentUser, loading: authLoading } = useAuth();
   const { t } = useTranslation(['roles', 'directions']);
@@ -35,9 +40,9 @@ export default function UsersPage() {
   const page = Number(searchParams.get('page')) || 1;
   const paramsKey = useMemo(() => searchParams.toString(), [searchParams]);
 
+  // загружаем пользователей
   useEffect(() => {
     let mounted = true;
-
     const fetchUsers = async () => {
       setLoading(true);
       setError('');
@@ -62,12 +67,84 @@ export default function UsersPage() {
         if (mounted) setLoading(false);
       }
     };
-
     fetchUsers();
     return () => {
       mounted = false;
     };
   }, [paramsKey, page, searchParams]);
+
+  // загружаем избранных юзеров (чтобы кнопка-сердечко была сразу в правильном состоянии)
+  useEffect(() => {
+    if (!currentUser?._id) {
+      setFavoriteIds(new Set());
+      return;
+    }
+    let mounted = true;
+    (async () => {
+      try {
+        const res = await getMyFavorites({ type: 'user', page: 1, limit: 100 });
+        if (!mounted) return;
+        const ids = new Set(
+          (res?.data || []).map((u) => String(u._id ?? u.id))
+        );
+        setFavoriteIds(ids);
+      } catch (e) {
+        // молча — кнопка просто будет «пустой»
+      }
+    })();
+    return () => {
+      mounted = false;
+    };
+  }, [currentUser?._id]);
+
+  const handleToggleFavorite = useCallback(
+    async (e, userId) => {
+      e.preventDefault();
+      e.stopPropagation();
+
+      if (!currentUser?._id) {
+        router.push('/auth/login');
+        return;
+      }
+      if (!userId || pendingIds.has(userId)) return;
+
+      // оптимистично переключаем
+      setPendingIds((prev) => new Set(prev).add(userId));
+      setFavoriteIds((prev) => {
+        const next = new Set(prev);
+        next.has(userId) ? next.delete(userId) : next.add(userId);
+        return next;
+      });
+
+      try {
+        const res = await toggleFavorite({
+          targetType: 'user',
+          targetId: userId,
+        });
+        const favorited = res?.data?.favorited;
+        // синхронизируем по факту ответа сервера
+        setFavoriteIds((prev) => {
+          const next = new Set(prev);
+          favorited ? next.add(userId) : next.delete(userId);
+          return next;
+        });
+      } catch (err) {
+        // откат
+        setFavoriteIds((prev) => {
+          const next = new Set(prev);
+          next.has(userId) ? next.delete(userId) : next.add(userId);
+          return next;
+        });
+      } finally {
+        setPendingIds((prev) => {
+          const next = new Set(prev);
+          next.delete(userId);
+          return next;
+        });
+      }
+    },
+    [currentUser?._id, pendingIds, router]
+  );
 
   const totalPages = Math.max(
     1,
@@ -128,6 +205,9 @@ export default function UsersPage() {
                       ? [user.role]
                       : [];
 
+                const isFav = favoriteIds.has(userIdKey);
+                const isPending = pendingIds.has(userIdKey);
+
                 return (
                   <Link
                     key={user._id}
@@ -152,6 +232,37 @@ export default function UsersPage() {
                           <span className={s.statusDot} />
                           {isOnline ? 'Онлайн' : 'Офлайн'}
                         </div>
+
+                        {/* ─── кнопка избранного ─── */}
+                        {!isOwn && (
+                          <button
+                            type="button"
+                            className={`${s.favBtn} ${isFav ? s.favBtnActive : ''}`}
+                            onClick={(e) => handleToggleFavorite(e, userIdKey)}
+                            disabled={isPending}
+                            aria-pressed={isFav}
+                            aria-label={
+                              isFav ? 'Видалити з обраних' : 'Додати в обрані'
+                            }
+                            title={
+                              isFav ? 'Видалити з обраних' : 'Додати в обрані'
+                            }
+                          >
+                            <svg
+                              viewBox="0 0 24 24"
+                              width="18"
+                              height="18"
+                              fill={isFav ? 'currentColor' : 'none'}
+                              stroke="currentColor"
+                              strokeWidth="2"
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              aria-hidden="true"
+                            >
+                              <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
+                            </svg>
+                          </button>
+                        )}
                       </div>
 
                       <div className={s.infoBlur}>

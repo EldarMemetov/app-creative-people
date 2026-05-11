@@ -53,10 +53,8 @@ export default function ReviewForm({ postId, isAuthor = false, onSuccess }) {
 
     setLoading(true);
     try {
-      // Отправляем отзыв
       await addReview(postId, { text, rating });
 
-      // Если автор — отправляем результаты
       if (isAuthor) {
         const filteredLinks = videoLinks.filter((v) => v.url.trim());
         if (photos.length > 0 || filteredLinks.length > 0) {
@@ -82,16 +80,17 @@ export default function ReviewForm({ postId, isAuthor = false, onSuccess }) {
 
   return (
     <form onSubmit={handleSubmit} className={styles.form}>
-      <h3>Оставить отзыв о проекте</h3>
+      <h3 className={styles.title}>Оставить отзыв о проекте</h3>
 
       <div className={styles.field}>
-        <label>Оценка</label>
+        <label className={styles.label}>Оценка</label>
         <StarRating value={rating} onChange={setRating} size={32} />
       </div>
 
       <div className={styles.field}>
-        <label>Отзыв</label>
+        <label className={styles.label}>Отзыв</label>
         <textarea
+          className={styles.textarea}
           value={text}
           onChange={(e) => setText(e.target.value)}
           placeholder="Напишите ваш отзыв о работе в команде..."
@@ -103,8 +102,11 @@ export default function ReviewForm({ postId, isAuthor = false, onSuccess }) {
       {isAuthor && (
         <>
           <div className={styles.field}>
-            <label>Фотографии результата (макс. 5)</label>
+            <label className={styles.label}>
+              Фотографии результата (макс. 5)
+            </label>
             <input
+              className={styles.fileInput}
               type="file"
               accept="image/*"
               multiple
@@ -116,6 +118,7 @@ export default function ReviewForm({ postId, isAuthor = false, onSuccess }) {
                 {photos.map((file, idx) => (
                   <div key={idx} className={styles.photoItem}>
                     <Image
+                      className={styles.photoImg}
                       src={URL.createObjectURL(file)}
                       alt={`Preview ${idx}`}
                       width={100}
@@ -123,7 +126,9 @@ export default function ReviewForm({ postId, isAuthor = false, onSuccess }) {
                     />
                     <button
                       type="button"
+                      className={styles.photoRemoveBtn}
                       onClick={() => handleRemovePhoto(idx)}
+                      aria-label="Удалить фото"
                     >
                       ×
                     </button>
@@ -134,35 +139,45 @@ export default function ReviewForm({ postId, isAuthor = false, onSuccess }) {
           </div>
 
           <div className={styles.field}>
-            <label>Ссылки на видео (YouTube, Vimeo)</label>
-            {videoLinks.map((link, idx) => (
-              <div key={idx} className={styles.videoLinkRow}>
-                <input
-                  type="url"
-                  placeholder="https://youtube.com/..."
-                  value={link.url}
-                  onChange={(e) =>
-                    handleVideoLinkChange(idx, 'url', e.target.value)
-                  }
-                />
-                <input
-                  type="text"
-                  placeholder="Название (опционально)"
-                  value={link.title}
-                  onChange={(e) =>
-                    handleVideoLinkChange(idx, 'title', e.target.value)
-                  }
-                />
-                {videoLinks.length > 1 && (
-                  <button
-                    type="button"
-                    onClick={() => handleRemoveVideoLink(idx)}
-                  >
-                    ×
-                  </button>
-                )}
-              </div>
-            ))}
+            <label className={styles.label}>
+              Ссылки на видео (YouTube, Vimeo)
+            </label>
+
+            <div className={styles.videoLinkList}>
+              {videoLinks.map((link, idx) => (
+                <div key={idx} className={styles.videoLinkRow}>
+                  <input
+                    className={styles.input}
+                    type="url"
+                    placeholder="https://youtube.com/..."
+                    value={link.url}
+                    onChange={(e) =>
+                      handleVideoLinkChange(idx, 'url', e.target.value)
+                    }
+                  />
+                  <input
+                    className={styles.input}
+                    type="text"
+                    placeholder="Название (опционально)"
+                    value={link.title}
+                    onChange={(e) =>
+                      handleVideoLinkChange(idx, 'title', e.target.value)
+                    }
+                  />
+                  {videoLinks.length > 1 && (
+                    <button
+                      type="button"
+                      className={styles.videoRemoveBtn}
+                      onClick={() => handleRemoveVideoLink(idx)}
+                      aria-label="Удалить ссылку"
+                    >
+                      ×
+                    </button>
+                  )}
+                </div>
+              ))}
+            </div>
+
             <button
               type="button"
               onClick={handleAddVideoLink}

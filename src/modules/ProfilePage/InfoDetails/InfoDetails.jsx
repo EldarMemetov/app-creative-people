@@ -190,6 +190,12 @@ export default function InfoDetails() {
             type={LINKDATA.TYPE_LIGHT_BORDER}
             linkText="Редагувати свій профіль"
           />
+          <LinkButton
+            className={s.actionButton}
+            path="favorite-talents"
+            type={LINKDATA.FAVORITES_TALENTS}
+            linkText="избранний таланты"
+          />
         </nav>
         <CompletedProjects userId={user._id} />
 

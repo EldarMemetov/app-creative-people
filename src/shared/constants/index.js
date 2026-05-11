@@ -15,6 +15,7 @@ export const ROUTES = {
   NOTIFICATION: 'notification',
   CREATE: '/posts/create',
   APPLICATIONS: 'my-applications',
+  FAVORITES_TALENTS: 'favorite-talents',
 };
 
 export const LINKDATA = {
@@ -35,6 +36,7 @@ export const LINKDATA = {
   POLICY: 'privacy-policy',
   APPLICATIONS: 'my-applications',
   TYPE_LIGHT_BORDER: 'light-border',
+  FAVORITES_TALENTS: 'favorite-talents',
 };
 
 export const LANGUAGES = { UA: 'ua', EN: 'en', DE: 'de' };

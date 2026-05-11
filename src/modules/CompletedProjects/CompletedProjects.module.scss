@@ -83,18 +83,8 @@
 
 .projectsList,
 .reviewsList {
-  display: grid;
-  grid-template-columns: 1fr;
+  display: flex;
   gap: 18px;
-
-  @media (min-width: 768px) {
-    grid-template-columns: repeat(2, 1fr);
-    gap: 22px;
-  }
-
-  @media (min-width: 1200px) {
-    grid-template-columns: repeat(3, 1fr);
-  }
 }
 
 // ============================================
@@ -233,7 +223,7 @@
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  padding: 4px 12px 4px 4px;
+  padding: 5px 12px;
   border-radius: 999px;
   background: rgba(255, 255, 255, 0.04);
   border: 1px solid rgba(255, 255, 255, 0.08);

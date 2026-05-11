@@ -27,7 +27,7 @@
   width: 100%;
   padding: 12px 14px;
   border-radius: 12px;
-  font-size: 14px;
+  font-size: 16px;
   font-weight: 500;
   line-height: 1.4;
   color: #f5f6ff;
@@ -84,6 +84,7 @@
   min-height: 120px;
   resize: vertical;
   line-height: 1.6;
+  resize: none;
 }
 
 .inputInner:has(.eyeButton) .input {
