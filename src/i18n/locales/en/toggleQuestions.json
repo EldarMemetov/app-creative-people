@@ -1,0 +1,34 @@
+{
+  "title": "Frequently Asked Questions",
+  "description": "We've collected answers to the most common questions about QVRIX. Didn't find what you were looking for — contact us.",
+  "faq": [
+    {
+      "question": "Who is this platform for?",
+      "answer": "QVRIX is built for everyone involved in the creative process — photographers, models, videographers, directors, makeup artists, stylists, hair stylists, producers, fashion designers, brands and AI creators. If you're connected to creativity — you belong here."
+    },
+    {
+      "question": "How do I find the right person?",
+      "answer": "The platform has a dedicated page with all community members. Use filters by role, city or country — and find the right people in minutes. You can then message them directly with no middlemen involved."
+    },
+    {
+      "question": "How do I build a team for a shoot?",
+      "answer": "Create a team recruitment post — describe the project and specify which roles you need. Community members will submit their applications and you choose the best fit. You can create a post on the posts page or under the My Posts tab in your profile."
+    },
+    {
+      "question": "How does the calendar work?",
+      "answer": "Once the team is assembled, the shoot date is automatically added to the calendar of all participants. The calendar shows the full team and project details. You can also add personal shoots and notes to any date manually."
+    },
+    {
+      "question": "What happens after the shoot?",
+      "answer": "After the shoot is marked as completed, all participants are automatically prompted to leave a review about how the project went and who they worked with. The post author can publish the shoot results — and they will appear on the profiles of all team members."
+    },
+    {
+      "question": "How is QVRIX different from regular social media?",
+      "answer": "QVRIX is not just a content feed. It's a tool built for work. It includes role-based search, a team recruitment system, a shared shoot calendar and post-project reviews. Everything is designed for creative collaboration — not for likes."
+    },
+    {
+      "question": "Is there a mobile app?",
+      "answer": "The mobile app is currently in development and will be available for iOS and Android soon. Stay tuned for updates."
+    }
+  ]
+}

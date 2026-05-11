@@ -54,6 +54,7 @@ export const NAMESPACES = [
   'directions',
   'resetPassword',
   'comments',
+  'toggleQuestions',
 ];
 
 export const FLIPPED_TIME_MS = 15000;

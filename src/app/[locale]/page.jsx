@@ -5,16 +5,23 @@ import HowItWorks from '@/modules/HomePage/HowItWorks/HowItWorks';
 import WhyUs from '@/modules/HomePage/WhyUs/WhyUs';
 import JoinNow from '@/modules/HomePage/JoinNow/JoinNow';
 import RenderOurStory from '@/modules/HomePage/RenderOurStory/RenderOurStory';
+import ToggleQuestions from '@/modules/Faq/ToggleQuestions';
 
-export default function Home() {
+export default async function Home({ params: rawParams }) {
+  const params = await rawParams;
+  const availableLocales = ['en', 'ua', 'de'];
+  const locale = availableLocales.includes(params?.locale)
+    ? params.locale
+    : 'en';
   return (
     <div className={s.container}>
-      <HeroSection />
-      <RenderOurStory />
-      <WhoIsItForSection />
-      <HowItWorks />
-      <WhyUs />
-      <JoinNow />
+      <HeroSection locale={locale} />
+      <RenderOurStory locale={locale} />
+      <WhoIsItForSection locale={locale} />
+      <HowItWorks locale={locale} />
+      <WhyUs locale={locale} />
+      <JoinNow locale={locale} />
+      <ToggleQuestions locale={locale} />
     </div>
   );
 }

@@ -522,3 +522,220 @@
     transform: scale(0.8);
   }
 }
+
+.comingModal {
+  width: 100%;
+  max-width: 460px;
+  padding: 0 !important;
+  border-radius: 24px;
+  background: linear-gradient(
+    180deg,
+    rgba(20, 22, 60, 0.96) 0%,
+    rgba(8, 10, 50, 0.96) 100%
+  );
+  border: 1px solid rgba(166, 180, 255, 0.22);
+  box-shadow:
+    0 50px 100px -30px rgba(0, 0, 0, 0.95),
+    inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  overflow: hidden;
+  color: #f5f6ff;
+
+  // м’який світловий бордер
+  &::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: 24px;
+    padding: 1px;
+    background: linear-gradient(
+      135deg,
+      rgba(122, 91, 255, 0.6) 0%,
+      rgba(74, 107, 255, 0) 40%,
+      rgba(122, 91, 255, 0) 60%,
+      rgba(166, 180, 255, 0.6) 100%
+    );
+    -webkit-mask:
+      linear-gradient(#000 0 0) content-box,
+      linear-gradient(#000 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    pointer-events: none;
+  }
+}
+
+.comingInner {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 18px;
+  padding: 44px 28px 32px;
+
+  @include media(tablet) {
+    padding: 52px 40px 36px;
+    gap: 22px;
+  }
+}
+
+.comingBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 14px 6px 10px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: #c5cdff;
+  background: rgba(122, 91, 255, 0.14);
+  border: 1px solid rgba(122, 91, 255, 0.35);
+}
+
+.comingBadgeDot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #a6b4ff;
+  box-shadow: 0 0 12px rgba(166, 180, 255, 0.9);
+  animation: pulse 1.6s ease-in-out infinite;
+}
+
+// ---------- Icon з glow і орбітою ----------
+.comingIcon {
+  position: relative;
+  width: 86px;
+  height: 86px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 4px 0 2px;
+}
+
+.comingIconGlow {
+  position: absolute;
+  inset: -4px;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle,
+    rgba(122, 91, 255, 0.55) 0%,
+    rgba(122, 91, 255, 0) 70%
+  );
+  filter: blur(14px);
+  animation: glowPulse 2.6s ease-in-out infinite;
+}
+
+.comingIconCore {
+  position: relative;
+  width: 68px;
+  height: 68px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 22px;
+  color: #ffffff;
+  background: linear-gradient(135deg, #4a6bff 0%, #7a5bff 100%);
+  box-shadow:
+    0 18px 40px -8px rgba(122, 91, 255, 0.7),
+    inset 0 1px 0 rgba(255, 255, 255, 0.25);
+
+  // пунктирна орбіта
+  &::before {
+    content: '';
+    position: absolute;
+    inset: -12px;
+    border-radius: 50%;
+    border: 1px dashed rgba(166, 180, 255, 0.35);
+    animation: spin 14s linear infinite;
+  }
+}
+
+// ---------- Texts ----------
+.comingTitle {
+  margin: 0;
+  font-weight: 600;
+  font-size: 22px;
+  line-height: 1.25;
+  letter-spacing: -0.01em;
+  color: #f6f7ff;
+
+  @include media(tablet) {
+    font-size: 24px;
+  }
+}
+
+.comingText {
+  margin: 0;
+  max-width: 360px;
+  font-size: 14px;
+  line-height: 1.65;
+  color: rgba(222, 226, 250, 0.75);
+
+  strong {
+    color: #ffffff;
+    font-weight: 600;
+  }
+
+  @include media(tablet) {
+    font-size: 15px;
+  }
+}
+
+// ---------- Actions ----------
+.comingActions {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 6px;
+  width: 100%;
+}
+
+.comingPrimary {
+  font: inherit;
+  cursor: pointer;
+  border: 0;
+  padding: 14px 28px;
+  border-radius: 12px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #ffffff;
+  background: linear-gradient(135deg, #4a6bff 0%, #7a5bff 100%);
+  box-shadow:
+    0 10px 30px -10px rgba(122, 91, 255, 0.7),
+    inset 0 1px 0 rgba(255, 255, 255, 0.25);
+  transition:
+    transform 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+    box-shadow 0.4s ease,
+    filter 0.4s ease;
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow:
+      0 14px 36px -8px rgba(122, 91, 255, 0.85),
+      inset 0 1px 0 rgba(255, 255, 255, 0.35);
+    filter: brightness(1.08);
+  }
+
+  &:active {
+    transform: translateY(0);
+  }
+}
+
+@keyframes glowPulse {
+  0%,
+  100% {
+    opacity: 0.6;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.15);
+  }
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}

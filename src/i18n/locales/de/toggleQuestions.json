@@ -1,0 +1,34 @@
+{
+  "title": "Häufig gestellte Fragen",
+  "description": "Hier haben wir Antworten auf die häufigsten Fragen zu QVRIX gesammelt. Keine Antwort gefunden — schreib uns.",
+  "faq": [
+    {
+      "question": "Für wen ist diese Plattform?",
+      "answer": "QVRIX wurde für alle Beteiligten am kreativen Prozess entwickelt — Fotografen, Models, Videografen, Regisseure, Visagisten, Stylisten, Friseure, Produzenten, Modedesigner, Marken und KI-Creators. Wenn du mit Kreativität verbunden bist — bist du hier genau richtig."
+    },
+    {
+      "question": "Wie finde ich die richtige Person?",
+      "answer": "Die Plattform hat eine eigene Seite mit allen Community-Mitgliedern. Nutze Filter nach Rolle, Stadt oder Land — und finde die richtigen Personen in wenigen Minuten. Danach kannst du direkt schreiben, ohne Vermittler."
+    },
+    {
+      "question": "Wie stelle ich ein Team für ein Shooting zusammen?",
+      "answer": "Erstelle einen Team-Aufruf-Beitrag — beschreibe das Projekt und gib an, welche Rollen du benötigst. Community-Mitglieder bewerben sich und du wählst die Besten aus. Einen Beitrag kannst du auf der Beitragsseite oder im Tab Meine Beiträge in deinem Profil erstellen."
+    },
+    {
+      "question": "Wie funktioniert der Kalender?",
+      "answer": "Sobald das Team zusammengestellt ist, wird das Shooting-Datum automatisch in den Kalender aller Teilnehmer eingetragen. Im Kalender sind das gesamte Team und die Projektdetails sichtbar. Du kannst auch persönliche Shootings und Notizen manuell zu beliebigen Terminen hinzufügen."
+    },
+    {
+      "question": "Was passiert nach dem Shooting?",
+      "answer": "Nach Abschluss des Shootings werden alle Teilnehmer automatisch aufgefordert, eine Bewertung darüber zu hinterlassen, wie das Projekt verlaufen ist und mit wem sie gearbeitet haben. Der Autor des Beitrags kann die Shooting-Ergebnisse veröffentlichen — und sie erscheinen auf den Profilen aller Teammitglieder."
+    },
+    {
+      "question": "Was unterscheidet QVRIX von normalen sozialen Netzwerken?",
+      "answer": "QVRIX ist nicht nur ein Content-Feed. Es ist ein Arbeitswerkzeug. Es bietet rollenbasierte Suche, ein Team-Rekrutierungssystem, einen gemeinsamen Shooting-Kalender und Bewertungen nach Projekten. Alles ist auf kreative Zusammenarbeit ausgerichtet — nicht auf Likes."
+    },
+    {
+      "question": "Gibt es eine mobile App?",
+      "answer": "Die mobile App befindet sich derzeit in der Entwicklung und wird bald für iOS und Android verfügbar sein. Bleib auf dem Laufenden."
+    }
+  ]
+}
