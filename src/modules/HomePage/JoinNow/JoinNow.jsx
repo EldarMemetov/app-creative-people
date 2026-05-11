@@ -14,7 +14,10 @@ export default function JoinNow() {
   const [count, setCount] = useState(0);
   const [displayCount, setDisplayCount] = useState(0);
   const [progress, setProgress] = useState(0);
-  const [comingSoon, setComingSoon] = useState(null);
+
+  // ── разделили видимость и контент ──
+  const [comingPlatform, setComingPlatform] = useState(null); // 'ios' | 'android' | null
+  const [isComingOpen, setIsComingOpen] = useState(false);
 
   useEffect(() => {
     let mounted = true;
@@ -47,6 +50,22 @@ export default function JoinNow() {
     raf = requestAnimationFrame(tick);
     return () => cancelAnimationFrame(raf);
   }, [count]);
+
+  const handleOpenComing = (platform) => {
+    setComingPlatform(platform);
+    setIsComingOpen(true);
+  };
+
+  const handleCloseComing = () => {
+    setIsComingOpen(false);
+  };
+
+  const handleAfterClose = () => {
+    setComingPlatform(null);
+  };
+
+  const isIos = comingPlatform === 'ios';
+  const isAndroid = comingPlatform === 'android';
 
   return (
     <section className={s.section}>
@@ -102,7 +121,7 @@ export default function JoinNow() {
               type="button"
               className={s.store}
               aria-label="App Store"
-              onClick={() => setComingSoon('ios')}
+              onClick={() => handleOpenComing('ios')}
             >
               <svg
                 className={s.storeIcon}
@@ -122,7 +141,7 @@ export default function JoinNow() {
               type="button"
               className={s.store}
               aria-label="Google Play"
-              onClick={() => setComingSoon('android')}
+              onClick={() => handleOpenComing('android')}
             >
               <svg
                 className={s.storeIcon}
@@ -165,8 +184,9 @@ export default function JoinNow() {
       </Container>
 
       <Modal
-        show={Boolean(comingSoon)}
-        onClose={() => setComingSoon(null)}
+        show={isComingOpen}
+        onClose={handleCloseComing}
+        onAfterClose={handleAfterClose}
         contentClassName={s.comingModal}
       >
         <div className={s.comingInner}>
@@ -184,12 +204,13 @@ export default function JoinNow() {
                 height="32"
                 aria-hidden="true"
               >
-                {comingSoon === 'ios' ? (
+                {isIos && (
                   <path
                     fill="currentColor"
                     d="M16.365 1.43c0 1.14-.45 2.22-1.18 3.01-.78.85-2.05 1.5-3.07 1.42-.13-1.1.43-2.27 1.13-3.02.78-.83 2.13-1.45 3.12-1.41zM20.5 17.16c-.6 1.39-.89 2-1.66 3.23-1.07 1.71-2.58 3.84-4.45 3.86-1.66.02-2.09-1.08-4.34-1.07-2.25.01-2.72 1.09-4.39 1.07-1.87-.02-3.3-1.95-4.37-3.66-2.99-4.78-3.31-10.39-1.46-13.37 1.31-2.11 3.39-3.34 5.34-3.34 1.99 0 3.24 1.09 4.88 1.09 1.6 0 2.57-1.09 4.87-1.09 1.74 0 3.58.95 4.89 2.59-4.3 2.36-3.6 8.5.69 10.69z"
                   />
-                ) : (
+                )}
+                {isAndroid && (
                   <path
                     fill="currentColor"
                     d="M3.6 1.6c-.4.3-.6.8-.6 1.4v18c0 .6.2 1.1.6 1.4l10.5-10.4L3.6 1.6zm12 9.4l3.4-3.4-12-7c-.2-.1-.5-.2-.8-.2l9.4 10.6zm0 1.8l-9.4 10.6c.3 0 .5-.1.8-.2l12-7-3.4-3.4zm5.5-3.2l-2.6-1.5-3.7 3.7 3.7 3.7 2.6-1.5c1.3-.7 1.3-2.7 0-3.4z"
@@ -200,16 +221,16 @@ export default function JoinNow() {
           </div>
 
           <h3 className={s.comingTitle}>
-            {comingSoon === 'ios'
-              ? 'Додаток для iOS — в розробці'
-              : 'Додаток для Android — в розробці'}
+            {isIos && 'Додаток для iOS — в розробці'}
+            {isAndroid && 'Додаток для Android — в розробці'}
           </h3>
 
           <p className={s.comingText}>
             Ми вже працюємо над мобільним додатком QVRIX — щоб ти міг знаходити
-            команду й вести проєкти прямо з телефону. Скоро він зявиться у
+            команду й вести проєкти прямо з телефону. Скоро він з&apos;явиться у{' '}
             <strong>
-              {comingSoon === 'ios' ? 'App Store' : 'Google Play'}
+              {isIos && 'App Store'}
+              {isAndroid && 'Google Play'}
             </strong>
             . А поки що — користуйся вебверсією, тут є все необхідне.
           </p>
@@ -218,7 +239,7 @@ export default function JoinNow() {
             <button
               type="button"
               className={s.comingPrimary}
-              onClick={() => setComingSoon(null)}
+              onClick={handleCloseComing}
             >
               Зрозуміло
             </button>

@@ -2,32 +2,31 @@
   position: fixed;
   inset: 0;
   z-index: 1200;
-  overflow-y: auto;
-  display: block;
-  padding: 40px 20px;
-  box-sizing: border-box;
   display: flex;
   flex-wrap: wrap;
   align-items: center;
+  justify-content: center;
+  padding: 40px 20px;
+  overflow-y: auto;
+  box-sizing: border-box;
 }
 
 .background {
   position: fixed;
   inset: 0;
+  z-index: 1;
   background-color: rgba(0, 0, 0, 0.5);
-  transition: opacity 0.3s ease;
-  z-index: -1;
+  cursor: pointer;
 }
 
 .modal {
   position: relative;
-  border-radius: 10px;
-  padding: 20px;
-  z-index: 60;
+  z-index: 2;
   margin: 0 auto;
-  opacity: 0;
-  transform: scale(0.95);
+  padding: 20px;
+  border-radius: 10px;
   pointer-events: auto;
+  outline: none;
 }
 
 .background {
@@ -41,10 +40,40 @@
   position: absolute;
   top: 10px;
   right: 10px;
+  z-index: 3;
+  width: 32px;
+  height: 32px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  margin: 0;
   background: none;
   border: none;
+  border-radius: 50%;
   cursor: pointer;
   pointer-events: auto;
+  transition:
+    background 0.25s ease,
+    transform 0.2s ease;
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.08);
+    transform: scale(1.08);
+  }
+
+  &:active {
+    transform: scale(0.95);
+  }
+
+  &:focus-visible {
+    outline: 2px solid #8a2be2;
+    outline-offset: 2px;
+  }
+
+  ─── & > * {
+    pointer-events: none;
+  }
 }
 
 .icon {

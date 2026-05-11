@@ -90,6 +90,11 @@ export default function Modal({
 
   if (!isMounted) return null;
 
+  const handleCloseClick = (e) => {
+    e.stopPropagation();
+    onClose();
+  };
+
   return createPortal(
     <div className={`${styles.overlay} ${className}`}>
       <div ref={backdropRef} className={styles.background} onClick={onClose} />
@@ -101,8 +106,9 @@ export default function Modal({
         tabIndex={-1}
       >
         <button
+          type="button"
           className={styles.closeButton}
-          onClick={onClose}
+          onClick={handleCloseClick}
           aria-label="Close modal"
         >
           <Icon
