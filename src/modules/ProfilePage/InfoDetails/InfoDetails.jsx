@@ -103,7 +103,7 @@ export default function InfoDetails() {
               <span className={s.avatarRing} />
               <ImageWithFallback
                 className={s.avatar}
-                src={user.photo || '/image/logo.png'}
+                src={user.photo || '/image/avatar.webp'}
                 alt={fullName}
                 width={180}
                 height={180}

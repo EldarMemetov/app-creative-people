@@ -17,7 +17,9 @@ html {
 body {
   font-family: $primary-font-family;
 }
-
+* {
+  overflow-wrap: anywhere;
+}
 *,
 *::before,
 *::after {

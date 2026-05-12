@@ -79,8 +79,8 @@ export default function UserDetailPage() {
     typeof user.likesCount === 'number' ? user.likesCount : 0;
 
   return (
-    <Container>
-      <section className={s.section}>
+    <section className={s.section}>
+      <Container>
         <PortfolioHero heroType={user.heroType} heroMedia={user.heroMedia} />
         <header className={s.pageHeader}>
           <span className={s.eyebrow}>
@@ -216,7 +216,7 @@ export default function UserDetailPage() {
           <h3 className={s.sectionTitle}>Соціальні мережі</h3>
           <SocialLinks socialLinks={user.socialLinks} />
         </div>
-      </section>
-    </Container>
+      </Container>
+    </section>
   );
 }
