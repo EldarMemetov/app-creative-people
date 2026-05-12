@@ -67,14 +67,7 @@ function ShowreelHero({ item }) {
         playsInline
       />
       <div className={s.gradient} />
-      <button
-        type="button"
-        className={s.muteBtn}
-        onClick={toggleMute}
-        aria-label={muted ? 'Включить звук' : 'Выключить звук'}
-      >
-        {muted ? '🔇' : '🔊'}
-      </button>
+
       {!playing && (
         <div className={s.playOverlay} aria-hidden>
           ▶

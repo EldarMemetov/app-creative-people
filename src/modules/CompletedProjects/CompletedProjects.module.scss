@@ -24,7 +24,6 @@
   border: 1px solid rgba(255, 255, 255, 0.07);
   width: fit-content;
   max-width: 100%;
-  overflow-x: auto;
 }
 
 .tab {
@@ -84,7 +83,13 @@
 .projectsList,
 .reviewsList {
   display: flex;
+  flex-direction: column;
   gap: 18px;
+  @include media(tablet) {
+  }
+
+  @include media(desktop) {
+  }
 }
 
 // ============================================

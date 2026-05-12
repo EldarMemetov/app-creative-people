@@ -1,9 +1,18 @@
 'use client';
 import React, { useState, useMemo, useEffect } from 'react';
+import { Formik, Form, Field, ErrorMessage } from 'formik';
+import * as Yup from 'yup';
+
 import { applyToPost } from '@/services/api/postRole/api';
 import { handleError } from '@/utils/errorHandler';
 import Modal from '@/shared/Modal/Modal';
+import FormInput from '@/shared/FormInput/FormInput';
 import s from './ApplyToPost.module.scss';
+
+const validationSchema = Yup.object({
+  appliedRole: Yup.string().required('Выберите роль из списка'),
+  message: Yup.string().max(2000, 'Слишком длинное сообщение'),
+});
 
 export default function ApplyToPost({
   post,
@@ -12,9 +21,6 @@ export default function ApplyToPost({
   initialApplied = false,
 }) {
   const [open, setOpen] = useState(false);
-  const [selectedRole, setSelectedRole] = useState('');
-  const [message, setMessage] = useState('');
-  const [loading, setLoading] = useState(false);
   const [applied, setApplied] = useState(Boolean(initialApplied));
   const [formError, setFormError] = useState('');
 
@@ -55,34 +61,24 @@ export default function ApplyToPost({
 
   const openModal = () => {
     if (applied) return;
-    setSelectedRole('');
-    setMessage('');
     setFormError('');
     setOpen(true);
   };
 
   const closeModal = () => {
-    if (loading) return;
     setOpen(false);
   };
 
-  const handleSubmit = async (e) => {
-    e?.preventDefault?.();
+  const handleSubmit = async (values, { setSubmitting }) => {
     setFormError('');
-
-    if (!selectedRole) {
-      setFormError('Выберите роль из списка');
-      return;
-    }
-
-    setLoading(true);
     try {
       await applyToPost(String(post._id), {
-        appliedRole: selectedRole,
-        message,
+        appliedRole: values.appliedRole,
+        message: values.message,
       });
       setApplied(true);
-      if (typeof onApplied === 'function') onApplied(post._id, selectedRole);
+      if (typeof onApplied === 'function')
+        onApplied(post._id, values.appliedRole);
       setOpen(false);
     } catch (err) {
       console.error(err);
@@ -93,7 +89,7 @@ export default function ApplyToPost({
           'Не удалось отправить заявку'
       );
     } finally {
-      setLoading(false);
+      setSubmitting(false);
     }
   };
 
@@ -123,76 +119,87 @@ export default function ApplyToPost({
             </p>
           </header>
 
-          <form className={s.form} onSubmit={handleSubmit}>
-            <div className={s.field}>
-              <label className={s.label} htmlFor="apply-role">
-                Роль
-              </label>
-              <div className={s.selectWrap}>
-                <select
-                  id="apply-role"
-                  className={s.select}
-                  value={selectedRole}
-                  onChange={(e) => setSelectedRole(e.target.value)}
-                >
-                  <option value="">— выберите роль —</option>
-                  {rolesWithAvailability.map((r) => {
-                    const allowed = userRoles.includes(String(r.role));
-                    return (
-                      <option
-                        key={r.role}
-                        value={r.role}
-                        disabled={r.available <= 0 || !allowed}
-                      >
-                        {r.role}
-                        {r.available <= 0
-                          ? ' (мест нет)'
-                          : ` — свободно: ${r.available}`}
-                        {!allowed ? ' (не в ваших ролях)' : ''}
-                      </option>
-                    );
-                  })}
-                </select>
-                <span className={s.selectChevron} aria-hidden>
-                  ▾
-                </span>
-              </div>
-            </div>
+          <Formik
+            initialValues={{ appliedRole: '', message: '' }}
+            validationSchema={validationSchema}
+            onSubmit={handleSubmit}
+          >
+            {({ isSubmitting }) => (
+              <Form className={s.form}>
+                {/* ─── Роль (select через Formik) ─── */}
+                <div className={s.field}>
+                  <label htmlFor="appliedRole" className={s.label}>
+                    Роль
+                  </label>
+                  <div className={s.selectWrap}>
+                    <Field
+                      as="select"
+                      id="appliedRole"
+                      name="appliedRole"
+                      className={s.select}
+                    >
+                      <option value="">— выберите роль —</option>
+                      {rolesWithAvailability.map((r) => {
+                        const allowed = userRoles.includes(String(r.role));
+                        return (
+                          <option
+                            key={r.role}
+                            value={r.role}
+                            disabled={r.available <= 0 || !allowed}
+                          >
+                            {r.role}
+                            {r.available <= 0
+                              ? ' (мест нет)'
+                              : ` — свободно: ${r.available}`}
+                            {!allowed ? ' (не в ваших ролях)' : ''}
+                          </option>
+                        );
+                      })}
+                    </Field>
+                    <span className={s.selectChevron} aria-hidden>
+                      ▾
+                    </span>
+                  </div>
+                  <ErrorMessage
+                    name="appliedRole"
+                    component="p"
+                    className={s.error}
+                  />
+                </div>
 
-            <div className={s.field}>
-              <label className={s.label} htmlFor="apply-message">
-                Сообщение <span className={s.optional}>(необязательно)</span>
-              </label>
-              <textarea
-                id="apply-message"
-                className={s.textarea}
-                value={message}
-                onChange={(e) => setMessage(e.target.value)}
-                rows={4}
-                placeholder="Расскажите кратко о себе и почему вам интересен проект…"
-              />
-            </div>
+                <FormInput
+                  label="Сообщение (необязательно)"
+                  name="message"
+                  as="textarea"
+                  placeholder="Расскажите кратко о себе и почему вам интересен проект…"
+                />
 
-            {formError && (
-              <div className={s.errorBox} role="alert">
-                {formError}
-              </div>
+                {formError && (
+                  <div className={s.errorBox} role="alert">
+                    {formError}
+                  </div>
+                )}
+
+                <div className={s.actions}>
+                  <button
+                    type="button"
+                    className={s.btnGhost}
+                    onClick={closeModal}
+                    disabled={isSubmitting}
+                  >
+                    Отмена
+                  </button>
+                  <button
+                    type="submit"
+                    className={s.btnPrimary}
+                    disabled={isSubmitting}
+                  >
+                    {isSubmitting ? 'Отправляем…' : 'Отправить заявку'}
+                  </button>
+                </div>
+              </Form>
             )}
-
-            <div className={s.actions}>
-              <button
-                type="button"
-                className={s.btnGhost}
-                onClick={closeModal}
-                disabled={loading}
-              >
-                Отмена
-              </button>
-              <button type="submit" className={s.btnPrimary} disabled={loading}>
-                {loading ? 'Отправляем…' : 'Отправить заявку'}
-              </button>
-            </div>
-          </form>
+          </Formik>
         </div>
       </Modal>
     </>

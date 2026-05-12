@@ -409,7 +409,9 @@ export default function CompletedProjects({ userId }) {
             className={styles.lbContent}
             onClick={(e) => e.stopPropagation()}
           >
-            <img
+            <Image
+              width={1000}
+              height={1000}
               src={lightbox.images[lightbox.index]?.url}
               alt={`Фото ${lightbox.index + 1}`}
               className={styles.lbImage}

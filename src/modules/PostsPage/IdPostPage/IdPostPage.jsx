@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState, useCallback } from 'react';
 import { useParams } from 'next/navigation';
 import Link from 'next/link';
 import Image from 'next/image';
@@ -14,6 +14,7 @@ import Comments from '@/modules/Comments/Comments';
 import ApplyToPost from '@/modules/ApplyToPost/ApplyToPost';
 import ReviewForm from '@/modules/Reviews/ReviewForm';
 import StarRating from '@/shared/StarRating/StarRating';
+import ConfirmDialog from '@/shared/ConfirmDialog/ConfirmDialog';
 import { groupRoles } from '@/utils/groupRoles';
 import {
   assignCandidates,
@@ -35,6 +36,17 @@ const paymentLabel = (post) => {
   return 'TFP';
 };
 
+const DIALOG_INITIAL = {
+  show: false,
+  variant: 'info',
+  title: '',
+  message: '',
+  confirmText: 'OK',
+  cancelText: 'Отмена',
+  onConfirm: null,
+  loading: false,
+};
+
 export default function IdPostPage() {
   const { id } = useParams();
   const [post, setPost] = useState(null);
@@ -48,6 +60,41 @@ export default function IdPostPage() {
   const [extendDate, setExtendDate] = useState('');
   const [extendLoading, setExtendLoading] = useState(false);
   const [showExtendPicker, setShowExtendPicker] = useState(false);
+
+  // ─── единый диалог ───
+  const [dialog, setDialog] = useState(DIALOG_INITIAL);
+
+  const closeDialog = useCallback(
+    () => setDialog((d) => ({ ...d, show: false })),
+    []
+  );
+
+  const notify = useCallback((variant, message, title = '') => {
+    setDialog({
+      ...DIALOG_INITIAL,
+      show: true,
+      variant,
+      title,
+      message,
+      confirmText: 'OK',
+    });
+  }, []);
+
+  const askConfirm = useCallback(
+    ({ title, message, confirmText = 'Подтвердить', onConfirm }) => {
+      setDialog({
+        ...DIALOG_INITIAL,
+        show: true,
+        variant: 'confirm',
+        title,
+        message,
+        confirmText,
+        cancelText: 'Отмена',
+        onConfirm,
+      });
+    },
+    []
+  );
 
   const loadPost = async () => {
     try {
@@ -99,30 +146,49 @@ export default function IdPostPage() {
     );
   };
 
-  const handleConfirmShooting = async () => {
-    if (
-      !confirm(
-        'Подтвердить что съёмка прошла? Участники смогут оставить отзывы.'
-      )
-    ) {
-      return;
-    }
-    setConfirmLoading(true);
-    try {
-      await confirmShooting(post._id);
-      await loadPost();
-      alert('Съёмка подтверждена! Теперь все участники могут оставить отзывы.');
-    } catch (err) {
-      alert(err?.response?.data?.message || 'Ошибка при подтверждении');
-    } finally {
-      setConfirmLoading(false);
-    }
+  // ─── подтверждение съёмки ───
+  const handleConfirmShooting = () => {
+    askConfirm({
+      title: 'Подтвердить съёмку?',
+      message:
+        'После подтверждения участники смогут оставить отзывы о проекте.',
+      confirmText: 'Подтвердить',
+      onConfirm: async () => {
+        setConfirmLoading(true);
+        setDialog((d) => ({ ...d, loading: true }));
+        try {
+          await confirmShooting(post._id);
+          await loadPost();
+          closeDialog();
+          notify(
+            'info',
+            'Теперь все участники могут оставить отзывы.',
+            'Съёмка подтверждена'
+          );
+        } catch (err) {
+          closeDialog();
+          notify(
+            'error',
+            err?.response?.data?.message || 'Ошибка при подтверждении',
+            'Не получилось'
+          );
+        } finally {
+          setConfirmLoading(false);
+        }
+      },
+    });
   };
 
+  // ─── продление даты ───
   const handleExtendDate = async () => {
-    if (!extendDate) return alert('Выберите новую дату');
-    if (extendDate < getBerlinTodayISO())
-      return alert('Дата не может быть в прошлом');
+    if (!extendDate) {
+      notify('error', 'Выберите новую дату', 'Не хватает данных');
+      return;
+    }
+    if (extendDate < getBerlinTodayISO()) {
+      notify('error', 'Дата не может быть в прошлом', 'Некорректная дата');
+      return;
+    }
 
     setExtendLoading(true);
     try {
@@ -131,58 +197,101 @@ export default function IdPostPage() {
       setExtendDate('');
       await loadPost();
     } catch (err) {
-      alert(err?.response?.data?.message || 'Ошибка при продлении даты');
+      notify(
+        'error',
+        err?.response?.data?.message || 'Ошибка при продлении даты',
+        'Не получилось'
+      );
     } finally {
       setExtendLoading(false);
     }
   };
 
-  const handleRejectApplicant = async (applicant) => {
+  // ─── отклонить заявку ───
+  const handleRejectApplicant = (applicant) => {
     const applicationId = applicant.id || applicant._id;
     const applicantName = applicant?.user
       ? `${applicant.user.name || ''} ${applicant.user.surname || ''}`.trim()
       : 'кандидата';
-    if (!confirm(`Отклонить заявку ${applicantName}?`)) return;
-    try {
-      await rejectApplication(post._id, applicationId);
-      await loadPost();
-    } catch (err) {
-      alert(err?.response?.data?.message || 'Не удалось отклонить заявку');
-    }
+
+    askConfirm({
+      title: 'Отклонить заявку?',
+      message: `Заявка от ${applicantName} будет отклонена.`,
+      confirmText: 'Отклонить',
+      onConfirm: async () => {
+        try {
+          await rejectApplication(post._id, applicationId);
+          await loadPost();
+          closeDialog();
+        } catch (err) {
+          closeDialog();
+          notify(
+            'error',
+            err?.response?.data?.message || 'Не удалось отклонить заявку'
+          );
+        }
+      },
+    });
   };
 
-  const handleUnassignApplicant = async (applicant) => {
+  // ─── снять с поста ───
+  const handleUnassignApplicant = (applicant) => {
     const applicationId = applicant.id || applicant._id;
     const applicantName = applicant?.user
       ? `${applicant.user.name || ''} ${applicant.user.surname || ''}`.trim()
       : 'кандидата';
-    if (!confirm(`Снять ${applicantName} с поста?`)) return;
-    try {
-      await unassignCandidate(post._id, applicationId);
-      await loadPost();
-    } catch (err) {
-      alert(err?.response?.data?.message || 'Не удалось снять кандидата');
-    }
+
+    askConfirm({
+      title: 'Снять кандидата?',
+      message: `${applicantName} будет снят(а) с этой роли.`,
+      confirmText: 'Снять',
+      onConfirm: async () => {
+        try {
+          await unassignCandidate(post._id, applicationId);
+          await loadPost();
+          closeDialog();
+        } catch (err) {
+          closeDialog();
+          notify(
+            'error',
+            err?.response?.data?.message || 'Не удалось снять кандидата'
+          );
+        }
+      },
+    });
   };
 
-  const handleSelectApplicant = async (applicant) => {
+  // ─── выбрать кандидата ───
+  const handleSelectApplicant = (applicant) => {
     const applicantName = applicant?.user
       ? `${applicant.user.name || ''} ${applicant.user.surname || ''}`.trim()
       : 'кандидата';
-    if (!confirm(`Назначить ${applicantName} как ${applicant.appliedRole}?`))
-      return;
-    setAssignLoading(true);
-    try {
-      await assignCandidates(post._id, [
-        { userId: applicant.user._id, role: applicant.appliedRole },
-      ]);
-      await loadPost();
-      alert('Кандидат назначен.');
-    } catch (err) {
-      alert(err?.response?.data?.message || 'Не удалось назначить кандидата');
-    } finally {
-      setAssignLoading(false);
-    }
+
+    askConfirm({
+      title: 'Назначить кандидата?',
+      message: `${applicantName} будет назначен(а) как ${applicant.appliedRole}.`,
+      confirmText: 'Назначить',
+      onConfirm: async () => {
+        setAssignLoading(true);
+        setDialog((d) => ({ ...d, loading: true }));
+        try {
+          await assignCandidates(post._id, [
+            { userId: applicant.user._id, role: applicant.appliedRole },
+          ]);
+          await loadPost();
+          closeDialog();
+          notify('info', 'Кандидат назначен на роль.', 'Готово');
+        } catch (err) {
+          closeDialog();
+          notify(
+            'error',
+            err?.response?.data?.message || 'Не удалось назначить кандидата'
+          );
+        } finally {
+          setAssignLoading(false);
+        }
+      },
+    });
   };
 
   const roleMap = useMemo(() => {
@@ -626,6 +735,17 @@ export default function IdPostPage() {
           <Comments targetType="post" targetId={post._id} />
         </div>
       </Container>
+      <ConfirmDialog
+        show={dialog.show}
+        variant={dialog.variant}
+        title={dialog.title}
+        message={dialog.message}
+        confirmText={dialog.confirmText}
+        cancelText={dialog.cancelText}
+        loading={dialog.loading}
+        onConfirm={dialog.onConfirm}
+        onClose={closeDialog}
+      />
     </section>
   );
 }
