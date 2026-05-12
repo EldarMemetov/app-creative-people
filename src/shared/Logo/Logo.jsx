@@ -23,7 +23,7 @@ const Logo = ({ variant = 'header' }) => {
       aria-label={localeLabels[locale] || localeLabels.en}
     >
       <Image
-        src="/image/logo.png"
+        src="/image/logo.webp"
         alt="QVRIX logo"
         width={40}
         height={40}
