@@ -60,7 +60,7 @@ export default function EditProfileAvatar({ user, t, refreshUser }) {
           </div>
         ) : (
           <ImageWithFallback
-            src={user.photo || '/image/logo.png'}
+            src={user.photo || '/image/avatar.webp'}
             alt="avatar"
             width={140}
             height={140}

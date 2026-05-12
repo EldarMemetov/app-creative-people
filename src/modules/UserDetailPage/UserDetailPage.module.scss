@@ -1,21 +1,12 @@
 .section {
+  margin-bottom: 50px;
+  margin-top: 50px;
+}
+.globalContainer {
   display: flex;
   flex-direction: column;
   gap: 28px;
-  padding: 100px 0 120px;
-  color: #f5f6ff;
-
-  @include media(tablet) {
-    gap: 36px;
-    padding: 120px 0 140px;
-  }
-
-  @include media(desktop) {
-    gap: 44px;
-    padding: 140px 0 160px;
-  }
 }
-
 // ---------- Page header ----------
 .pageHeader {
   display: flex;

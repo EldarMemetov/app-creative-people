@@ -87,7 +87,6 @@
   }
 }
 
-/* ====== MEDIA (default: cover — для видео) ====== */
 .media {
   position: absolute;
   inset: 0;
@@ -100,7 +99,6 @@
   pointer-events: none;
 }
 
-/* ====== SLIDES ====== */
 .slide {
   opacity: 0;
   transition:
@@ -114,16 +112,14 @@
   z-index: 2;
 }
 
-/* ====== KEN BURNS ====== */
 .kenBurns {
   animation: kenBurns 18s ease-in-out infinite alternate;
 }
 
-/* ====== PLAY OVERLAY ====== */
 .playOverlay {
   position: absolute;
   inset: 0;
-  z-index: 4; /* ВАЖНО: выше чем ::after (z-index: 3) */
+  z-index: 4;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -148,7 +144,7 @@
 .arrow {
   position: absolute;
   top: 50%;
-  z-index: 5; /* выше градиента */
+  z-index: 5;
   transform: translateY(-50%);
   width: 44px;
   height: 44px;
