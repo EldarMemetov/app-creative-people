@@ -49,11 +49,11 @@ export default function UserDetailPage() {
   const isOwn = currentUser && String(currentUser._id) === userIdKey;
 
   const getSafePhoto = (url) => {
-    if (!url) return '/image/logo.png';
+    if (!url) return '/image/avatar.webp';
     return url.startsWith('https://cdn.sanity.io') ||
       url.startsWith('https://res.cloudinary.com')
       ? url
-      : '/image/logo.png';
+      : '/image/avatar.webp';
   };
 
   const isOnline = isOwn

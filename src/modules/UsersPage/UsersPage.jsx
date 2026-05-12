@@ -17,7 +17,7 @@ import FilterUser from '../Filter/FilterUser/FilterUser';
 
 const ALLOWED_HOSTS = ['https://cdn.sanity.io', 'https://res.cloudinary.com'];
 const safePhoto = (url = '') =>
-  ALLOWED_HOSTS.some((h) => url.startsWith(h)) ? url : '/image/logo.png';
+  ALLOWED_HOSTS.some((h) => url.startsWith(h)) ? url : '/image/avatar.webp';
 
 export default function UsersPage() {
   const router = useRouter();
