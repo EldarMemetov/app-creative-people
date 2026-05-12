@@ -19,6 +19,7 @@ import PortfolioHero from '../PortfolioHero/PortfolioHero';
 
 import s from './InfoDetails.module.scss';
 import HandleLogout from '@/shared/HandleLogout/HandleLogout';
+import Container from '@/shared/container/Container';
 
 export default function InfoDetails() {
   const { user: guardUser, loading } = useAuthGuard();
@@ -82,174 +83,179 @@ export default function InfoDetails() {
 
   return (
     <section className={s.section}>
-      <div className={s.infoDetails}>
-        <PortfolioHero heroType={user.heroType} heroMedia={user.heroMedia} />
-        <header className={s.pageHeader}>
-          <span className={s.eyebrow}>
-            <span className={s.eyebrowDot} />
-            Особистий кабінет
-          </span>
-          <h1 className={s.title}>Мій профіль</h1>
-        </header>
-        <div className={s.hero}>
-          <div className={s.heroBorder} />
+      <PortfolioHero heroType={user.heroType} heroMedia={user.heroMedia} />
+      <Container>
+        <div className={s.infoDetails}>
+          <header className={s.pageHeader}>
+            <span className={s.eyebrow}>
+              <span className={s.eyebrowDot} />
+              Особистий кабінет
+            </span>
+            <h1 className={s.title}>Мій профіль</h1>
+          </header>
+          <div className={s.hero}>
+            <div className={s.heroBorder} />
 
-          <div className={s.identity}>
-            <div className={s.phoneHandleLogout}>
-              <HandleLogout />
+            <div className={s.identity}>
+              <div className={s.phoneHandleLogout}>
+                <HandleLogout />
+              </div>
+              <div className={s.avatarWrap}>
+                <span className={s.avatarOrbit} />
+                <span className={s.avatarRing} />
+                <ImageWithFallback
+                  className={s.avatar}
+                  src={user.photo || '/image/avatar.webp'}
+                  alt={fullName}
+                  width={180}
+                  height={180}
+                />
+                <span
+                  className={`${s.statusBadge} ${
+                    isOnline ? s.statusOnline : s.statusOffline
+                  }`}
+                >
+                  <span className={s.statusDot} />
+                  {isOnline ? 'Онлайн' : 'Офлайн'}
+                </span>
+              </div>
+
+              <div className={s.identityText}>
+                <h2 className={s.fullName}>{fullName}</h2>
+
+                {user.email && (
+                  <a href={`mailto:${user.email}`} className={s.emailLink}>
+                    {user.email}
+                  </a>
+                )}
+
+                {(user.city || user.country) && (
+                  <p className={s.location}>
+                    {[user.city, user.country].filter(Boolean).join(', ')}
+                  </p>
+                )}
+
+                {user.roles && user.roles.length > 0 && (
+                  <ul className={s.rolesList} aria-label="Ролі користувача">
+                    {user.roles.map((r, idx) => (
+                      <li key={idx} className={s.roleItem}>
+                        {t(r)}
+                      </li>
+                    ))}
+                  </ul>
+                )}
+              </div>
+              <div className={s.tabletHandleLogout}>
+                <HandleLogout />
+              </div>
             </div>
-            <div className={s.avatarWrap}>
-              <span className={s.avatarOrbit} />
-              <span className={s.avatarRing} />
-              <ImageWithFallback
-                className={s.avatar}
-                src={user.photo || '/image/avatar.webp'}
-                alt={fullName}
-                width={180}
-                height={180}
-              />
-              <span
-                className={`${s.statusBadge} ${
-                  isOnline ? s.statusOnline : s.statusOffline
-                }`}
+
+            <div className={s.stats}>
+              <div className={s.stat}>
+                <span className={s.statLabel}>Лайки</span>
+                <span className={s.statValue}>
+                  {likesCount === null ? '…' : likesCount}
+                </span>
+              </div>
+
+              <div className={s.stat}>
+                <span className={s.statLabel}>Досвід</span>
+                <span className={s.statValue}>{user.experience || '—'}</span>
+              </div>
+            </div>
+          </div>
+
+          <nav className={s.actions} aria-label="Дії профілю">
+            <LinkButton
+              className={s.actionButton}
+              path="notification"
+              type={LINKDATA.NOTIFICATION}
+              linkText="Сповіщення"
+            />
+
+            <LinkButton
+              className={s.actionButton}
+              path="my-post"
+              type={LINKDATA.MYPOST}
+              linkText="Мої пости"
+            />
+
+            <LinkButton
+              className={s.actionButton}
+              path="my-applications"
+              type={LINKDATA.APPLICATIONS}
+              linkText="Мої заявки"
+            />
+            <LinkButton
+              className={s.actionButton}
+              path="profile/edit"
+              type={LINKDATA.TYPE_LIGHT_BORDER}
+              linkText="Редагувати свій профіль"
+            />
+            <LinkButton
+              className={s.actionButton}
+              path="favorite-talents"
+              type={LINKDATA.FAVORITES_TALENTS}
+              linkText="избранний таланты"
+            />
+          </nav>
+          <CompletedProjects userId={user._id} />
+
+          <div className={s.card}>
+            <h3 className={s.sectionTitle}>Основна інформація</h3>
+
+            <div className={s.details}>
+              <div className={s.detail}>
+                <span className={s.label}>Ім’я</span>
+                <span className={s.value}>{user.name || 'не вказано'}</span>
+              </div>
+
+              <div className={s.detail}>
+                <span className={s.label}>Прізвище</span>
+                <span className={s.value}>{user.surname || 'не вказано'}</span>
+              </div>
+
+              <div className={s.detail}>
+                <span className={s.label}>Місто</span>
+                <span className={s.value}>{user.city || 'не вказано'}</span>
+              </div>
+
+              <div className={s.detail}>
+                <span className={s.label}>Країна</span>
+                <span className={s.value}>{user.country || 'не вказано'}</span>
+              </div>
+            </div>
+          </div>
+
+          <div className={s.card}>
+            <h3 className={s.sectionTitle}>Про себе</h3>
+            <p className={s.about}>{user.aboutMe || 'не вказано'}</p>
+          </div>
+
+          <div className={s.card}>
+            <h3 className={s.sectionTitle}>Напрямки</h3>
+            {user.directions && user.directions.length > 0 ? (
+              <ul
+                className={s.directionsList}
+                aria-label="Напрямки користувача"
               >
-                <span className={s.statusDot} />
-                {isOnline ? 'Онлайн' : 'Офлайн'}
-              </span>
-            </div>
-
-            <div className={s.identityText}>
-              <h2 className={s.fullName}>{fullName}</h2>
-
-              {user.email && (
-                <a href={`mailto:${user.email}`} className={s.emailLink}>
-                  {user.email}
-                </a>
-              )}
-
-              {(user.city || user.country) && (
-                <p className={s.location}>
-                  {[user.city, user.country].filter(Boolean).join(', ')}
-                </p>
-              )}
-
-              {user.roles && user.roles.length > 0 && (
-                <ul className={s.rolesList} aria-label="Ролі користувача">
-                  {user.roles.map((r, idx) => (
-                    <li key={idx} className={s.roleItem}>
-                      {t(r)}
-                    </li>
-                  ))}
-                </ul>
-              )}
-            </div>
-            <div className={s.tabletHandleLogout}>
-              <HandleLogout />
-            </div>
+                {user.directions.map((d, idx) => (
+                  <li key={idx} className={s.directionItem}>
+                    {t(d, { ns: 'directions' })}
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <p className={s.empty}>не вказано</p>
+            )}
           </div>
 
-          <div className={s.stats}>
-            <div className={s.stat}>
-              <span className={s.statLabel}>Лайки</span>
-              <span className={s.statValue}>
-                {likesCount === null ? '…' : likesCount}
-              </span>
-            </div>
-
-            <div className={s.stat}>
-              <span className={s.statLabel}>Досвід</span>
-              <span className={s.statValue}>{user.experience || '—'}</span>
-            </div>
+          <div className={s.card}>
+            <h3 className={s.sectionTitle}>Соціальні мережі</h3>
+            <SocialLinks socialLinks={user.socialLinks} />
           </div>
         </div>
-
-        <nav className={s.actions} aria-label="Дії профілю">
-          <LinkButton
-            className={s.actionButton}
-            path="notification"
-            type={LINKDATA.NOTIFICATION}
-            linkText="Сповіщення"
-          />
-
-          <LinkButton
-            className={s.actionButton}
-            path="my-post"
-            type={LINKDATA.MYPOST}
-            linkText="Мої пости"
-          />
-
-          <LinkButton
-            className={s.actionButton}
-            path="my-applications"
-            type={LINKDATA.APPLICATIONS}
-            linkText="Мої заявки"
-          />
-          <LinkButton
-            className={s.actionButton}
-            path="profile/edit"
-            type={LINKDATA.TYPE_LIGHT_BORDER}
-            linkText="Редагувати свій профіль"
-          />
-          <LinkButton
-            className={s.actionButton}
-            path="favorite-talents"
-            type={LINKDATA.FAVORITES_TALENTS}
-            linkText="избранний таланты"
-          />
-        </nav>
-        <CompletedProjects userId={user._id} />
-
-        <div className={s.card}>
-          <h3 className={s.sectionTitle}>Основна інформація</h3>
-
-          <div className={s.details}>
-            <div className={s.detail}>
-              <span className={s.label}>Ім’я</span>
-              <span className={s.value}>{user.name || 'не вказано'}</span>
-            </div>
-
-            <div className={s.detail}>
-              <span className={s.label}>Прізвище</span>
-              <span className={s.value}>{user.surname || 'не вказано'}</span>
-            </div>
-
-            <div className={s.detail}>
-              <span className={s.label}>Місто</span>
-              <span className={s.value}>{user.city || 'не вказано'}</span>
-            </div>
-
-            <div className={s.detail}>
-              <span className={s.label}>Країна</span>
-              <span className={s.value}>{user.country || 'не вказано'}</span>
-            </div>
-          </div>
-        </div>
-
-        <div className={s.card}>
-          <h3 className={s.sectionTitle}>Про себе</h3>
-          <p className={s.about}>{user.aboutMe || 'не вказано'}</p>
-        </div>
-
-        <div className={s.card}>
-          <h3 className={s.sectionTitle}>Напрямки</h3>
-          {user.directions && user.directions.length > 0 ? (
-            <ul className={s.directionsList} aria-label="Напрямки користувача">
-              {user.directions.map((d, idx) => (
-                <li key={idx} className={s.directionItem}>
-                  {t(d, { ns: 'directions' })}
-                </li>
-              ))}
-            </ul>
-          ) : (
-            <p className={s.empty}>не вказано</p>
-          )}
-        </div>
-
-        <div className={s.card}>
-          <h3 className={s.sectionTitle}>Соціальні мережі</h3>
-          <SocialLinks socialLinks={user.socialLinks} />
-        </div>
-      </div>
+      </Container>
     </section>
   );
 }

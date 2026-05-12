@@ -13,7 +13,10 @@
 html {
   box-sizing: border-box;
 }
-
+html,
+body {
+  overflow-x: clip;
+}
 body {
   font-family: $primary-font-family;
 }

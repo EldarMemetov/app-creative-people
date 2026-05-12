@@ -15,6 +15,7 @@ import {
 } from '@/services/api/calendar/api';
 
 import styles from './CalendarManager.module.scss';
+import Container from '@/shared/container/Container';
 
 function formatDateForInput(date) {
   const d = new Date(date);
@@ -138,7 +139,6 @@ export default function CalendarManager() {
       : formatDateForInput(selectedDate),
   };
 
-  // Получить статус поста
   const getPostStatus = (event) => {
     if (event.status === 'canceled') return 'canceled';
     if (event.post?.status) return event.post.status;
@@ -146,199 +146,212 @@ export default function CalendarManager() {
   };
 
   return (
-    <div className={styles.wrapper}>
-      <Calendar
-        events={events}
-        initialDate={selectedDate}
-        onDateSelect={setSelectedDate}
-      />
+    <section>
+      <Container>
+        <div className={styles.wrapper}>
+          <Calendar
+            events={events}
+            initialDate={selectedDate}
+            onDateSelect={setSelectedDate}
+          />
 
-      <div className={styles.panel}>
-        <div className={styles.panelHeader}>
-          <div>
-            <h3 className={styles.panelTitle}>
-              {selectedDate.toLocaleDateString('ru-RU')}
-            </h3>
-            <p className={styles.panelText}>
-              {selectedEvents.length > 0
-                ? `Записей: ${selectedEvents.length}`
-                : 'На этот день пока нет записей'}
-            </p>
-          </div>
+          <div className={styles.panel}>
+            <div className={styles.panelHeader}>
+              <div>
+                <h3 className={styles.panelTitle}>
+                  {selectedDate.toLocaleDateString('ru-RU')}
+                </h3>
+                <p className={styles.panelText}>
+                  {selectedEvents.length > 0
+                    ? `Записей: ${selectedEvents.length}`
+                    : 'На этот день пока нет записей'}
+                </p>
+              </div>
 
-          <button
-            type="button"
-            className={styles.createButton}
-            onClick={openCreate}
-          >
-            Создать заметку
-          </button>
-        </div>
+              <button
+                type="button"
+                className={styles.createButton}
+                onClick={openCreate}
+              >
+                Создать заметку
+              </button>
+            </div>
 
-        {selectedEvents.length > 0 && (
-          <div className={styles.list}>
-            {selectedEvents.map((event) => {
-              const isPostEvent = event.type === 'post' || Boolean(event.post);
-              const isCanceled = event.status === 'canceled';
-              const postStatus = getPostStatus(event);
-              const statusLabel = postStatus
-                ? postStatusLabels[postStatus]
-                : null;
-              const statusColor = postStatus
-                ? postStatusColors[postStatus]
-                : null;
+            {selectedEvents.length > 0 && (
+              <div className={styles.list}>
+                {selectedEvents.map((event) => {
+                  const isPostEvent =
+                    event.type === 'post' || Boolean(event.post);
+                  const isCanceled = event.status === 'canceled';
+                  const postStatus = getPostStatus(event);
+                  const statusLabel = postStatus
+                    ? postStatusLabels[postStatus]
+                    : null;
+                  const statusColor = postStatus
+                    ? postStatusColors[postStatus]
+                    : null;
 
-              return (
-                <div key={event._id} className={styles.card}>
-                  <div className={styles.cardMain}>
-                    <div className={styles.cardHeader}>
-                      <h4 className={styles.cardTitle}>{event.title}</h4>
+                  return (
+                    <div key={event._id} className={styles.card}>
+                      <div className={styles.cardMain}>
+                        <div className={styles.cardHeader}>
+                          <h4 className={styles.cardTitle}>{event.title}</h4>
 
-                      {/* Статус поста */}
-                      {isPostEvent && statusLabel && (
-                        <span
-                          className={styles.statusBadge}
-                          style={{ backgroundColor: statusColor }}
-                        >
-                          {statusLabel}
-                        </span>
-                      )}
-                    </div>
-
-                    {event.description && (
-                      <p className={styles.cardDescription}>
-                        {event.description}
-                      </p>
-                    )}
-
-                    {/* Ссылка на пост */}
-                    {isPostEvent && event.post && (
-                      <div className={styles.postLink}>
-                        <Link href={`/posts/${event.post._id || event.post}`}>
-                          Перейти к посту →
-                        </Link>
-                      </div>
-                    )}
-
-                    {/* Участники */}
-                    {event.participants && event.participants.length > 0 && (
-                      <div className={styles.participants}>
-                        <span className={styles.participantsLabel}>
-                          Участники:
-                        </span>
-                        <div className={styles.participantsList}>
-                          {event.participants.map((p) => (
-                            <Link
-                              key={p._id || p}
-                              href={`/talents/${p._id || p}`}
-                              className={styles.participantChip}
+                          {/* Статус поста */}
+                          {isPostEvent && statusLabel && (
+                            <span
+                              className={styles.statusBadge}
+                              style={{ backgroundColor: statusColor }}
                             >
-                              {p.name
-                                ? `${p.name} ${p.surname || ''}`
-                                : 'Участник'}
-                            </Link>
-                          ))}
+                              {statusLabel}
+                            </span>
+                          )}
                         </div>
+
+                        {event.description && (
+                          <p className={styles.cardDescription}>
+                            {event.description}
+                          </p>
+                        )}
+
+                        {/* Ссылка на пост */}
+                        {isPostEvent && event.post && (
+                          <div className={styles.postLink}>
+                            <Link
+                              href={`/posts/${event.post._id || event.post}`}
+                            >
+                              Перейти к посту →
+                            </Link>
+                          </div>
+                        )}
+
+                        {/* Участники */}
+                        {event.participants &&
+                          event.participants.length > 0 && (
+                            <div className={styles.participants}>
+                              <span className={styles.participantsLabel}>
+                                Участники:
+                              </span>
+                              <div className={styles.participantsList}>
+                                {event.participants.map((p) => (
+                                  <Link
+                                    key={p._id || p}
+                                    href={`/talents/${p._id || p}`}
+                                    className={styles.participantChip}
+                                  >
+                                    {p.name
+                                      ? `${p.name} ${p.surname || ''}`
+                                      : 'Участник'}
+                                  </Link>
+                                ))}
+                              </div>
+                            </div>
+                          )}
+
+                        {isPostEvent && !isCanceled && (
+                          <p className={styles.cardHint}>
+                            Событие из поста — редактируется в самом посте.
+                          </p>
+                        )}
+
+                        {isCanceled && (
+                          <p className={styles.cardHintCanceled}>
+                            ❌ Событие отменено
+                          </p>
+                        )}
                       </div>
-                    )}
 
-                    {isPostEvent && !isCanceled && (
-                      <p className={styles.cardHint}>
-                        Событие из поста — редактируется в самом посте.
-                      </p>
-                    )}
-
-                    {isCanceled && (
-                      <p className={styles.cardHintCanceled}>
-                        ❌ Событие отменено
-                      </p>
-                    )}
-                  </div>
-
-                  <div className={styles.cardActions}>
-                    {!isPostEvent && !isCanceled && (
-                      <>
-                        <button
-                          type="button"
-                          className={styles.editButton}
-                          onClick={() => openEdit(event)}
-                        >
-                          Редактировать
-                        </button>
-                        <button
-                          type="button"
-                          className={styles.deleteButton}
-                          onClick={() => handleDelete(event._id)}
-                        >
-                          Удалить
-                        </button>
-                      </>
-                    )}
-                  </div>
-                </div>
-              );
-            })}
+                      <div className={styles.cardActions}>
+                        {!isPostEvent && !isCanceled && (
+                          <>
+                            <button
+                              type="button"
+                              className={styles.editButton}
+                              onClick={() => openEdit(event)}
+                            >
+                              Редактировать
+                            </button>
+                            <button
+                              type="button"
+                              className={styles.deleteButton}
+                              onClick={() => handleDelete(event._id)}
+                            >
+                              Удалить
+                            </button>
+                          </>
+                        )}
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            )}
           </div>
-        )}
-      </div>
 
-      {isModalOpen && (
-        <div
-          className={styles.modalBackdrop}
-          onClick={() => setIsModalOpen(false)}
-        >
-          <div className={styles.modal} onClick={(e) => e.stopPropagation()}>
-            <h3 className={styles.modalTitle}>
-              {mode === 'create' ? 'Создать заметку' : 'Редактировать заметку'}
-            </h3>
-
-            <Formik
-              initialValues={initialValues}
-              enableReinitialize
-              onSubmit={handleSubmit}
+          {isModalOpen && (
+            <div
+              className={styles.modalBackdrop}
+              onClick={() => setIsModalOpen(false)}
             >
-              {({ isSubmitting }) => (
-                <Form className={styles.form}>
-                  <FormInput
-                    label="Название"
-                    name="title"
-                    placeholder="Введите название"
-                  />
+              <div
+                className={styles.modal}
+                onClick={(e) => e.stopPropagation()}
+              >
+                <h3 className={styles.modalTitle}>
+                  {mode === 'create'
+                    ? 'Создать заметку'
+                    : 'Редактировать заметку'}
+                </h3>
 
-                  <FormInput
-                    label="Описание"
-                    name="description"
-                    placeholder="Введите описание"
-                    as="textarea"
-                  />
+                <Formik
+                  initialValues={initialValues}
+                  enableReinitialize
+                  onSubmit={handleSubmit}
+                >
+                  {({ isSubmitting }) => (
+                    <Form className={styles.form}>
+                      <FormInput
+                        label="Название"
+                        name="title"
+                        placeholder="Введите название"
+                      />
 
-                  <FormInput label="Дата" name="date" type="date" />
+                      <FormInput
+                        label="Описание"
+                        name="description"
+                        placeholder="Введите описание"
+                        as="textarea"
+                      />
 
-                  <div className={styles.formActions}>
-                    <button
-                      type="button"
-                      className={styles.secondaryButton}
-                      onClick={() => setIsModalOpen(false)}
-                    >
-                      Отмена
-                    </button>
+                      <FormInput label="Дата" name="date" type="date" />
 
-                    <button
-                      type="submit"
-                      className={styles.primaryButton}
-                      disabled={isSubmitting}
-                    >
-                      {isSubmitting ? 'Сохранение...' : 'Сохранить'}
-                    </button>
-                  </div>
-                </Form>
-              )}
-            </Formik>
-          </div>
+                      <div className={styles.formActions}>
+                        <button
+                          type="button"
+                          className={styles.secondaryButton}
+                          onClick={() => setIsModalOpen(false)}
+                        >
+                          Отмена
+                        </button>
+
+                        <button
+                          type="submit"
+                          className={styles.primaryButton}
+                          disabled={isSubmitting}
+                        >
+                          {isSubmitting ? 'Сохранение...' : 'Сохранить'}
+                        </button>
+                      </div>
+                    </Form>
+                  )}
+                </Formik>
+              </div>
+            </div>
+          )}
+
+          {loading && <div className={styles.loading}>Загрузка...</div>}
         </div>
-      )}
-
-      {loading && <div className={styles.loading}>Загрузка...</div>}
-    </div>
+      </Container>
+    </section>
   );
 }

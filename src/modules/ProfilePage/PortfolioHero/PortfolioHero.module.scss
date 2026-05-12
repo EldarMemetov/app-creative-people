@@ -1,155 +1,318 @@
 .hero {
-  position: relative;
-  width: 100%;
-  aspect-ratio: 21 / 9;
-  border-radius: 18px;
-  overflow: hidden;
-  background: #0d0d0f;
-  margin-bottom: 24px;
-  cursor: pointer;
-  user-select: none;
-  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.25);
+  width: 100vw;
+  max-width: 100vw;
+  margin-inline: calc(50% - 50vw);
+  cursor: default;
+}
 
-  @media (max-width: 768px) {
-    aspect-ratio: 16 / 9;
-    border-radius: 12px;
+/* ====== VIDEO (showreel) — фиксированные 640px ====== */
+.heroVideo {
+  height: 640px;
+  min-height: 640px;
+  max-height: 640px;
+
+  @include media(tablet) {
+    height: 640px;
+    min-height: 640px;
+    max-height: 640px;
   }
-  @media (max-width: 480px) {
-    aspect-ratio: 4 / 3;
-    border-radius: 10px;
+
+  @include media(desktop) {
+    height: 640px;
+    min-height: 640px;
+    max-height: 640px;
   }
 }
 
+/* ====== BANNER (cover) — пониже, чтобы лого/текст не обрезались ====== */
+.heroBanner {
+  height: 50vh;
+  min-height: 360px;
+  max-height: 560px;
+
+  @include media(tablet) {
+    height: 56vh;
+    min-height: 440px;
+    max-height: 620px;
+  }
+
+  @include media(desktop) {
+    height: 64vh;
+    min-height: 520px;
+    max-height: 720px;
+  }
+}
+
+/* ====== SLIDESHOW ====== */
+.heroSlideshow {
+  height: 60vh;
+  min-height: 420px;
+  max-height: 760px;
+
+  @include media(tablet) {
+    height: 72vh;
+    min-height: 520px;
+  }
+
+  @include media(desktop) {
+    height: 86vh;
+    min-height: 620px;
+  }
+}
+
+/* ====== STAGE ====== */
+.stage {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+
+  &::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: 3;
+    pointer-events: none;
+
+    background:
+      linear-gradient(180deg, rgba(3, 5, 37, 0.4) 0%, rgba(3, 5, 37, 0) 25%),
+      linear-gradient(
+        180deg,
+        rgba(3, 5, 37, 0) 50%,
+        rgba(3, 5, 37, 0.3) 65%,
+        rgba(3, 5, 37, 0.7) 80%,
+        rgba(3, 5, 37, 1) 92%,
+        rgba(3, 5, 37, 1) 100%
+      );
+  }
+}
+
+/* ====== MEDIA (default: cover — для видео) ====== */
 .media {
   position: absolute;
   inset: 0;
-  width: 100%;
-  height: 100%;
+  width: 100% !important;
+  height: 100% !important;
   object-fit: cover;
+  object-position: center;
   display: block;
-}
-
-.gradient {
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(
-    180deg,
-    rgba(0, 0, 0, 0) 0%,
-    rgba(0, 0, 0, 0) 55%,
-    rgba(0, 0, 0, 0.55) 100%
-  );
+  user-select: none;
   pointer-events: none;
 }
 
-.kenBurns {
-  animation: kenBurns 14s ease-out infinite alternate;
-}
-@keyframes kenBurns {
-  0% {
-    transform: scale(1) translate(0, 0);
-  }
-  100% {
-    transform: scale(1.08) translate(-1%, -1%);
-  }
-}
-
-/* Slideshow */
+/* ====== SLIDES ====== */
 .slide {
   opacity: 0;
-  transition: opacity 0.9s ease-in-out;
+  transition:
+    opacity 1.2s cubic-bezier(0.16, 1, 0.3, 1),
+    transform 8s ease-out;
   z-index: 1;
 }
+
 .slideActive {
   opacity: 1;
   z-index: 2;
 }
 
+/* ====== KEN BURNS ====== */
+.kenBurns {
+  animation: kenBurns 18s ease-in-out infinite alternate;
+}
+
+/* ====== PLAY OVERLAY ====== */
+.playOverlay {
+  position: absolute;
+  inset: 0;
+  z-index: 4; /* ВАЖНО: выше чем ::after (z-index: 3) */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 64px;
+  color: #fff;
+  background: rgba(3, 5, 37, 0.35);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  text-shadow: 0 4px 30px rgba(0, 0, 0, 0.6);
+  animation: pulse 2.4s ease-in-out infinite;
+  pointer-events: none;
+
+  @include media(tablet) {
+    font-size: 84px;
+  }
+  @include media(desktop) {
+    font-size: 110px;
+  }
+}
+
+/* ====== ARROWS ====== */
 .arrow {
   position: absolute;
   top: 50%;
+  z-index: 5; /* выше градиента */
   transform: translateY(-50%);
   width: 44px;
   height: 44px;
-  border-radius: 50%;
-  background: rgba(0, 0, 0, 0.4);
-  color: #fff;
-  border: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
   font-size: 28px;
   line-height: 1;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  color: #fff;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 50%;
   cursor: pointer;
-  z-index: 5;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
   transition:
-    background 0.2s,
-    transform 0.2s;
-  backdrop-filter: blur(6px);
+    background 0.3s ease,
+    border-color 0.3s ease,
+    transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+
   &:hover {
-    background: rgba(0, 0, 0, 0.65);
-    transform: translateY(-50%) scale(1.08);
+    background: rgba(255, 255, 255, 0.18);
+    border-color: rgba(255, 255, 255, 0.4);
+  }
+
+  &:active {
+    transform: translateY(-50%) scale(0.94);
+  }
+
+  &:focus-visible {
+    outline: 2px solid rgba(166, 180, 255, 0.8);
+    outline-offset: 3px;
+  }
+
+  @include media(tablet) {
+    width: 52px;
+    height: 52px;
+    font-size: 32px;
+  }
+
+  @include media(desktop) {
+    width: 60px;
+    height: 60px;
+    font-size: 36px;
   }
 }
+
 .arrowLeft {
-  left: 16px;
-}
-.arrowRight {
-  right: 16px;
+  left: 14px;
+  &:hover {
+    transform: translateY(-50%) translateX(-3px);
+  }
+  @include media(tablet) {
+    left: 24px;
+  }
+  @include media(desktop) {
+    left: 36px;
+  }
 }
 
+.arrowRight {
+  right: 14px;
+  &:hover {
+    transform: translateY(-50%) translateX(3px);
+  }
+  @include media(tablet) {
+    right: 24px;
+  }
+  @include media(desktop) {
+    right: 36px;
+  }
+}
+
+/* ====== DOTS ====== */
 .dots {
   position: absolute;
-  bottom: 18px;
   left: 50%;
+  bottom: 20px;
+  z-index: 5;
   transform: translateX(-50%);
   display: flex;
+  align-items: center;
   gap: 8px;
-  z-index: 5;
-}
-.dot {
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
-  border: none;
-  cursor: pointer;
-  background: rgba(255, 255, 255, 0.45);
-  transition:
-    background 0.2s,
-    width 0.2s;
-  &:hover {
-    background: rgba(255, 255, 255, 0.75);
+  padding: 8px 14px;
+  background: rgba(3, 5, 37, 0.35);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 999px;
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+
+  @include media(tablet) {
+    bottom: 28px;
+    gap: 10px;
+    padding: 10px 18px;
+  }
+
+  @include media(desktop) {
+    bottom: 36px;
   }
 }
-.dotActive {
-  background: #fff;
-  width: 24px;
-  border-radius: 6px;
+
+.dot {
+  width: 8px;
+  height: 8px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.3);
+  cursor: pointer;
+  transition:
+    width 0.45s cubic-bezier(0.16, 1, 0.3, 1),
+    background 0.3s ease,
+    transform 0.3s ease;
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.6);
+    transform: scale(1.15);
+  }
+
+  &:focus-visible {
+    outline: 2px solid rgba(166, 180, 255, 0.8);
+    outline-offset: 3px;
+  }
+
+  @include media(tablet) {
+    width: 9px;
+    height: 9px;
+  }
 }
 
-.playOverlay {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 80px;
-  height: 80px;
-  border-radius: 50%;
-  background: rgba(0, 0, 0, 0.55);
-  color: #fff;
-  font-size: 32px;
-  z-index: 5;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  backdrop-filter: blur(8px);
-  animation: pulse 1.6s ease-in-out infinite;
+.dotActive {
+  width: 28px;
+  background: linear-gradient(90deg, #a6b4ff 0%, #c9b2ff 100%);
+  box-shadow: 0 0 12px rgba(166, 180, 255, 0.6);
+
+  &:hover {
+    transform: none;
+    background: linear-gradient(90deg, #a6b4ff 0%, #c9b2ff 100%);
+  }
+
+  @include media(tablet) {
+    width: 32px;
+  }
 }
+
+/* ====== KEYFRAMES ====== */
+@keyframes kenBurns {
+  0% {
+    transform: scale(1.06) translate(0, 0);
+  }
+  100% {
+    transform: scale(1.16) translate(-1.5%, -1.2%);
+  }
+}
+
 @keyframes pulse {
   0%,
   100% {
-    transform: translate(-50%, -50%) scale(1);
+    opacity: 0.85;
+    transform: scale(1);
   }
   50% {
-    transform: translate(-50%, -50%) scale(1.08);
+    opacity: 1;
+    transform: scale(1.06);
   }
 }

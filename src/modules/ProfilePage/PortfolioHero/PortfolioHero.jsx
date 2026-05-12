@@ -1,8 +1,8 @@
 'use client';
 
 import { useEffect, useRef, useState, useCallback } from 'react';
-import s from './PortfolioHero.module.scss';
 import Image from 'next/image';
+import s from './PortfolioHero.module.scss';
 
 const SLIDESHOW_INTERVAL = 5000;
 
@@ -16,24 +16,25 @@ export default function PortfolioHero({ heroType, heroMedia = [] }) {
 
 function CoverHero({ item }) {
   return (
-    <div className={s.hero}>
-      <Image
-        fill
-        priority
-        sizes="100vw"
-        className={`${s.media} ${s.kenBurns}`}
-        src={item.url}
-        alt="cover"
-      />
-      <div className={s.gradient} />
+    <div className={`${s.hero} ${s.heroBanner}`}>
+      <div className={s.stage}>
+        <Image
+          fill
+          priority
+          sizes="100vw"
+          className={`${s.media} ${s.mediaContain}`}
+          src={item.url}
+          alt="cover"
+        />
+      </div>
     </div>
   );
 }
 
 function ShowreelHero({ item }) {
   const videoRef = useRef(null);
-  const [muted, setMuted] = useState(true);
-  const [playing, setPlaying] = useState(true);
+  const [playing, setPlaying] = useState(false);
+  const [ready, setReady] = useState(false);
 
   const togglePlay = useCallback(() => {
     const v = videoRef.current;
@@ -47,32 +48,33 @@ function ShowreelHero({ item }) {
     }
   }, []);
 
-  const toggleMute = useCallback((e) => {
-    e.stopPropagation();
-    const v = videoRef.current;
-    if (!v) return;
-    v.muted = !v.muted;
-    setMuted(v.muted);
-  }, []);
-
   return (
-    <div className={s.hero} onClick={togglePlay}>
-      <video
-        ref={videoRef}
-        className={s.media}
-        src={item.url}
-        autoPlay
-        muted
-        loop
-        playsInline
-      />
-      <div className={s.gradient} />
-
-      {!playing && (
-        <div className={s.playOverlay} aria-hidden>
-          ▶
-        </div>
-      )}
+    <div
+      className={`${s.hero} ${s.heroVideo}`}
+      onClick={togglePlay}
+      style={{ cursor: 'pointer' }}
+    >
+      <div className={s.stage}>
+        <video
+          ref={videoRef}
+          className={s.media}
+          src={item.url}
+          autoPlay
+          muted
+          loop
+          playsInline
+          onCanPlay={() => {
+            setReady(true);
+            setPlaying(true);
+          }}
+          style={{ opacity: ready ? 1 : 0, transition: 'opacity 0.6s ease' }}
+        />
+        {!playing && ready && (
+          <div className={s.playOverlay} aria-hidden>
+            ▶
+          </div>
+        )}
+      </div>
     </div>
   );
 }
@@ -95,56 +97,58 @@ function SlideshowHero({ items }) {
 
   return (
     <div
-      className={s.hero}
+      className={`${s.hero} ${s.heroSlideshow}`}
       onMouseEnter={() => setPaused(true)}
       onMouseLeave={() => setPaused(false)}
     >
-      {items.map((it, i) => (
-        <Image
-          key={it._id || it.url}
-          fill
-          sizes="100vw"
-          priority={i === 0}
-          src={it.url}
-          alt={`slide ${i + 1}`}
-          className={`${s.media} ${s.slide} ${i === index ? s.slideActive : ''} ${s.kenBurns}`}
-          aria-hidden={i !== index}
-        />
-      ))}
+      <div className={s.stage}>
+        {items.map((it, i) => (
+          <Image
+            key={it._id || it.url}
+            fill
+            sizes="100vw"
+            priority={i === 0}
+            src={it.url}
+            alt={`Слайд ${i + 1}`}
+            className={`${s.media} ${s.mediaContain} ${s.slide} ${
+              i === index ? s.slideActive : ''
+            }`}
+            aria-hidden={i !== index}
+          />
+        ))}
 
-      <div className={s.gradient} />
-
-      {total > 1 && (
-        <>
-          <button
-            type="button"
-            className={`${s.arrow} ${s.arrowLeft}`}
-            onClick={() => go(index - 1)}
-            aria-label="Предыдущее"
-          >
-            ‹
-          </button>
-          <button
-            type="button"
-            className={`${s.arrow} ${s.arrowRight}`}
-            onClick={() => go(index + 1)}
-            aria-label="Следующее"
-          >
-            ›
-          </button>
-          <div className={s.dots}>
-            {items.map((_, i) => (
-              <button
-                key={i}
-                type="button"
-                className={`${s.dot} ${i === index ? s.dotActive : ''}`}
-                onClick={() => setIndex(i)}
-                aria-label={`Слайд ${i + 1}`}
-              />
-            ))}
-          </div>
-        </>
-      )}
+        {total > 1 && (
+          <>
+            <button
+              type="button"
+              className={`${s.arrow} ${s.arrowLeft}`}
+              onClick={() => go(index - 1)}
+              aria-label="Попередній"
+            >
+              ‹
+            </button>
+            <button
+              type="button"
+              className={`${s.arrow} ${s.arrowRight}`}
+              onClick={() => go(index + 1)}
+              aria-label="Наступний"
+            >
+              ›
+            </button>
+            <div className={s.dots}>
+              {items.map((_, i) => (
+                <button
+                  key={i}
+                  type="button"
+                  className={`${s.dot} ${i === index ? s.dotActive : ''}`}
+                  onClick={() => setIndex(i)}
+                  aria-label={`Слайд ${i + 1}`}
+                />
+              ))}
+            </div>
+          </>
+        )}
+      </div>
     </div>
   );
 }
