@@ -6,6 +6,7 @@ import HeroModeSelector from './HeroModeSelector';
 import UploadZone from './UploadZone';
 import UploadQueue from './UploadQueue';
 import PortfolioGrid from './PortfolioGrid';
+import ConfirmModal from './ConfirmModal/ConfirmModal';
 import s from './PortfolioManager.module.scss';
 
 export default function PortfolioManager({
@@ -31,6 +32,7 @@ export default function PortfolioManager({
     onDragOver,
     onDragLeave,
     openFileDialog,
+    confirmProps,
   } = usePortfolioManager({
     initialHeroType,
     initialHeroMedia,
@@ -75,6 +77,8 @@ export default function PortfolioManager({
       <UploadQueue uploadQueue={uploadQueue} />
 
       <PortfolioGrid items={items} onDelete={handleDelete} />
+
+      <ConfirmModal {...confirmProps} />
     </div>
   );
 }

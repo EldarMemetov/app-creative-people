@@ -31,6 +31,34 @@ export function usePortfolioManager({
   const [busy, setBusy] = useState(false);
   const inputRef = useRef(null);
 
+  // --- confirm modal state ---
+  const [confirmState, setConfirmState] = useState({
+    show: false,
+    message: '',
+    confirmText: 'Подтвердить',
+    cancelText: 'Отмена',
+  });
+  const confirmResolverRef = useRef(null);
+
+  const confirm = useCallback((options) => {
+    setConfirmState({
+      show: true,
+      message: options?.message ?? '',
+      confirmText: options?.confirmText ?? 'Подтвердить',
+      cancelText: options?.cancelText ?? 'Отмена',
+    });
+    return new Promise((resolve) => {
+      confirmResolverRef.current = resolve;
+    });
+  }, []);
+
+  const resolveConfirm = useCallback((result) => {
+    confirmResolverRef.current?.(result);
+    confirmResolverRef.current = null;
+    setConfirmState((s) => ({ ...s, show: false }));
+  }, []);
+  // ---------------------------
+
   const setUserStore = useAuth((s) => s.setUser);
 
   useEffect(() => {
@@ -82,9 +110,10 @@ export function usePortfolioManager({
       if (nextType === heroType) return;
 
       if (heroType && items.length > 0) {
-        const ok = window.confirm(
-          `При смене режима текущие файлы (${items.length}) будут безвозвратно удалены. Продолжить?`
-        );
+        const ok = await confirm({
+          message: `При смене режима текущие файлы (${items.length}) будут безвозвратно удалены. Продолжить?`,
+          confirmText: 'Сменить',
+        });
         if (!ok) return;
       }
 
@@ -100,12 +129,16 @@ export function usePortfolioManager({
         setBusy(false);
       }
     },
-    [heroType, items.length, applyServerData, refreshUser, pushError]
+    [heroType, items.length, applyServerData, refreshUser, pushError, confirm]
   );
 
   const clearAll = useCallback(async () => {
     if (!heroType && items.length === 0) return;
-    const ok = window.confirm('Очистить портфолио полностью?');
+
+    const ok = await confirm({
+      message: 'Очистить портфолио полностью?',
+      confirmText: 'Очистить',
+    });
     if (!ok) return;
 
     setBusy(true);
@@ -118,7 +151,14 @@ export function usePortfolioManager({
     } finally {
       setBusy(false);
     }
-  }, [heroType, items.length, applyServerData, refreshUser, pushError]);
+  }, [
+    heroType,
+    items.length,
+    applyServerData,
+    refreshUser,
+    pushError,
+    confirm,
+  ]);
 
   const updateUpload = useCallback((id, patch) => {
     setUploadQueue((q) => q.map((u) => (u.id === id ? { ...u, ...patch } : u)));
@@ -239,7 +279,10 @@ export function usePortfolioManager({
 
   const handleDelete = useCallback(
     async (id) => {
-      const ok = window.confirm('Удалить элемент портфолио?');
+      const ok = await confirm({
+        message: 'Удалить элемент портфолио?',
+        confirmText: 'Удалить',
+      });
       if (!ok) return;
 
       const prev = items;
@@ -254,7 +297,7 @@ export function usePortfolioManager({
         pushError('Ошибка удаления. Попробуйте ещё раз.');
       }
     },
-    [items, applyServerData, refreshUser, pushError]
+    [items, applyServerData, refreshUser, pushError, confirm]
   );
 
   const onDrop = useCallback(
@@ -290,5 +333,15 @@ export function usePortfolioManager({
     openFileDialog,
     limits: heroType ? HERO_LIMITS[heroType] : null,
     remaining: heroType ? HERO_LIMITS[heroType].count - items.length : 0,
+
+    // пропсы для <ConfirmModal {...confirmProps} />
+    confirmProps: {
+      show: confirmState.show,
+      message: confirmState.message,
+      confirmText: confirmState.confirmText,
+      cancelText: confirmState.cancelText,
+      onConfirm: () => resolveConfirm(true),
+      onCancel: () => resolveConfirm(false),
+    },
   };
 }

@@ -73,7 +73,6 @@ export default function UsersPage() {
     };
   }, [paramsKey, page, searchParams]);
 
-  // загружаем избранных юзеров (чтобы кнопка-сердечко была сразу в правильном состоянии)
   useEffect(() => {
     if (!currentUser?._id) {
       setFavoriteIds(new Set());
@@ -88,9 +87,7 @@ export default function UsersPage() {
           (res?.data || []).map((u) => String(u._id ?? u.id))
         );
         setFavoriteIds(ids);
-      } catch (e) {
-        // молча — кнопка просто будет «пустой»
-      }
+      } catch (e) {}
     })();
     return () => {
       mounted = false;
@@ -103,12 +100,11 @@ export default function UsersPage() {
       e.stopPropagation();
 
       if (!currentUser?._id) {
-        router.push('/auth/login');
+        router.push('/login');
         return;
       }
       if (!userId || pendingIds.has(userId)) return;
 
-      // оптимистично переключаем
       setPendingIds((prev) => new Set(prev).add(userId));
       setFavoriteIds((prev) => {
         const next = new Set(prev);
@@ -122,14 +118,13 @@ export default function UsersPage() {
           targetId: userId,
         });
         const favorited = res?.data?.favorited;
-        // синхронизируем по факту ответа сервера
+
         setFavoriteIds((prev) => {
           const next = new Set(prev);
           favorited ? next.add(userId) : next.delete(userId);
           return next;
         });
       } catch (err) {
-        // откат
         setFavoriteIds((prev) => {
           const next = new Set(prev);
           next.has(userId) ? next.delete(userId) : next.add(userId);
@@ -233,7 +228,6 @@ export default function UsersPage() {
                           {isOnline ? 'Онлайн' : 'Офлайн'}
                         </div>
 
-                        {/* ─── кнопка избранного ─── */}
                         {!isOwn && (
                           <button
                             type="button"
