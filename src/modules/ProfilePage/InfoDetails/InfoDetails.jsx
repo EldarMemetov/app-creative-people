@@ -157,7 +157,14 @@ export default function InfoDetails() {
                   {likesCount === null ? '…' : likesCount}
                 </span>
               </div>
-
+              <div className={s.stat}>
+                <span className={s.statLabel}>Рейтинг</span>
+                <span className={s.statValue}>
+                  {user.rating !== undefined && user.rating !== null
+                    ? user.rating
+                    : '—'}
+                </span>
+              </div>
               <div className={s.stat}>
                 <span className={s.statLabel}>Досвід</span>
                 <span className={s.statValue}>{user.experience || '—'}</span>

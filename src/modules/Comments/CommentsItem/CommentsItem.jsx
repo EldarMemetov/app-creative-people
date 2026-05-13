@@ -37,8 +37,8 @@ export default function CommentItem({
   const isModeratorOrAdmin = user && ['admin', 'moderator'].includes(user.role);
 
   const getSafePhoto = (url) => {
-    if (!url) return '/image/avatar.png';
-    return url && url.startsWith('http') ? url : '/image/avatar.png';
+    if (!url) return '/image/avatar.webp';
+    return url && url.startsWith('http') ? url : '/image/avatar.webp';
   };
 
   const avatarUrl = getSafePhoto(comment.author?.photo);
