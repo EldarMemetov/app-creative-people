@@ -15,6 +15,7 @@ import { useAuth } from '@/services/store/useAuth';
 import PortfolioHero from '../ProfilePage/PortfolioHero/PortfolioHero';
 import CompletedProjects from '../CompletedProjects/CompletedProjects';
 import SocialLinks from '@/shared/SocialLinks/SocialLinks';
+import RatingBadge from '@/shared/RatingBadge/RatingBadge';
 
 export default function UserDetailPage() {
   const { id } = useParams();
@@ -134,14 +135,7 @@ export default function UserDetailPage() {
             </div>
 
             <div className={s.stats}>
-              <div className={s.stat}>
-                <span className={s.statLabel}>Рейтинг</span>
-                <span className={s.statValue}>
-                  {user.rating !== undefined && user.rating !== null
-                    ? user.rating
-                    : '—'}
-                </span>
-              </div>
+              <RatingBadge rating={user.rating ?? 0} />
               <div className={s.stat}>
                 <span className={s.statLabel}>Досвід</span>
                 <span className={s.statValue}>{user.experience || '—'}</span>

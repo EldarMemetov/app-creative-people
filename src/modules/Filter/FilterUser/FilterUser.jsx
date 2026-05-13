@@ -10,23 +10,28 @@ import FormInput from '@/shared/FormInput/FormInput';
 import FormSelect from '@/shared/FormSelect/FormSelect';
 import DirectionsSelector from '@/modules/EditProfile/DirectionsSelector/DirectionsSelector';
 import roles from '@/utils/roles.js';
+import { LEVEL_FILTER_OPTIONS } from '@/shared/constants/levels';
 
-const buildInitial = (sp) => ({
-  q: sp.get('q') || '',
-  city: sp.get('city') || '',
-  country: sp.get('country') || '',
-  role: sp.get('role') || '',
-  directions: sp.getAll('directions'),
-  minRating: sp.get('minRating') || '',
-  maxRating: sp.get('maxRating') || '',
-});
+const buildInitial = (sp) => {
+  const minRating = sp.get('minRating') || '';
+  const maxRating = sp.get('maxRating') || '';
+  const level = minRating && maxRating ? `${minRating}-${maxRating}` : '';
+
+  return {
+    q: sp.get('q') || '',
+    city: sp.get('city') || '',
+    country: sp.get('country') || '',
+    role: sp.get('role') || '',
+    directions: sp.getAll('directions'),
+    level,
+  };
+};
 
 export default function FilterUser() {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const { t } = useTranslation(['roles']);
-
   const [open, setOpen] = useState(false);
 
   const ROLE_OPTIONS = roles.map((r) => ({ value: r, label: t(r) }));
@@ -39,13 +44,23 @@ export default function FilterUser() {
 
   const applyFilters = (values) => {
     const sp = new URLSearchParams();
+
     Object.entries(values).forEach(([k, v]) => {
+      if (k === 'level') return; // обробляємо окремо
       if (Array.isArray(v)) {
         v.forEach((x) => x && sp.append(k, x));
       } else if (v !== '' && v !== null && v !== undefined) {
         sp.set(k, typeof v === 'string' ? v.trim() : v);
       }
     });
+
+    // розбиваємо level на minRating і maxRating для бека
+    if (values.level) {
+      const [min, max] = values.level.split('-');
+      sp.set('minRating', min);
+      sp.set('maxRating', max);
+    }
+
     sp.set('page', '1');
     router.replace(`${pathname}?${sp.toString()}`);
     setOpen(false);
@@ -112,18 +127,12 @@ export default function FilterUser() {
                   onChange={(next) => setFieldValue('directions', next)}
                 />
 
-                <div className={s.row}>
-                  <FormInput
-                    name="minRating"
-                    type="number"
-                    label="Рейтинг від"
-                  />
-                  <FormInput
-                    name="maxRating"
-                    type="number"
-                    label="Рейтинг до"
-                  />
-                </div>
+                <FormSelect
+                  name="level"
+                  label="Рівень"
+                  placeholder="Всі рівні"
+                  options={LEVEL_FILTER_OPTIONS}
+                />
 
                 <div className={s.actions}>
                   <button type="submit" className={s.primary}>
