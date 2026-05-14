@@ -63,7 +63,6 @@
   }
 }
 
-// ----- Grid (pill-style, авто-ширина) -----
 .roleGrid {
   display: flex;
   flex-wrap: wrap;
@@ -74,7 +73,6 @@
   }
 }
 
-// ----- Role card / pill -----
 .roleCard {
   position: relative;
   display: inline-flex;
@@ -131,7 +129,6 @@
     box-shadow: 0 0 0 3px rgba(255, 180, 76, 0.25);
   }
 
-  // Чекмарк скрыт по умолчанию (неактивные роли)
   .check {
     width: 0;
     opacity: 0;
@@ -139,7 +136,6 @@
   }
 }
 
-// ----- Active state: янтарно-розовый градиент -----
 .active {
   color: #2a1a08;
   background: linear-gradient(135deg, #ffd874 0%, #ffad6e 55%, #ff8fb1 100%);
@@ -169,7 +165,6 @@
   }
 }
 
-// ----- Disabled -----
 .disabled {
   cursor: not-allowed;
   opacity: 0.38;
@@ -181,7 +176,6 @@
   }
 }
 
-// ----- Text & Check -----
 .text {
   position: relative;
   z-index: 1;
@@ -208,7 +202,6 @@
     transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
-// ----- Error message -----
 .message {
   min-height: 18px;
   font-size: 12px;
@@ -231,4 +224,78 @@
     opacity: 1;
     transform: translateY(0);
   }
+}
+.roleItem {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+// ---- степпер ----
+.stepper {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 6px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 196, 76, 0.35);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  animation: stepperIn 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes stepperIn {
+  from {
+    opacity: 0;
+    transform: translateX(-4px) scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0) scale(1);
+  }
+}
+
+.stepBtn {
+  width: 22px;
+  height: 22px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  border: 0;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 700;
+  color: #2a1a08;
+  background: linear-gradient(135deg, #ffd874 0%, #ffad6e 100%);
+  box-shadow: 0 4px 10px rgba(255, 146, 100, 0.35);
+  transition:
+    transform 0.2s ease,
+    filter 0.2s ease,
+    opacity 0.2s ease;
+
+  &:hover:not(:disabled) {
+    transform: translateY(-1px);
+    filter: brightness(1.08);
+  }
+
+  &:active:not(:disabled) {
+    transform: translateY(0) scale(0.95);
+  }
+
+  &:disabled {
+    cursor: not-allowed;
+    opacity: 0.4;
+    filter: grayscale(0.4);
+  }
+}
+
+.stepValue {
+  min-width: 18px;
+  text-align: center;
+  font-size: 13px;
+  font-weight: 600;
+  color: #ffd874;
+  font-variant-numeric: tabular-nums;
 }

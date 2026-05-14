@@ -29,6 +29,10 @@
     {
       "question": "Gibt es eine mobile App?",
       "answer": "Die mobile App befindet sich derzeit in der Entwicklung und wird bald für iOS und Android verfügbar sein. Bleib auf dem Laufenden."
+    },
+    {
+      "question": "Garantiert QVRIX die Bezahlung für geleistete Arbeit?",
+      "answer": "Nein. QVRIX ist eine Plattform zur Suche nach Teams und Kooperationen. Wir führen keine finanziellen Transaktionen durch. Alle Zahlungsvereinbarungen erfolgen ausschließlich zwischen den Teilnehmern. Wenn jemand eine Vereinbarung verletzt, melde es uns und wir prüfen eine Sperrung."
     }
   ]
 }

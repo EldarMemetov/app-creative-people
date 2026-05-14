@@ -4,51 +4,121 @@ import { useTranslation } from 'react-i18next';
 import s from './RoleSelector.module.scss';
 import roles from '@/utils/roles.js';
 
-const MAX_ROLES = 3;
-
-export default function RoleSelector({ values = [], onChange, label, error }) {
+export default function RoleSelector({
+  values = [],
+  onChange,
+  label,
+  error,
+  max = 3,
+  slotsMode = false,
+  minPerSlot = 1,
+  maxPerSlot = 20,
+}) {
   const { t } = useTranslation(['roles']);
 
+  const hasLimit = Number.isFinite(max) && max > 0;
+
+  const isActive = (role) =>
+    slotsMode ? values.some((v) => v.role === role) : values.includes(role);
+
+  const getRequired = (role) =>
+    slotsMode ? (values.find((v) => v.role === role)?.required ?? 0) : 0;
+
+  const totalSelected = values.length;
+  const limitReached = hasLimit && totalSelected >= max;
+
   const toggleRole = (role) => {
-    const isActive = values.includes(role);
-
-    if (isActive) {
-      onChange(values.filter((r) => r !== role));
-      return;
+    if (slotsMode) {
+      if (isActive(role)) {
+        onChange(values.filter((v) => v.role !== role));
+        return;
+      }
+      if (limitReached) return;
+      onChange([...values, { role, required: minPerSlot }]);
+    } else {
+      if (values.includes(role)) {
+        onChange(values.filter((r) => r !== role));
+        return;
+      }
+      if (limitReached) return;
+      onChange([...values, role]);
     }
-
-    if (values.length >= MAX_ROLES) return;
-
-    onChange([...values, role]);
   };
 
-  const limitReached = values.length >= MAX_ROLES;
+  const changeRequired = (role, delta) => {
+    if (!slotsMode) return;
+    onChange(
+      values.map((v) =>
+        v.role === role
+          ? {
+              ...v,
+              required: Math.min(
+                maxPerSlot,
+                Math.max(minPerSlot, (v.required || minPerSlot) + delta)
+              ),
+            }
+          : v
+      )
+    );
+  };
 
   return (
     <div className={s.container}>
       <div className={s.header}>
         {label && <label className={s.label}>{label}</label>}
-        <span className={`${s.counter} ${limitReached ? s.counterLimit : ''}`}>
-          {values.length} / {MAX_ROLES}
-        </span>
+        {hasLimit ? (
+          <span
+            className={`${s.counter} ${limitReached ? s.counterLimit : ''}`}
+          >
+            {totalSelected} / {max}
+          </span>
+        ) : (
+          <span className={s.counter}>{totalSelected}</span>
+        )}
       </div>
 
       <div className={s.roleGrid}>
         {roles.map((role) => {
-          const isActive = values.includes(role);
-          const isDisabled = !isActive && limitReached;
+          const active = isActive(role);
+          const disabled = !active && limitReached;
+          const required = getRequired(role);
 
           return (
-            <button
-              key={role}
-              type="button"
-              disabled={isDisabled}
-              onClick={() => toggleRole(role)}
-              className={`${s.roleCard} ${isActive ? s.active : ''} ${isDisabled ? s.disabled : ''}`}
-            >
-              <span className={s.text}>{t(role)}</span>
-              <span className={s.check}>✓</span>
-            </button>
+            <div key={role} className={s.roleItem}>
+              <button
+                type="button"
+                disabled={disabled}
+                onClick={() => toggleRole(role)}
+                className={`${s.roleCard} ${active ? s.active : ''} ${disabled ? s.disabled : ''}`}
+              >
+                <span className={s.text}>{t(role)}</span>
+                <span className={s.check}>✓</span>
+              </button>
+
+              {slotsMode && active && (
+                <div className={s.stepper}>
+                  <button
+                    type="button"
+                    className={s.stepBtn}
+                    onClick={() => changeRequired(role, -1)}
+                    disabled={required <= minPerSlot}
+                    aria-label="Уменьшить"
+                  >
+                    −
+                  </button>
+                  <span className={s.stepValue}>{required}</span>
+                  <button
+                    type="button"
+                    className={s.stepBtn}
+                    onClick={() => changeRequired(role, +1)}
+                    disabled={required >= maxPerSlot}
+                    aria-label="Увеличить"
+                  >
+                    +
+                  </button>
+                </div>
+              )}
+            </div>
           );
         })}
       </div>

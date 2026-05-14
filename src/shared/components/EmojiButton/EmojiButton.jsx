@@ -32,9 +32,10 @@ export default function EmojiButton({ fieldName }) {
     <div ref={wrapperRef} className={s.emojiWrapper}>
       <button
         type="button"
-        className={s.emojiBtn}
+        className={`${s.emojiBtn} ${showPicker ? s.emojiBtnOpen : ''}`}
         onClick={() => setShowPicker((p) => !p)}
         aria-label="Toggle emoji picker"
+        aria-expanded={showPicker}
       >
         😎
       </button>

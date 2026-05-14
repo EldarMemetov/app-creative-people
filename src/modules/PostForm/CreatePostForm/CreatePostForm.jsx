@@ -17,6 +17,7 @@ import Image from 'next/image';
 import Container from '@/shared/container/Container';
 import RoleSelector from '@/modules/RegisterPage/RoleSelector/RoleSelector';
 import CountryCitySelector from '@/shared/CountryCitySelector/CountryCitySelector';
+import ConfirmDialog from '@/shared/ConfirmDialog/ConfirmDialog';
 
 const MAX_PHOTO_COUNT = 3;
 const MAX_PHOTO_BYTES = 5 * 1024 * 1024;
@@ -24,17 +25,72 @@ const MAX_PHOTO_BYTES = 5 * 1024 * 1024;
 const getBerlinTodayISO = () =>
   new Date().toLocaleDateString('en-CA', { timeZone: 'Europe/Berlin' });
 
+const INITIAL_DIALOG = {
+  show: false,
+  variant: 'info',
+  title: '',
+  message: '',
+  confirmText: 'OK',
+  cancelText: 'Отмена',
+  onConfirm: null,
+  loading: false,
+};
+
 export default function CreatePostForm({ initial = null }) {
   const router = useRouter();
   const [submitting, setSubmitting] = useState(false);
   const [newFiles, setNewFiles] = useState([]);
   const [existingMedia, setExistingMedia] = useState(initial?.media ?? []);
+  const [dialog, setDialog] = useState(INITIAL_DIALOG);
   const isEdit = Boolean(initial && initial._id);
 
   useEffect(() => {
     setExistingMedia(initial?.media ?? []);
   }, [initial]);
 
+  // ---------- Dialog helpers ----------
+  const closeDialog = () =>
+    setDialog((d) => ({ ...d, show: false, loading: false }));
+
+  const notifyInfo = (message, title = 'Информация') =>
+    setDialog({
+      ...INITIAL_DIALOG,
+      show: true,
+      variant: 'info',
+      title,
+      message,
+      confirmText: 'OK',
+    });
+
+  const notifyError = (message, title = 'Ошибка') =>
+    setDialog({
+      ...INITIAL_DIALOG,
+      show: true,
+      variant: 'error',
+      title,
+      message,
+      confirmText: 'OK',
+    });
+
+  const confirmAction = ({
+    title = 'Подтверждение',
+    message,
+    confirmText = 'Удалить',
+    cancelText = 'Отмена',
+    onConfirm,
+  }) =>
+    setDialog({
+      ...INITIAL_DIALOG,
+      show: true,
+      variant: 'confirm',
+      title,
+      message,
+      confirmText,
+      cancelText,
+      onConfirm,
+    });
+
+  // ---------- Helpers ----------
   const formatDateForInput = (d) => {
     if (!d) return '';
     const dt = new Date(d);
@@ -70,21 +126,26 @@ export default function CreatePostForm({ initial = null }) {
     const newPhotos = countNewPhotos(list);
 
     if (existingPhotos + newPhotos > MAX_PHOTO_COUNT) {
-      alert(
-        `Можно загрузить максимум ${MAX_PHOTO_COUNT} фото (включая уже загруженные).`
+      notifyError(
+        `Можно загрузить максимум ${MAX_PHOTO_COUNT} фото (включая уже загруженные).`,
+        'Слишком много файлов'
       );
+      e.target.value = '';
       return;
     }
 
     for (const f of list) {
       if (!f.type.startsWith('image')) {
-        alert('Можно загружать только изображения');
+        notifyError('Можно загружать только изображения');
+        e.target.value = '';
         return;
       }
       if (f.size > MAX_PHOTO_BYTES) {
-        alert(
-          `${f.name} превышает максимальный размер фото ${MAX_PHOTO_BYTES / (1024 * 1024)}MB`
+        notifyError(
+          `${f.name} превышает максимальный размер ${MAX_PHOTO_BYTES / (1024 * 1024)}MB`,
+          'Файл слишком большой'
         );
+        e.target.value = '';
         return;
       }
     }
@@ -96,18 +157,28 @@ export default function CreatePostForm({ initial = null }) {
   const removeNewFile = (index) =>
     setNewFiles((prev) => prev.filter((_, i) => i !== index));
 
-  const removeExistingMedia = async (mediaId) => {
+  const removeExistingMedia = (mediaId) => {
     if (!isEdit) return;
-    if (!confirm('Удалить это медиа?')) return;
-    try {
-      await deletePostMedia(initial._id, mediaId);
-      setExistingMedia((prev) =>
-        prev.filter((m) => String(m._id) !== String(mediaId))
-      );
-    } catch (err) {
-      console.error('Failed to delete media', err);
-      alert('Ошибка при удалении медиа');
-    }
+
+    confirmAction({
+      title: 'Удалить медиа?',
+      message: 'Это действие нельзя отменить.',
+      confirmText: 'Удалить',
+      cancelText: 'Отмена',
+      onConfirm: async () => {
+        setDialog((d) => ({ ...d, loading: true }));
+        try {
+          await deletePostMedia(initial._id, mediaId);
+          setExistingMedia((prev) =>
+            prev.filter((m) => String(m._id) !== String(mediaId))
+          );
+          closeDialog();
+        } catch (err) {
+          console.error('Failed to delete media', err);
+          notifyError('Не удалось удалить медиа.');
+        }
+      },
+    });
   };
 
   const isDateInPastBerlin = (value) => {
@@ -178,7 +249,7 @@ export default function CreatePostForm({ initial = null }) {
       router.push(`/posts/${savedPost._id}`);
     } catch (err) {
       console.error('submit error', err);
-      alert('Ошибка при сохранении поста');
+      notifyError(err?.message || 'Ошибка при сохранении поста');
     } finally {
       setSubmitting(false);
       setFormikSubmitting(false);
@@ -188,6 +259,10 @@ export default function CreatePostForm({ initial = null }) {
   return (
     <section className={s.section}>
       <Container>
+        <p className={s.info}>
+          QVRIX не проводить платежі та не несе відповідальності за фінансові
+          розрахунки між учасниками. Домовляйтесь напряму.
+        </p>
         <div className={s.formWrap}>
           <h2 className={s.title}>
             {isEdit ? 'Редактировать пост' : 'Создать пост'}
@@ -213,6 +288,7 @@ export default function CreatePostForm({ initial = null }) {
                   placeholder="Описание..."
                 />
                 <CountryCitySelector />
+
                 <div className={s.dateRow}>
                   <label className={s.checkboxLabel}>
                     <input
@@ -288,14 +364,17 @@ export default function CreatePostForm({ initial = null }) {
                 <div className={s.roleSection}>
                   <RoleSelector
                     label="Роли"
-                    values={(values.roleSlots || []).map((rs) => rs.role)}
-                    onChange={(nextRoles) =>
-                      setFieldValue(
-                        'roleSlots',
-                        nextRoles.map((r) => ({ role: r, required: 1 }))
-                      )
+                    values={values.roleSlots || []}
+                    onChange={(slots) => setFieldValue('roleSlots', slots)}
+                    error={
+                      typeof errors.roleSlots === 'string'
+                        ? errors.roleSlots
+                        : undefined
                     }
-                    error={errors.roleSlots}
+                    max={0}
+                    slotsMode
+                    minPerSlot={1}
+                    maxPerSlot={20}
                   />
                 </div>
 
@@ -394,6 +473,18 @@ export default function CreatePostForm({ initial = null }) {
           </Formik>
         </div>
       </Container>
+
+      <ConfirmDialog
+        show={dialog.show}
+        variant={dialog.variant}
+        title={dialog.title}
+        message={dialog.message}
+        confirmText={dialog.confirmText}
+        cancelText={dialog.cancelText}
+        loading={dialog.loading}
+        onConfirm={dialog.onConfirm || closeDialog}
+        onClose={closeDialog}
+      />
     </section>
   );
 }

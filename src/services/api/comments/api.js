@@ -1,7 +1,6 @@
 import { api } from '../lib/api';
 import { handleError } from '@/utils/errorHandler';
 
-// targetType: 'post' | 'forumTopic'
 const basePath = (targetType, targetId) => {
   if (targetType === 'forumTopic') return `/forum/${targetId}`;
   return `/posts/${targetId}`;
@@ -72,6 +71,16 @@ export const toggleCommentLike = async (targetType, targetId, commentId) => {
   try {
     const { data } = await api.patch(
       `${basePath(targetType, targetId)}/comments/${commentId}/like`
+    );
+    return data;
+  } catch (err) {
+    throw handleError(err);
+  }
+};
+export const getComment = async (targetType, targetId, commentId) => {
+  try {
+    const { data } = await api.get(
+      `${basePath(targetType, targetId)}/comments/${commentId}`
     );
     return data;
   } catch (err) {

@@ -11,7 +11,15 @@
     padding: 140px 0 160px;
   }
 }
-
+.info {
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgb(255 255 255);
+  margin-bottom: 30px;
+  text-align: center;
+}
 // ---------- Glass card wrapper ----------
 .formWrap {
   position: relative;

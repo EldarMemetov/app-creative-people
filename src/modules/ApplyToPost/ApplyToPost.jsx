@@ -113,6 +113,10 @@ export default function ApplyToPost({
               <span className={s.eyebrowDot} />
               Заявка
             </span>
+            <p className={s.info}>
+              Всі фінансові домовленості вирішуються напряму з організатором.
+              QVRIX не несе відповідальності за оплату послуг між учасниками.
+            </p>
             <h3 className={s.title}>Откликнуться на «{post.title}»</h3>
             <p className={s.subtitle}>
               Выберите свою роль и при желании оставьте сообщение автору.
