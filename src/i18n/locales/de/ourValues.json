@@ -1,0 +1,33 @@
+{
+  "eyebrow": "Prinzipien",
+  "title": "Was für uns",
+  "titleAccent": "wichtig ist.",
+
+  "values": [
+    {
+      "num": "01",
+      "title": "Offenheit",
+      "text": "Wir schaffen einen Raum ohne Barrieren — für Anfänger und Profis, für kleine Marken und große Agenturen."
+    },
+    {
+      "num": "02",
+      "title": "Einfachheit",
+      "text": "Keine unnötigen Schritte. Registrierung, Profil, Suche — und du bist bereits Teil der Community."
+    },
+    {
+      "num": "03",
+      "title": "Kreativität",
+      "text": "Wir inspirieren — durch das Interface, die Community und die Möglichkeiten der Plattform."
+    },
+    {
+      "num": "04",
+      "title": "Vertrauen",
+      "text": "Echte Menschen, echte Arbeiten, echte Bewertungen. Keine Fakes und keine Vermittler."
+    },
+    {
+      "num": "05",
+      "title": "Community",
+      "text": "Wir sind nicht nur ein Service — wir sind eine Community. Jedes Mitglied macht die Plattform besser."
+    }
+  ]
+}

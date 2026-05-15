@@ -1,46 +1,38 @@
 import Container from '@/shared/container/Container';
 import s from './WhereWeAreGoing.module.scss';
+import { initServerI18n } from '@/i18n/utils/serverI18n';
 
-export default function WhereWeAreGoing() {
+export default async function WhereWeAreGoing({ locale }) {
+  const { t } = await initServerI18n(locale, ['whereWeAreGoing']);
+
   return (
     <section className={s.vision}>
       <Container>
         <div className={s.inner}>
           <span className={s.eyebrow}>
             <span className={s.eyebrowDot} aria-hidden="true" />
-            Місія і візія
+            {t('eyebrow')}
           </span>
 
           <h2 className={s.title}>
-            Ми віримо, що талант є скрізь.
+            {t('title')}
             <br />
-            Йому просто потрібна <em>сцена.</em>
+            <em>{t('titleAccent')}</em>
           </h2>
 
           <div className={s.body}>
-            <p className={s.paragraph}>
-              Зробити творчу колаборацію доступною для кожного — незалежно від
-              міста, досвіду чи бюджету. Ми будуємо простір, де починаючий
-              фотограф з маленького міста має ті самі можливості, що і
-              досвідчений професіонал з великого.
-            </p>
+            <p className={s.paragraph}>{t('paragraph1')}</p>
 
-            <p className={s.paragraph}>
-              QVRIX — це не просто каталог профілів. Це жива спільнота, де
-              народжуються проєкти, будуються карєри і зявляються нові імена.
-              Наша ціль — стати головною креативною платформою України та
-              Європи, де кожен творчий професіонал має свій голос, своє
-              портфоліо і свою аудиторію.
-            </p>
+            <p className={s.paragraph}>{t('paragraph2')}</p>
           </div>
 
-          <p className={s.spotlight}>
-            <span className={s.spotlightLead}>Від першої зйомки</span>
-            <span className={s.spotlightHero}>до великого імені</span>
-            <span className={s.spotlightOutro}>
-              — ми будемо поруч на кожному кроці.
-            </span>
-          </p>
+          <div className={s.spotlight}>
+            <span className={s.spotlightLead}>{t('spotlightLead')}</span>
+
+            <span className={s.spotlightHero}>{t('spotlightHero')}</span>
+
+            <span className={s.spotlightOutro}>{t('spotlightOutro')}</span>
+          </div>
         </div>
       </Container>
     </section>

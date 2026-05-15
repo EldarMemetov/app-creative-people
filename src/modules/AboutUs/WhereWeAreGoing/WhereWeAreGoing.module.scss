@@ -141,7 +141,6 @@
   align-items: center;
   gap: 10px;
   margin: 0;
-  max-width: 18ch;
   text-align: center;
 
   &::before {
@@ -161,11 +160,9 @@
 
   @include media(tablet) {
     gap: 14px;
-    max-width: 22ch;
   }
   @include media(desktop) {
     gap: 20px;
-    max-width: 26ch;
   }
 }
 

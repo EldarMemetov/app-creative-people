@@ -1,13 +1,12 @@
 .section {
   margin-bottom: 50px;
-  margin-top: 50px;
 }
 .infoDetails {
   display: flex;
   flex-direction: column;
   gap: 32px;
   margin: 0 auto;
-
+  margin-top: 50px;
   @include media(desktop) {
     gap: 40px;
   }

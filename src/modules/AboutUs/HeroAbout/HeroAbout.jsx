@@ -1,7 +1,10 @@
 import Container from '@/shared/container/Container';
 import s from './HeroAbout.module.scss';
+import { initServerI18n } from '@/i18n/utils/serverI18n';
 
-export default function HeroAbout() {
+export default async function HeroAbout({ locale }) {
+  const { t } = await initServerI18n(locale, ['heroAbout']);
+
   return (
     <section className={s.hero}>
       <Container>
@@ -9,17 +12,14 @@ export default function HeroAbout() {
           <div className={s.text}>
             <span className={s.eyebrow}>
               <span className={s.eyebrowDot} aria-hidden="true" />
-              Про QVRIX
+              {t('eyebrow')}
             </span>
 
             <h1 className={s.title}>
-              Ми створили місце, <em>якого не вистачало.</em>
+              {t('title')} <em>{t('titleAccent')}</em>
             </h1>
 
-            <p className={s.subtitle}>
-              QVRIX народився з простої ідеї — обєднати творчих людей, які
-              шукають одне одного, але не знають де знайти.
-            </p>
+            <p className={s.subtitle}>{t('subtitle')}</p>
           </div>
 
           <div className={s.collage}>
@@ -27,13 +27,15 @@ export default function HeroAbout() {
             <span className={s.gridLines} aria-hidden="true" />
 
             <figure className={`${s.photo} ${s.photo1}`}>
-              <span className={s.photoTag}>fotograf</span>
+              <span className={s.photoTag}>{t('tagPhotographer')}</span>
             </figure>
+
             <figure className={`${s.photo} ${s.photo2}`}>
-              <span className={s.photoTag}>model</span>
+              <span className={s.photoTag}>{t('tagModel')}</span>
             </figure>
+
             <figure className={`${s.photo} ${s.photo3}`}>
-              <span className={s.photoTag}>creator</span>
+              <span className={s.photoTag}>{t('tagCreator')}</span>
             </figure>
           </div>
         </div>

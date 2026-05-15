@@ -1,0 +1,33 @@
+{
+  "eyebrow": "Principles",
+  "title": "What matters",
+  "titleAccent": "to us.",
+
+  "values": [
+    {
+      "num": "01",
+      "title": "Openness",
+      "text": "We build a space without barriers — for beginners and professionals, for small brands and large agencies."
+    },
+    {
+      "num": "02",
+      "title": "Simplicity",
+      "text": "No unnecessary steps. Registration, profile, search — and you're already part of the community."
+    },
+    {
+      "num": "03",
+      "title": "Creativity",
+      "text": "We inspire through the interface, the community, and the opportunities the platform creates."
+    },
+    {
+      "num": "04",
+      "title": "Trust",
+      "text": "Real people, real work, real reviews. No fakes or middlemen."
+    },
+    {
+      "num": "05",
+      "title": "Community",
+      "text": "We are not just a service — we are a community. Every member makes the platform better."
+    }
+  ]
+}
