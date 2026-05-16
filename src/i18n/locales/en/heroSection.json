@@ -1,10 +1,10 @@
 {
-  "titleLine1": "Твоя сцена.",
-  "titleLine2": "Твоя команда.",
-  "titleAccent": "Твоё искусство.",
+  "titleLine1": "Your stage.",
+  "titleLine2": "Your team.",
+  "titleAccent": "Your art.",
 
-  "subtitle": "Платформа для креативных людей, где можно находить команду, показывать свои работы, запускать проекты, общаться и быть частью сообщества.",
+  "subtitle": "A platform for creative people where you can find a team, showcase your work, launch projects, communicate, and be part of a community.",
 
-  "register": "Регистрация",
-  "login": "Войти"
+  "register": "Register",
+  "login": "Log in"
 }
