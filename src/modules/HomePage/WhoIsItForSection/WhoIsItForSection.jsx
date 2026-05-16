@@ -3,61 +3,16 @@
 import { useRef, useCallback } from 'react';
 import Container from '@/shared/container/Container';
 import s from './WhoIsItForSection.module.scss';
-
-const cards = [
-  {
-    title: 'Фотографи',
-    description: 'Знаходь моделей та клієнтів для зйомок, розширюй клієнтуру.',
-    image: '/image/card.png',
-  },
-  {
-    title: 'Моделі',
-    description: 'Отримуй запрошення на зйомки, розширюй портфоліо.',
-    image: '/image/card.png',
-  },
-  {
-    title: 'Відеографи / Режисери',
-    description: 'Збирай команду для кліпів, реклами чи контенту.',
-    image: '/image/card.png',
-  },
-  {
-    title: 'Продюсери',
-    description: 'Координуй проєкти, знаходь підрядників та керуй командою.',
-    image: '/image/card.png',
-  },
-  {
-    title: 'Ретушери',
-    description:
-      'Пропонуй свої послуги фотографам та агентствам, знаходь постійних клієнтів.',
-    image: '/image/card.png',
-  },
-  {
-    title: 'Візажисти / Стилісти / Перукарі',
-    description: "Створюй образи, працюй із командами та просувай своє ім'я.",
-    image: '/image/card.png',
-  },
-  {
-    title: 'Дизайнери одягу',
-    description: 'Просувай колекції, знаходь моделей та знімальні команди.',
-    image: '/image/card.png',
-  },
-  {
-    title: 'Бізнес / Бренди / Агентства',
-    description: 'Шукай креативні команди для реклами, контенту та промо.',
-    image: '/image/card.png',
-  },
-  {
-    title: 'AI-креатори',
-    description:
-      'Створюй фото і відео за допомогою ШІ, ділись роботами та знаходь колег.',
-    image: '/image/card.png',
-  },
-];
+import Icon from '@/shared/Icon/Icon';
+import { useTranslation } from 'react-i18next';
 
 export default function WhoIsItForSection() {
+  const { t } = useTranslation(['whoIsItFor']);
   const trackRef = useRef(null);
   const currentIndexRef = useRef(0);
   const isScrollingRef = useRef(false);
+
+  const cards = t('cards', { returnObjects: true });
 
   const getCardWidth = useCallback(() => {
     const el = trackRef.current;
@@ -85,7 +40,7 @@ export default function WhoIsItForSection() {
         isScrollingRef.current = false;
       }, 500);
     },
-    [getCardWidth]
+    [getCardWidth, cards.length]
   );
 
   const handleScroll = useCallback(() => {
@@ -102,20 +57,17 @@ export default function WhoIsItForSection() {
           <div className={s.headerTop}>
             <span className={s.eyebrow}>
               <span className={s.dot} />
-              Для кого платформа
+              {t('eyebrow')}
             </span>
           </div>
 
           <h2 className={s.title}>
-            Простір, де творці
+            {t('titleLine1')}
             <br />
-            знаходять одне одного
+            {t('titleLine2')}
           </h2>
 
-          <p className={s.subtitle}>
-            Незалежно від того, хто ти — професіонал зі стажем чи лише шукаєш
-            свою команду — тут є місце для тебе. Обери свою роль.
-          </p>
+          <p className={s.subtitle}>{t('subtitle')}</p>
         </header>
       </Container>
 
@@ -158,44 +110,26 @@ export default function WhoIsItForSection() {
         <button
           type="button"
           className={s.arrow}
-          aria-label="Попередня"
+          aria-label={t('prevAriaLabel')}
           onClick={() => scrollToIndex(currentIndexRef.current - 1)}
         >
-          <svg
-            viewBox="0 0 24 24"
-            width="18"
-            height="18"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="1.6"
-          >
-            <path
-              d="M15 5l-7 7 7 7"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            />
-          </svg>
+          <Icon
+            iconName="icon-next-go"
+            className={s.storeIcon}
+            aria-hidden="true"
+          />
         </button>
         <button
           type="button"
           className={s.arrow}
-          aria-label="Наступна"
+          aria-label={t('nextAriaLabel')}
           onClick={() => scrollToIndex(currentIndexRef.current + 1)}
         >
-          <svg
-            viewBox="0 0 24 24"
-            width="18"
-            height="18"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="1.6"
-          >
-            <path
-              d="M9 5l7 7-7 7"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            />
-          </svg>
+          <Icon
+            iconName="icon-next"
+            className={s.storeIcon}
+            aria-hidden="true"
+          />
         </button>
       </div>
     </section>

@@ -61,6 +61,12 @@ export const NAMESPACES = [
   'heroAbout',
   'ourValues',
   'whereWeAreGoing',
+  'heroSection',
+  'howItWorks',
+  'joinNow',
+  'renderOurStory',
+  'whoIsItFor',
+  'whyUs',
 ];
 
 export const FLIPPED_TIME_MS = 15000;

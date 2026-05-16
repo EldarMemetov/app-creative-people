@@ -1,0 +1,55 @@
+{
+  "eyebrow": "Für wen ist die Plattform",
+  "titleLine1": "Ein Raum, in dem Kreative",
+  "titleLine2": "einander finden",
+  "subtitle": "Egal ob du ein erfahrener Profi bist oder gerade dein Team suchst — hier ist Platz für dich. Wähle deine Rolle.",
+  "prevAriaLabel": "Zurück",
+  "nextAriaLabel": "Weiter",
+  "cards": [
+    {
+      "title": "Fotografen",
+      "description": "Finde Models und Kunden für Shootings, erweitere deinen Kundenstamm.",
+      "image": "/image/card.png"
+    },
+    {
+      "title": "Models",
+      "description": "Erhalte Einladungen zu Shootings und erweitere dein Portfolio.",
+      "image": "/image/card.png"
+    },
+    {
+      "title": "Videografen / Regisseure",
+      "description": "Stelle ein Team für Musikvideos, Werbung oder Content zusammen.",
+      "image": "/image/card.png"
+    },
+    {
+      "title": "Produzenten",
+      "description": "Koordiniere Projekte, finde Auftragnehmer und manage dein Team.",
+      "image": "/image/card.png"
+    },
+    {
+      "title": "Retuschierer",
+      "description": "Biete deine Dienste Fotografen und Agenturen an, finde Stammkunden.",
+      "image": "/image/card.png"
+    },
+    {
+      "title": "MUAs / Stylisten / Hairstylisten",
+      "description": "Kreiere Looks, arbeite mit Teams und mach dir einen Namen.",
+      "image": "/image/card.png"
+    },
+    {
+      "title": "Modedesigner",
+      "description": "Präsentiere Kollektionen, finde Models und Filmteams.",
+      "image": "/image/card.png"
+    },
+    {
+      "title": "Unternehmen / Marken / Agenturen",
+      "description": "Suche kreative Teams für Werbung, Content und Promo.",
+      "image": "/image/card.png"
+    },
+    {
+      "title": "KI-Kreative",
+      "description": "Erstelle Fotos und Videos mit KI, teile deine Arbeiten und finde Kollegen.",
+      "image": "/image/card.png"
+    }
+  ]
+}

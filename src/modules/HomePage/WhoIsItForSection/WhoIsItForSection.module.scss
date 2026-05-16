@@ -439,7 +439,11 @@
   transform-origin: left center;
   transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
 }
-
+.storeIcon {
+  width: 14px;
+  height: 14px;
+  fill: #f5f6ff;
+}
 @keyframes fadeUp {
   from {
     opacity: 0;

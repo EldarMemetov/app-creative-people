@@ -1,0 +1,33 @@
+{
+  "eyebrow": "Jetzt beitreten",
+  "title": "Ein Ort, an dem Kollaborationen entstehen",
+  "subtitle": "Verbinde dich mit kreativen Menschen, finde Projekte und baue deinen Ruf in einer wachsenden Community auf.",
+
+  "counterSuffix": "Mitglieder",
+  "hint": "Hilf uns bis zum Launch — sei einer der Ersten.",
+
+  "register": "Registrieren",
+  "login": "Anmelden",
+
+  "stores": {
+    "iosSmall": "Laden im",
+    "androidSmall": "Laden im",
+    "appStore": "App Store",
+    "googlePlay": "Google Play"
+  },
+
+  "guarantees": [
+    "Kostenlose Registrierung",
+    "Keine versteckten Kosten",
+    "Jederzeit kündbar"
+  ],
+
+  "coming": {
+    "badge": "Demnächst",
+    "iosTitle": "iOS-App — in Entwicklung",
+    "androidTitle": "Android-App — in Entwicklung",
+    "textBefore": "Wir arbeiten bereits an der mobilen QVRIX-App — damit du Projekte vom Handy aus steuern kannst. Bald verfügbar im",
+    "textAfter": ". Bis dahin nutze die Web-Version — alles ist bereits da.",
+    "button": "Verstanden"
+  }
+}

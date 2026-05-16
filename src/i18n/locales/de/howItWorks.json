@@ -1,0 +1,21 @@
+{
+  "eyebrow": "Prozess",
+  "title": "Wie funktioniert",
+  "titleAccent": "es?",
+  "subtitle": "Drei Schritte — von der Registrierung bis zum ersten gemeinsamen Projekt.",
+
+  "steps": [
+    {
+      "title": "Stell dich vor",
+      "description": "Wähle eine Rolle, zeige deine Arbeiten — und lass dich zuerst finden."
+    },
+    {
+      "title": "Finde deine Leute",
+      "description": "Fotograf, Model, Stylist — alle sind hier. Eine Suche — und dein Team steht."
+    },
+    {
+      "title": "Von der Idee zum Ergebnis",
+      "description": "Kommunizieren, absprechen und loslegen. Ohne unnötige Schritte."
+    }
+  ]
+}

@@ -1,0 +1,37 @@
+{
+  "eyebrow": "Warum wir",
+  "title": "Warum QVRIX?",
+  "subtitle": "Wir haben einen Raum geschaffen, in dem Kreative einander finden — und gemeinsam Größeres erschaffen.",
+  "features": [
+    {
+      "icon": "icon-globe-line",
+      "title": "Eine Community ohne Grenzen",
+      "description": "Die einzige kreative Plattform für Fotografen, Models und ganze Teams — von der Ukraine bis Europa."
+    },
+    {
+      "icon": "icon-partner-handshake-icon",
+      "title": "Direkte Kollaborationen",
+      "description": "Keine Agenturen, keine Mittelsmänner. Finde Menschen, einige dich direkt und fang an zu arbeiten."
+    },
+    {
+      "icon": "icon-computer-folder",
+      "title": "Alles an einem Ort",
+      "description": "Profil, Portfolio, Suche und Kommunikation — ohne zusätzliche Apps oder ständiges Wechseln."
+    },
+    {
+      "icon": "icon-flash-thunder",
+      "title": "Ein Interface, das inspiriert",
+      "description": "Modernes und klares Design, das nicht stört — sondern hilft, sich auf die Kreativität zu konzentrieren."
+    },
+    {
+      "icon": "icon-shield-lock",
+      "title": "Nur echte Profile",
+      "description": "Verifizierte Mitglieder, ehrliche Bewertungen und transparente Reputation für jeden."
+    },
+    {
+      "icon": "icon-rocket-launch",
+      "title": "Wachse mit der Community",
+      "description": "Neue Kontakte, Projekte und Möglichkeiten — jeden Tag. Je mehr du gibst, desto mehr bekommst du."
+    }
+  ]
+}

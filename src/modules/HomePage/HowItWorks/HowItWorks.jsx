@@ -1,40 +1,26 @@
 import Container from '@/shared/container/Container';
 import s from './HowItWorks.module.scss';
+import { initServerI18n } from '@/i18n/utils/serverI18n';
 
-const steps = [
-  {
-    title: 'Заяви про себе',
-    description:
-      'Обери роль, покажи свої роботи — і нехай тебе знайдуть перші.',
-  },
-  {
-    title: 'Знайди своїх людей',
-    description:
-      'Фотограф, модель, стиліст — всі тут. Один пошук — і команда готова.',
-  },
-  {
-    title: 'Від ідеї до результату',
-    description: 'Спілкуйся, домовляйся і знімай. Без зайвих кроків.',
-  },
-];
+export default async function HowItWorks({ locale }) {
+  const { t } = await initServerI18n(locale, ['howItWorks']);
 
-export default function HowItWorks() {
+  const steps = t('steps', { returnObjects: true });
+
   return (
     <section className={s.section}>
       <Container>
         <header className={s.header}>
           <span className={s.eyebrow}>
             <span className={s.dot} />
-            Процес
+            {t('eyebrow')}
           </span>
 
           <h2 className={s.title}>
-            Як це <span className={s.accent}>працює?</span>
+            {t('title')} <span className={s.accent}>{t('titleAccent')}</span>
           </h2>
 
-          <p className={s.subtitle}>
-            Три кроки — від реєстрації до першого спільного проєкту.
-          </p>
+          <p className={s.subtitle}>{t('subtitle')}</p>
         </header>
 
         <div className={s.timeline}>
@@ -61,6 +47,7 @@ export default function HowItWorks() {
 
                   <div className={s.body}>
                     <h3 className={s.cardTitle}>{step.title}</h3>
+
                     <p className={s.cardText}>{step.description}</p>
                   </div>
 

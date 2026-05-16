@@ -1,0 +1,33 @@
+{
+  "eyebrow": "Join now",
+  "title": "A place where collaborations are born",
+  "subtitle": "Connect with creative people, find projects, and build your reputation in a growing community.",
+
+  "counterSuffix": "members",
+  "hint": "Help us reach launch — be among the first.",
+
+  "register": "Register",
+  "login": "Log in",
+
+  "stores": {
+    "iosSmall": "Download on",
+    "androidSmall": "Download on",
+    "appStore": "App Store",
+    "googlePlay": "Google Play"
+  },
+
+  "guarantees": [
+    "Free registration",
+    "No hidden fees",
+    "You can leave anytime"
+  ],
+
+  "coming": {
+    "badge": "Coming soon",
+    "iosTitle": "iOS app — in development",
+    "androidTitle": "Android app — in development",
+    "textBefore": "We are already working on the QVRIX mobile app — so you can manage projects from your phone. Soon it will be available on",
+    "textAfter": ". In the meantime, use the web version — everything you need is here.",
+    "button": "Got it"
+  }
+}

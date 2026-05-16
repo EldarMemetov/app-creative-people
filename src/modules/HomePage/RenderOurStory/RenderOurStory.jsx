@@ -1,40 +1,31 @@
 import Container from '@/shared/container/Container';
 import s from './RenderOurStory.module.scss';
+import { initServerI18n } from '@/i18n/utils/serverI18n';
 
-export default function RenderOurStory() {
+export default async function RenderOurStory({ locale }) {
+  const { t } = await initServerI18n(locale, ['renderOurStory']);
+
   return (
     <section className={s.story}>
       <Container>
         <div className={s.inner}>
-          <span className={s.eyebrow}>
-            Маніфест <span className={s.eyebrowDot}>•</span> Для тих, хто
-            творить
-          </span>
+          <span className={s.eyebrow}>{t('eyebrow')}</span>
 
           <h2 className={s.title}>
-            Ми самі були частиною <em>цього світу.</em>
+            {t('title')} <em>{t('titleAccent')}</em>
           </h2>
 
-          <p className={s.intro}>
-            Кожен фотограф хоча б раз шукав модель через знайомих. Кожна модель
-            чекала на запрошення, яке не надходило. Ми бачили, наскільки цей
-            світ роздроблений — і вирішили це змінити.
-          </p>
+          <p className={s.intro}>{t('intro')}</p>
 
           <div className={s.declaration}>
-            <p className={s.declarationLead}>Досить бігати з місця на місце.</p>
-            <p className={s.declarationHero}>
-              Час зібратись <em>разом.</em>
-            </p>
+            <p className={s.declarationLead}>{t('declarationLead')}</p>
+
+            <p className={s.declarationHero}>{t('declarationHero')}</p>
           </div>
 
-          <p className={s.closing}>
-            Ми створили простір, де всі учасники творчого процесу існують під
-            одним дахом. Зі спільною метою — знаходити одне одного і створювати
-            щось більше, ніж поодинці.
-          </p>
+          <p className={s.closing}>{t('closing')}</p>
 
-          <span className={s.endMark}>Твоя сцена починається тут.</span>
+          <span className={s.endMark}>{t('endMark')}</span>
         </div>
       </Container>
     </section>

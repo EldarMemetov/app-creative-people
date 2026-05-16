@@ -1,63 +1,24 @@
-'use client';
-
 import Container from '@/shared/container/Container';
 import s from './WhyUs.module.scss';
+import { initServerI18n } from '@/i18n/utils/serverI18n';
+import Icon from '@/shared/Icon/Icon';
 
-const features = [
-  {
-    icon: '🌍',
-    title: 'Спільнота без кордонів',
-    description:
-      'Єдина креативна платформа для фотографів, моделей та всієї команди — з України до Європи.',
-  },
-  {
-    icon: '🤝',
-    title: 'Прямі колаборації',
-    description:
-      'Ніяких агентств і посередників. Знаходь людей, домовляйся напряму і починай працювати.',
-  },
-  {
-    icon: '🗂',
-    title: 'Все в одному місці',
-    description:
-      'Профіль, портфоліо, пошук і спілкування — без зайвих додатків і переходів.',
-  },
-  {
-    icon: '⚡',
-    title: 'Інтерфейс, який надихає',
-    description:
-      'Сучасний і простий дизайн, який не заважає — а допомагає зосередитись на творчості.',
-  },
-  {
-    icon: '🔒',
-    title: 'Тільки реальні профілі',
-    description:
-      'Верифіковані учасники, чесні відгуки і прозора репутація кожного.',
-  },
-  {
-    icon: '🚀',
-    title: 'Зростай разом зі спільнотою',
-    description:
-      'Нові контакти, проєкти і можливості — щодня. Чим більше ти даєш, тим більше отримуєш.',
-  },
-];
+export default async function WhyUs({ locale }) {
+  const { t } = await initServerI18n(locale, ['whyUs']);
+  const features = t('features', { returnObjects: true });
 
-export default function WhyUs() {
   return (
     <section className={s.section}>
       <Container>
         <header className={s.header}>
           <span className={s.eyebrow}>
             <span className={s.dot} />
-            Чому ми
+            {t('eyebrow')}
           </span>
 
-          <h2 className={s.title}>Чому QVRIX?</h2>
+          <h2 className={s.title}>{t('title')}</h2>
 
-          <p className={s.subtitle}>
-            Ми створили простір, де творчі люди знаходять одне одного — і разом
-            створюють щось більше.
-          </p>
+          <p className={s.subtitle}>{t('subtitle')}</p>
         </header>
 
         <ul className={s.grid}>
@@ -72,7 +33,7 @@ export default function WhyUs() {
               <div className={s.iconWrap}>
                 <span className={s.iconOrbit} />
                 <span className={s.iconGlow} />
-                <span className={s.icon}>{f.icon}</span>
+                <Icon iconName={f.icon} className={s.icon} aria-hidden="true" />
               </div>
 
               <div className={s.body}>

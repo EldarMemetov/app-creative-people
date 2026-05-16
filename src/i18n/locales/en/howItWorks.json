@@ -1,0 +1,21 @@
+{
+  "eyebrow": "Process",
+  "title": "How does it",
+  "titleAccent": "work?",
+  "subtitle": "Three steps — from registration to your first collaborative project.",
+
+  "steps": [
+    {
+      "title": "Introduce yourself",
+      "description": "Choose a role, showcase your work — and let others find you first."
+    },
+    {
+      "title": "Find your people",
+      "description": "Photographer, model, stylist — everyone is here. One search — and your team is ready."
+    },
+    {
+      "title": "From idea to result",
+      "description": "Communicate, agree, and create. No unnecessary steps."
+    }
+  ]
+}

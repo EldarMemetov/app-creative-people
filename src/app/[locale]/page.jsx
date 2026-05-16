@@ -20,7 +20,7 @@ export default async function Home({ params: rawParams }) {
       <WhoIsItForSection locale={locale} />
       <HowItWorks locale={locale} />
       <WhyUs locale={locale} />
-      <JoinNow locale={locale} />
+      <JoinNow />
       <ToggleQuestions locale={locale} />
     </div>
   );

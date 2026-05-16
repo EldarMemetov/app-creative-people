@@ -12,7 +12,6 @@
   }
 }
 
-// ---------- Shell (велика картка-контейнер) ----------
 .shell {
   position: relative;
   max-width: 920px;
@@ -45,7 +44,6 @@
   }
 }
 
-// м’який світловий бордер по периметру
 .shellBorder {
   position: absolute;
   inset: 0;
@@ -237,7 +235,6 @@
   overflow: hidden;
 }
 
-// біг-«відблиск» по бару
 .barShine {
   position: absolute;
   top: 0;
@@ -253,7 +250,6 @@
   animation: barShine 2.6s ease-in-out infinite;
 }
 
-// ледь помітні насічки
 .barTicks {
   position: absolute;
   inset: 0;
@@ -415,7 +411,7 @@
   width: 26px;
   height: 26px;
   flex-shrink: 0;
-  color: #c5cdff;
+  fill: #c5cdff;
 }
 
 .storeText {

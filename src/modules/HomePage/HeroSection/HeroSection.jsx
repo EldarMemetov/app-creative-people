@@ -2,7 +2,11 @@ import Container from '@/shared/container/Container';
 import s from './HeroSection.module.scss';
 import { ROUTES, LINKDATA } from '@/shared/constants';
 import LinkButton from '@/shared/components/LinkButton/LinkButton';
-export default function HeroSection() {
+import { initServerI18n } from '@/i18n/utils/serverI18n';
+
+export default async function HeroSection({ locale }) {
+  const { t } = await initServerI18n(locale, ['heroSection']);
+
   return (
     <section className={s.hero}>
       <div className={s.bg}>
@@ -16,31 +20,28 @@ export default function HeroSection() {
       <Container>
         <div className={s.inner}>
           <h1 className={s.title}>
-            Твоя сцена.
+            {t('titleLine1')}
             <br />
-            Твоя команда.
+            {t('titleLine2')}
             <br />
-            <span className={s.accent}>Твоє мистецтво.</span>
+            <span className={s.accent}>{t('titleAccent')}</span>
           </h1>
 
-          <p className={s.subtitle}>
-            Платформа для креативних людей, де можна знаходити команду,
-            показувати свої роботи, запускати проєкти, спілкуватися та бути
-            частиною спільноти.
-          </p>
+          <p className={s.subtitle}>{t('subtitle')}</p>
 
           <div className={s.actions}>
             <LinkButton
               className={s.primary}
               path={ROUTES.REGISTER}
               type={LINKDATA.TYPE_LIGHT_BORDER}
-              linkText=" Реєстрація"
+              linkText={t('register')}
             />
+
             <LinkButton
               className={s.secondary}
               path={ROUTES.LOGIN}
               type={LINKDATA.TYPE_LIGHT_BORDER}
-              linkText="Увійти"
+              linkText={t('login')}
             />
           </div>
         </div>

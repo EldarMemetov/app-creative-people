@@ -1,0 +1,55 @@
+{
+  "eyebrow": "Who is the platform for",
+  "titleLine1": "A space where creators",
+  "titleLine2": "find each other",
+  "subtitle": "Whether you're a seasoned professional or just looking for your team — there's a place for you here. Choose your role.",
+  "prevAriaLabel": "Previous",
+  "nextAriaLabel": "Next",
+  "cards": [
+    {
+      "title": "Photographers",
+      "description": "Find models and clients for shoots, grow your client base.",
+      "image": "/image/card.png"
+    },
+    {
+      "title": "Models",
+      "description": "Receive shoot invitations and expand your portfolio.",
+      "image": "/image/card.png"
+    },
+    {
+      "title": "Videographers / Directors",
+      "description": "Assemble a team for music videos, ads, or content.",
+      "image": "/image/card.png"
+    },
+    {
+      "title": "Producers",
+      "description": "Coordinate projects, find contractors, and manage your team.",
+      "image": "/image/card.png"
+    },
+    {
+      "title": "Retouchers",
+      "description": "Offer your services to photographers and agencies, find recurring clients.",
+      "image": "/image/card.png"
+    },
+    {
+      "title": "MUAs / Stylists / Hair Artists",
+      "description": "Create looks, work with teams, and build your name.",
+      "image": "/image/card.png"
+    },
+    {
+      "title": "Fashion Designers",
+      "description": "Promote collections, find models and film crews.",
+      "image": "/image/card.png"
+    },
+    {
+      "title": "Businesses / Brands / Agencies",
+      "description": "Find creative teams for ads, content, and promo.",
+      "image": "/image/card.png"
+    },
+    {
+      "title": "AI Creators",
+      "description": "Create photos and videos with AI, share your work, and find collaborators.",
+      "image": "/image/card.png"
+    }
+  ]
+}
