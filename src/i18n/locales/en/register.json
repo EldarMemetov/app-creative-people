@@ -1,24 +1,31 @@
 {
-  "register": "Register",
-  "name": "First Name",
-  "surname": "Last Name",
+  "register": "Registration",
+  "name": "First name",
+  "surname": "Last name",
   "country": "Country",
   "city": "City",
-  "email": "Email",
+  "email": "Email address",
   "password": "Password",
+
   "register_success": "Registration successful!",
   "register_failed": "Registration failed",
   "required_field": "Required field",
   "invalid_email": "Invalid email",
   "password_min": "Password must be at least 6 characters",
   "password_max": "Password cannot exceed 128 characters",
-  "submit": "Register",
+  "submit": "Sign up",
   "loading": "Loading...",
-  "email_already_exist": "Email already exists",
+  "email_already_exist": "Email is already in use",
   "name_min": "First name must be at least 2 characters",
   "name_max": "First name cannot exceed 50 characters",
   "surname_min": "Last name must be at least 2 characters",
   "surname_max": "Last name cannot exceed 50 characters",
   "country_placeholder": "Enter your country",
-  "city_placeholder": "Enter your city"
+  "city_placeholder": "Enter your city",
+
+  "agree_with": "I agree with the",
+  "privacy_policy": "privacy policy",
+  "must_agree_policy": "You must agree to the privacy policy",
+  "already_have_account": "Already have an account?",
+  "sign_in": "Sign in"
 }

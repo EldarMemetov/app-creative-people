@@ -1,13 +1,15 @@
 'use client';
 
 import s from './RegisterPage.module.scss';
-import { Formik, Form, ErrorMessage } from 'formik';
+import { Formik, Form, ErrorMessage, Field } from 'formik';
 import { registerUser } from '../../services/api/auth/auth';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '../../services/store/useAuth.js';
 import Container from '@/shared/container/Container';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'react-hot-toast';
+import Link from 'next/link';
+import { LINKDATA } from '@/shared/constants';
 import FormInput from '@/shared/FormInput/FormInput';
 import { RegisterSchema } from '@/shared/FormSchema/RegisterSchema/RegisterSchema';
 import RoleSelector from './RoleSelector/RoleSelector';
@@ -42,6 +44,7 @@ export default function RegisterPage() {
                 email: '',
                 password: '',
                 roles: [],
+                agreedToPolicy: false,
               }}
               validationSchema={GetRegisterSchema}
               onSubmit={async (values, actions) => {
@@ -102,17 +105,72 @@ export default function RegisterPage() {
                     />
                   </div>
 
+                  {/* NEW: чекбокс согласия с политикой */}
+                  <div className={s.policy}>
+                    <label className={s.policyLabel}>
+                      <Field
+                        type="checkbox"
+                        name="agreedToPolicy"
+                        className={s.policyCheckbox}
+                        data-testid="register-policy-checkbox"
+                      />
+                      <span className={s.policyBox} aria-hidden="true">
+                        <svg
+                          viewBox="0 0 16 16"
+                          className={s.policyCheck}
+                          fill="none"
+                        >
+                          <path
+                            d="M3 8.5L6.5 12L13 4.5"
+                            stroke="currentColor"
+                            strokeWidth="2.2"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                          />
+                        </svg>
+                      </span>
+                      <span className={s.policyText}>
+                        {t('agree_with')}{' '}
+                        <Link
+                          href={`/${LINKDATA.POLICY}`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className={s.policyLink}
+                        >
+                          {t('privacy_policy')}
+                        </Link>
+                      </span>
+                    </label>
+                    <ErrorMessage
+                      name="agreedToPolicy"
+                      component="p"
+                      className={s.error}
+                    />
+                  </div>
+
                   <div className={s.actions}>
                     <button
                       type="submit"
                       disabled={isSubmitting}
                       className={s.submit}
+                      data-testid="register-submit-button"
                     >
                       <span className={s.submitLabel}>
                         {isSubmitting ? t('loading') : t('submit')}
                       </span>
                     </button>
                   </div>
+
+                  <p className={s.signinHint}>
+                    {t('already_have_account')}{' '}
+                    <Link
+                      href={LINKDATA.LOGIN}
+                      className={s.signinLink}
+                      data-testid="register-go-to-login"
+                    >
+                      {t('sign_in')}
+                    </Link>
+                  </p>
                 </Form>
               )}
             </Formik>

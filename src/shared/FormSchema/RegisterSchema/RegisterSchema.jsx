@@ -21,4 +21,7 @@ export const RegisterSchema = (t) =>
       .min(1, t('choose_at_least_one'))
       .max(3, t('choose_max_three'))
       .required(t('required_field')),
+    agreedToPolicy: Yup.boolean()
+      .oneOf([true], t('must_agree_policy'))
+      .required(t('must_agree_policy')),
   });

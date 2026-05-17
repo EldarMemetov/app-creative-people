@@ -1,13 +1,16 @@
 {
   "login": "Anmeldung",
-  "email": "E-Mail",
+  "email": "E-Mail-Adresse",
   "password": "Passwort",
   "login_success": "Anmeldung erfolgreich!",
-  "login_failed": "Ungültige E-Mail oder Passwort",
+  "login_failed": "Ungültige E-Mail oder falsches Passwort",
   "required_field": "Pflichtfeld",
   "invalid_email": "Ungültige E-Mail",
-  "password_min": "Passwort muss mindestens 6 Zeichen lang sein",
+  "password_min": "Das Passwort muss mindestens 6 Zeichen lang sein",
   "submit": "Anmelden",
-  "loading": "Lädt...",
-  "back_password": "Passwort vergessen"
+  "loading": "Wird geladen...",
+  "back_password": "Passwort vergessen",
+
+  "no_account": "Noch kein Konto?",
+  "sign_up": "Registrieren"
 }

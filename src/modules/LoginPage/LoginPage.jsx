@@ -6,6 +6,7 @@ import { useAuth } from '../../services/store/useAuth.js';
 import { useRouter } from 'next/navigation';
 import { useTranslation } from 'react-i18next';
 import toast from 'react-hot-toast';
+import Link from 'next/link';
 import Container from '@/shared/container/Container';
 import FormInput from '@/shared/FormInput/FormInput';
 import LinkButton from '@/shared/components/LinkButton/LinkButton';
@@ -71,6 +72,7 @@ export default function LoginPage() {
                       type="submit"
                       disabled={isSubmitting}
                       className={s.submit}
+                      data-testid="login-submit-button"
                     >
                       <span className={s.submitLabel}>
                         {isSubmitting ? t('loading') : t('submit')}
@@ -90,6 +92,17 @@ export default function LoginPage() {
                 {t('back_password')}
               </LinkButton>
             </div>
+
+            <p className={s.signupHint}>
+              {t('no_account')}{' '}
+              <Link
+                href={LINKDATA.REGISTER}
+                className={s.signupLink}
+                data-testid="login-go-to-register"
+              >
+                {t('sign_up')}
+              </Link>
+            </p>
           </div>
         </div>
       </Container>

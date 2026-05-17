@@ -1,13 +1,16 @@
 {
   "login": "Login",
-  "email": "Email",
+  "email": "Email address",
   "password": "Password",
   "login_success": "Login successful!",
   "login_failed": "Invalid email or password",
   "required_field": "Required field",
   "invalid_email": "Invalid email",
   "password_min": "Password must be at least 6 characters",
-  "submit": "Login",
+  "submit": "Sign in",
   "loading": "Loading...",
-  "back_password": "Forgot password"
+  "back_password": "Forgot password",
+
+  "no_account": "Don't have an account yet?",
+  "sign_up": "Sign up"
 }

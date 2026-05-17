@@ -225,7 +225,7 @@
 .actions {
   margin-top: 8px;
   display: flex;
-  justify-content: flex-end;
+  justify-content: center;
 }
 
 .submit {
@@ -329,5 +329,123 @@
   }
   50% {
     background-position: 100% 50%;
+  }
+}
+.policy {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-top: 4px;
+}
+
+.policyLabel {
+  display: inline-flex;
+  align-items: flex-start;
+  gap: 12px;
+  cursor: pointer;
+  user-select: none;
+  font-size: 14px;
+  line-height: 1.5;
+  color: rgba(222, 226, 250, 0.85);
+
+  @include media(tablet) {
+    font-size: 15px;
+  }
+}
+
+.policyCheckbox {
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+  pointer-events: none;
+
+  &:focus-visible + .policyBox {
+    outline: 2px solid rgba(122, 91, 255, 0.6);
+    outline-offset: 2px;
+  }
+
+  &:checked + .policyBox {
+    background: linear-gradient(135deg, #4a6bff 0%, #7a5bff 100%);
+    border-color: transparent;
+    box-shadow:
+      0 6px 20px -6px rgba(122, 91, 255, 0.7),
+      inset 0 1px 0 rgba(255, 255, 255, 0.3);
+
+    .policyCheck {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+}
+
+.policyBox {
+  flex: 0 0 auto;
+  width: 22px;
+  height: 22px;
+  margin-top: 1px;
+  border-radius: 7px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  transition:
+    background 0.25s ease,
+    border-color 0.25s ease,
+    box-shadow 0.25s ease;
+}
+
+.policyCheck {
+  width: 14px;
+  height: 14px;
+  opacity: 0;
+  transform: scale(0.7);
+  transition:
+    opacity 0.2s ease,
+    transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.policyText {
+  flex: 1 1 auto;
+}
+
+.policyLink {
+  color: #a99bff;
+  text-decoration: none;
+  font-weight: 500;
+  border-bottom: 1px solid rgba(169, 155, 255, 0.4);
+  transition:
+    color 0.25s ease,
+    border-color 0.25s ease;
+
+  &:hover {
+    color: #c7bcff;
+    border-bottom-color: #c7bcff;
+  }
+}
+
+// ---------- Sign-in hint ----------
+.signinHint {
+  margin: 8px 0 0;
+  text-align: center;
+  font-size: 14px;
+  color: rgba(222, 226, 250, 0.7);
+
+  @include media(tablet) {
+    font-size: 15px;
+  }
+}
+
+.signinLink {
+  margin-left: 6px;
+  color: #a99bff;
+  font-weight: 600;
+  text-decoration: none;
+  transition: color 0.25s ease;
+
+  &:hover {
+    color: #c7bcff;
   }
 }

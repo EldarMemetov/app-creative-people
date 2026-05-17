@@ -290,7 +290,32 @@
     color: #c9b2ff;
   }
 }
+.signupHint {
+  margin: 16px 0 0;
+  text-align: center;
+  font-size: 14px;
+  color: rgba(222, 226, 250, 0.7);
+  opacity: 0;
+  transform: translateY(8px);
+  animation: fadeUp 0.9s cubic-bezier(0.16, 1, 0.3, 1) 1s forwards;
 
+  @include media(tablet) {
+    font-size: 15px;
+    margin-top: 20px;
+  }
+}
+
+.signupLink {
+  margin-left: 6px;
+  color: #a99bff;
+  font-weight: 600;
+  text-decoration: none;
+  transition: color 0.25s ease;
+
+  &:hover {
+    color: #c7bcff;
+  }
+}
 // ---------- Keyframes ----------
 @keyframes fadeUp {
   from {
