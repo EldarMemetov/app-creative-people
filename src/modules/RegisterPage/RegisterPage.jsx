@@ -14,6 +14,7 @@ import FormInput from '@/shared/FormInput/FormInput';
 import { RegisterSchema } from '@/shared/FormSchema/RegisterSchema/RegisterSchema';
 import RoleSelector from './RoleSelector/RoleSelector';
 import CountryCitySelector from '@/shared/CountryCitySelector/CountryCitySelector';
+import Icon from '@/shared/Icon/Icon';
 
 export default function RegisterPage() {
   const router = useRouter();
@@ -115,19 +116,11 @@ export default function RegisterPage() {
                         data-testid="register-policy-checkbox"
                       />
                       <span className={s.policyBox} aria-hidden="true">
-                        <svg
-                          viewBox="0 0 16 16"
+                        <Icon
+                          iconName="icon-check"
                           className={s.policyCheck}
-                          fill="none"
-                        >
-                          <path
-                            d="M3 8.5L6.5 12L13 4.5"
-                            stroke="currentColor"
-                            strokeWidth="2.2"
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                          />
-                        </svg>
+                          aria-hidden="true"
+                        />
                       </span>
                       <span className={s.policyText}>
                         {t('agree_with')}{' '}

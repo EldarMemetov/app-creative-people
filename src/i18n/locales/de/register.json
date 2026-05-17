@@ -1,5 +1,6 @@
 {
   "register": "Registrierung",
+  "register_hint": "Erstelle ein Konto und werde Teil der kreativen Community.",
   "name": "Vorname",
   "surname": "Nachname",
   "country": "Land",

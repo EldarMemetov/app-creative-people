@@ -1,5 +1,6 @@
 {
   "register": "Registration",
+  "register_hint": "Create an account and become part of the creative community.",
   "name": "First name",
   "surname": "Last name",
   "country": "Country",

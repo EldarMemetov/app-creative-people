@@ -1,5 +1,6 @@
 {
-  "login": "Login",
+  "login": "Sign in",
+  "login_hint": "Good to see you again. Sign in to your account.",
   "email": "Email address",
   "password": "Password",
   "login_success": "Login successful!",
@@ -9,7 +10,7 @@
   "password_min": "Password must be at least 6 characters",
   "submit": "Sign in",
   "loading": "Loading...",
-  "back_password": "Forgot password",
+  "back_password": "Forgot password?",
 
   "no_account": "Don't have an account yet?",
   "sign_up": "Sign up"

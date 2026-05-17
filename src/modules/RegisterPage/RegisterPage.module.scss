@@ -400,6 +400,8 @@
 .policyCheck {
   width: 14px;
   height: 14px;
+  fill: white;
+  overflow: visible;
   opacity: 0;
   transform: scale(0.7);
   transition:
@@ -426,7 +428,6 @@
   }
 }
 
-// ---------- Sign-in hint ----------
 .signinHint {
   margin: 8px 0 0;
   text-align: center;
