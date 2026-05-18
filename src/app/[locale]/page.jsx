@@ -6,6 +6,7 @@ import WhyUs from '@/modules/HomePage/WhyUs/WhyUs';
 import JoinNow from '@/modules/HomePage/JoinNow/JoinNow';
 import RenderOurStory from '@/modules/HomePage/RenderOurStory/RenderOurStory';
 import ToggleQuestions from '@/modules/Faq/ToggleQuestions';
+import ContactSection from '@/modules/ContactSection/ContactSection';
 
 export default async function Home({ params: rawParams }) {
   const params = await rawParams;
@@ -22,6 +23,7 @@ export default async function Home({ params: rawParams }) {
       <WhyUs locale={locale} />
       <JoinNow />
       <ToggleQuestions locale={locale} />
+      <ContactSection />
     </div>
   );
 }

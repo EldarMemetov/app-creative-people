@@ -67,6 +67,7 @@ export const NAMESPACES = [
   'renderOurStory',
   'whoIsItFor',
   'whyUs',
+  'contact',
 ];
 
 export const FLIPPED_TIME_MS = 15000;

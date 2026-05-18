@@ -1,0 +1,24 @@
+{
+  "title": "Contact us",
+  "subtitle": "Have a question or suggestion? Write to us — we will respond as soon as possible.",
+  "name": "Name",
+  "email": "Email",
+  "message": "Message",
+  "submit": "Send",
+  "sending": "Sending...",
+
+  "success": "Message sent successfully!",
+  "failed": "Failed to send message. Please try again later.",
+
+  "required_field": "Required field",
+  "invalid_email": "Invalid email",
+  "name_min": "Name must be at least {{min}} characters",
+  "name_max": "Name must not exceed {{max}} characters",
+  "message_min": "Message must be at least {{min}} characters",
+  "message_max": "Message must not exceed {{max}} characters",
+
+  "agree_with": "I agree with",
+  "privacy_policy": "privacy policy",
+  "must_agree_policy": "You must agree to the privacy policy",
+  "message_placeholder": "Describe your question or suggestion..."
+}

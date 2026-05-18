@@ -106,7 +106,6 @@ export default function RegisterPage() {
                     />
                   </div>
 
-                  {/* NEW: чекбокс согласия с политикой */}
                   <div className={s.policy}>
                     <label className={s.policyLabel}>
                       <Field

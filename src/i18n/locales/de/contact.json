@@ -1,0 +1,24 @@
+{
+  "title": "Kontaktieren Sie uns",
+  "subtitle": "Haben Sie eine Frage oder einen Vorschlag? Schreiben Sie uns — wir antworten so schnell wie möglich.",
+  "name": "Name",
+  "email": "E-Mail",
+  "message": "Nachricht",
+  "submit": "Senden",
+  "sending": "Wird gesendet...",
+
+  "success": "Nachricht erfolgreich gesendet!",
+  "failed": "Nachricht konnte nicht gesendet werden. Bitte versuchen Sie es später erneut.",
+
+  "required_field": "Pflichtfeld",
+  "invalid_email": "Ungültige E-Mail",
+  "name_min": "Der Name muss mindestens {{min}} Zeichen enthalten",
+  "name_max": "Der Name darf nicht länger als {{max}} Zeichen sein",
+  "message_min": "Die Nachricht muss mindestens {{min}} Zeichen enthalten",
+  "message_max": "Die Nachricht darf nicht länger als {{max}} Zeichen sein",
+
+  "agree_with": "Ich stimme der",
+  "privacy_policy": "Datenschutzerklärung",
+  "must_agree_policy": "Sie müssen der Datenschutzerklärung zustimmen",
+  "message_placeholder": "Beschreiben Sie Ihre Frage oder Ihren Vorschlag..."
+}
