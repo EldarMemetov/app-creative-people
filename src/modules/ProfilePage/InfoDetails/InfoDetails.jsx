@@ -84,8 +84,10 @@ export default function InfoDetails() {
   return (
     <section className={s.section}>
       <PortfolioHero heroType={user.heroType} heroMedia={user.heroMedia} />
+
       <Container>
         <div className={s.infoDetails}>
+          {/* 2. Header */}
           <header className={s.pageHeader}>
             <span className={s.eyebrow}>
               <span className={s.eyebrowDot} />
@@ -93,6 +95,8 @@ export default function InfoDetails() {
             </span>
             <h1 className={s.title}>Мій профіль</h1>
           </header>
+
+          {/* 3. Hero блок */}
           <div className={s.hero}>
             <div className={s.heroBorder} />
 
@@ -158,10 +162,6 @@ export default function InfoDetails() {
                 </span>
               </div>
               <RatingBadge rating={user.rating ?? 0} />
-              <div className={s.stat}>
-                <span className={s.statLabel}>Досвід</span>
-                <span className={s.statValue}>{user.experience || '—'}</span>
-              </div>
             </div>
           </div>
 
@@ -172,14 +172,12 @@ export default function InfoDetails() {
               type={LINKDATA.NOTIFICATION}
               linkText="Сповіщення"
             />
-
             <LinkButton
               className={s.actionButton}
               path="my-post"
               type={LINKDATA.MYPOST}
               linkText="Мої пости"
             />
-
             <LinkButton
               className={s.actionButton}
               path="my-applications"
@@ -188,45 +186,23 @@ export default function InfoDetails() {
             />
             <LinkButton
               className={s.actionButton}
-              path="profile/edit"
-              type={LINKDATA.TYPE_LIGHT_BORDER}
-              linkText="Редагувати свій профіль"
-            />
-            <LinkButton
-              className={s.actionButton}
               path="favorite-talents"
               type={LINKDATA.FAVORITES_TALENTS}
               linkText="избранний таланты"
             />
+            <LinkButton
+              className={s.actionButton}
+              path="profile/edit"
+              type={LINKDATA.TYPE_LIGHT_BORDER}
+              linkText="Редагувати свій профіль"
+            />
           </nav>
-          <CompletedProjects userId={user._id} />
 
-          <div className={s.card}>
-            <h3 className={s.sectionTitle}>Основна інформація</h3>
-
-            <div className={s.details}>
-              <div className={s.detail}>
-                <span className={s.label}>Ім’я</span>
-                <span className={s.value}>{user.name || 'не вказано'}</span>
-              </div>
-
-              <div className={s.detail}>
-                <span className={s.label}>Прізвище</span>
-                <span className={s.value}>{user.surname || 'не вказано'}</span>
-              </div>
-
-              <div className={s.detail}>
-                <span className={s.label}>Місто</span>
-                <span className={s.value}>{user.city || 'не вказано'}</span>
-              </div>
-
-              <div className={s.detail}>
-                <span className={s.label}>Країна</span>
-                <span className={s.value}>{user.country || 'не вказано'}</span>
-              </div>
-            </div>
+          {/* 5. Про себе */}
+          <div className={s.stat}>
+            <span className={s.statLabel}>Досвід</span>
+            <span className={s.statValue}>{user.experience || '—'}</span>
           </div>
-
           <div className={s.card}>
             <h3 className={s.sectionTitle}>Про себе</h3>
             <p className={s.about}>{user.aboutMe || 'не вказано'}</p>
@@ -254,6 +230,8 @@ export default function InfoDetails() {
             <h3 className={s.sectionTitle}>Соціальні мережі</h3>
             <SocialLinks socialLinks={user.socialLinks} />
           </div>
+
+          <CompletedProjects userId={user._id} />
         </div>
       </Container>
     </section>

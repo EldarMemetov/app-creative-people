@@ -16,6 +16,7 @@ import PortfolioHero from '../ProfilePage/PortfolioHero/PortfolioHero';
 import CompletedProjects from '../CompletedProjects/CompletedProjects';
 import SocialLinks from '@/shared/SocialLinks/SocialLinks';
 import RatingBadge from '@/shared/RatingBadge/RatingBadge';
+import Icon from '@/shared/Icon/Icon';
 
 export default function UserDetailPage() {
   const { id } = useParams();
@@ -38,7 +39,6 @@ export default function UserDetailPage() {
         setLoading(false);
       }
     };
-
     fetchUser();
   }, [id]);
 
@@ -81,9 +81,29 @@ export default function UserDetailPage() {
 
   return (
     <section className={s.section}>
+      {/* 2. Hero медіа — на всю ширину */}
+      <PortfolioHero heroType={user.heroType} heroMedia={user.heroMedia} />
+
       <Container>
-        <PortfolioHero heroType={user.heroType} heroMedia={user.heroMedia} />
+        <div className={s.actionsNext}>
+          {' '}
+          <LinkButton
+            path={ROUTES.TALENTS}
+            type={LINKDATA.HOME}
+            className={s.backButton}
+          >
+            {' '}
+            <Icon
+              iconName="icon-left"
+              className={s.storeIcon}
+              aria-hidden="true"
+            />{' '}
+            Повернутись до профілів
+          </LinkButton>
+        </div>
+
         <div className={s.globalContainer}>
+          {/* 3. Header — ім'я і локація */}
           <header className={s.pageHeader}>
             <span className={s.eyebrow}>
               <span className={s.eyebrowDot} />
@@ -93,6 +113,7 @@ export default function UserDetailPage() {
             {location && <p className={s.subtitle}>{location}</p>}
           </header>
 
+          {/* 4. Hero блок — аватар, ролі, рейтинг, лайк */}
           <div className={s.hero}>
             <div className={s.heroBorder} />
 
@@ -119,9 +140,7 @@ export default function UserDetailPage() {
 
               <div className={s.identityText}>
                 <h2 className={s.fullName}>{fullName}</h2>
-
                 {location && <p className={s.location}>{location}</p>}
-
                 {rolesArray.length > 0 && (
                   <ul className={s.rolesList} aria-label="Ролі користувача">
                     {rolesArray.map((r, idx) => (
@@ -136,10 +155,6 @@ export default function UserDetailPage() {
 
             <div className={s.stats}>
               <RatingBadge rating={user.rating ?? 0} />
-              <div className={s.stat}>
-                <span className={s.statLabel}>Досвід</span>
-                <span className={s.statValue}>{user.experience || '—'}</span>
-              </div>
             </div>
 
             <div className={s.actions}>
@@ -156,40 +171,16 @@ export default function UserDetailPage() {
                   </div>
                 )
               )}
-
-              <LinkButton path={ROUTES.TALENTS} type={LINKDATA.HOME}>
-                ← Повернутись до профілів
-              </LinkButton>
             </div>
           </div>
 
-          <div className={s.card}>
-            <h3 className={s.sectionTitle}>Основна інформація</h3>
-            <div className={s.details}>
-              <div className={s.detail}>
-                <span className={s.label}>Ім’я</span>
-                <span className={s.value}>{user.name || 'не вказано'}</span>
-              </div>
-              <div className={s.detail}>
-                <span className={s.label}>Прізвище</span>
-                <span className={s.value}>{user.surname || 'не вказано'}</span>
-              </div>
-              <div className={s.detail}>
-                <span className={s.label}>Місто</span>
-                <span className={s.value}>{user.city || 'не вказано'}</span>
-              </div>
-              <div className={s.detail}>
-                <span className={s.label}>Країна</span>
-                <span className={s.value}>{user.country || 'не вказано'}</span>
-              </div>
-            </div>
-          </div>
-
+          {/* 5. Про себе */}
           <div className={s.card}>
             <h3 className={s.sectionTitle}>Про себе</h3>
             <p className={s.about}>{user.aboutMe || 'не вказано'}</p>
           </div>
 
+          {/* 6. Напрямки */}
           <div className={s.card}>
             <h3 className={s.sectionTitle}>Напрямки</h3>
             {user.directions && user.directions.length > 0 ? (
@@ -208,12 +199,14 @@ export default function UserDetailPage() {
             )}
           </div>
 
-          <CompletedProjects userId={user._id} />
-
+          {/* 7. Соціальні мережі */}
           <div className={s.card}>
             <h3 className={s.sectionTitle}>Соціальні мережі</h3>
             <SocialLinks socialLinks={user.socialLinks} />
           </div>
+
+          {/* 8. Завершені проєкти */}
+          <CompletedProjects userId={user._id} />
         </div>
       </Container>
     </section>
